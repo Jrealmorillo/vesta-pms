@@ -1,4 +1,5 @@
 const Usuario = require("../models/Usuario");
+const bcrypt = require("bcryptjs");
 
 
 // Registrar un usario
@@ -96,5 +97,38 @@ exports.modificarUsuario = async (req, res) => {
         res.json({ mensaje: "Usuario actualizado correctamente ", usuario});
     } catch (error) {
         res.status(500).json ({ error: "Error al actualizar el usuario", detalle: error.message})
+    }
+};
+
+
+// Cambiar contraseña
+exports.cambiarPassword = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { contraseña_actual, nueva_contraseña } = req.body;
+
+        // Buscar el usuario en la base de datos
+        const usuario = await Usuario.findByPk(id);
+
+        // Si el usuario no existe
+        if (!usuario) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        // Verificar que la contraseña actual sea correcta
+        const contraseñaValida = await bcrypt.compare(contraseña_actual, usuario.contraseña);
+        if (!contraseñaValida) {
+            return res.status(401).json({ error: "Contraseña actual incorrecta" });
+        }
+
+        // Encriptar la nueva contraseña
+        const contraseñaEncriptada = await bcrypt.hash(nueva_contraseña, 10);
+
+        // Actualizar la contraseña en la base de datos
+        await usuario.update({ contraseña: contraseñaEncriptada });
+
+        res.json({ mensaje: "Contraseña actualizada correctamente" });
+    } catch (error) {
+        res.status(500).json({ error: "Error al actualizar la contraseña", detalle: error.message });
     }
 };

@@ -9,5 +9,6 @@ router.get("/", usuarioController.obtenerusuarios);
 router.get("/:id", usuarioController.obtenerusuarioPorId);
 router.delete("/:id", usuarioController.desactivarUsuario)
 router.put("/:id", usuarioController.modificarUsuario);
+router.put("/:id/cambiar-password", usuarioController.cambiarPassword);
 
 module.exports = router;
