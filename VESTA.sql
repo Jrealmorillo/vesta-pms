@@ -9,7 +9,7 @@ CREATE TABLE Roles (
 );
 
 -- Insertar roles por defecto
-INSERT INTO Roles (nombre) VALUES ('Empleado'), ('Administrador');
+INSERT INTO Roles (nombre) VALUES ('Administrador'), ('Empleado');
 
 -- Crear la tabla Usuarios con las mejoras aplicadas
 CREATE TABLE Usuarios (
@@ -28,9 +28,13 @@ CREATE TABLE Usuarios (
 CREATE TABLE Clientes (
 	id_cliente INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(150) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
     tipo_documento ENUM ('DNI', 'Pasaporte', 'Documento de Identidad', 'Permiso de Residencia') NOT NULL,
     numero_documento VARCHAR(30) NOT NULL UNIQUE,
     direccion VARCHAR(255),
+    ciudad VARCHAR(100),
+    pais VARCHAR(100),
+    codigo_postal VARCHAR(30),
     telefono VARCHAR(30),
     email VARCHAR(255),
     observaciones TEXT
