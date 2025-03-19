@@ -3,11 +3,14 @@ const GestorUsuarios = require("../services/GestorUsuarios");
 // Registrar un usario
 exports.registrarUsuario = async (req, res) => {
   try {
-
     const usuario = await GestorUsuarios.registrarUsuario(req.body);
-    res.status(201).json({ mensaje: "Usuario creado existosamente", usuario: nuevoUsuario });
+    res
+      .status(201)
+      .json({ mensaje: "Usuario creado existosamente", usuario: usuario });
   } catch (error) {
-    res.status(500).json({ error: "Error al registrar usuario", detalle: error.message });
+    res
+      .status(500)
+      .json({ error: "Error al registrar usuario", detalle: error.message });
   }
 };
 
@@ -33,24 +36,31 @@ exports.obtenerusuarioPorId = async (req, res) => {
 
 // Modificar usuario
 exports.modificarUsuario = async (req, res) => {
-    try {
-      const usuario = await GestorUsuarios.modificarUsuario(req.params.id, req.body);
-      res.json(usuario);
-    } catch (error) {
-      res.status(404).json({ error: error.message });
-    }
-  };
+  try {
+    const usuario = await GestorUsuarios.modificarUsuario(
+      req.params.id,
+      req.body
+    );
+    res.json(usuario);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+};
 
-  // Cambiar contraseña
+// Cambiar contraseña
 exports.cambiarPassword = async (req, res) => {
-    try {
-      const { passwordActual, nuevaPassword } = req.body;
-      const respuesta = await GestorUsuarios.cambiarPassword(req.params.id, passwordActual, nuevaPassword);
-      res.json(respuesta);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  };
+  try {
+    const { passwordActual, nuevaPassword } = req.body;
+    const respuesta = await GestorUsuarios.cambiarPassword(
+      req.params.id,
+      passwordActual,
+      nuevaPassword
+    );
+    res.json(respuesta);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 // Desactivar usuario
 exports.desactivarUsuario = async (req, res) => {
@@ -62,6 +72,21 @@ exports.desactivarUsuario = async (req, res) => {
   }
 };
 
-
-
-
+// Acceso usuario
+exports.loginUsuario = async (req, res) => {
+  try {
+    const { nombre_usuario, contraseña } = req.body;
+    if (!nombre_usuario || !contraseña) {
+      return res
+        .status(400)
+        .json({ error: "nombre de usuario y contraseña obligatorios" });
+    }
+    const datosLogin = await GestorUsuarios.loginUsuario(
+      nombre_usuario,
+      contraseña
+    );
+    res.json(datosLogin);
+  } catch (error) {
+    res.status(401).json({ error: error.message });
+  }
+};
