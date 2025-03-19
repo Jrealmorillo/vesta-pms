@@ -31,7 +31,6 @@ probarConexion();
 
 
 const usuarioRoutes = require("./routes/usuarioRoutes");
-
 // Rutas de la API
 app.use("/usuarios", usuarioRoutes);
 
