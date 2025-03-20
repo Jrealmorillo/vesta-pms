@@ -20,7 +20,7 @@ const Usuario = sequelize.define(
       unique: true, // El nombre de usuario debe ser único
     },
     email: { 
-      type: DataTypes.STRING(150), 
+      type: DataTypes.STRING(255), 
       allowNull: false, 
       unique: true // El email también debe ser único
     },
@@ -36,7 +36,7 @@ const Usuario = sequelize.define(
     id_rol: { 
       type: DataTypes.INTEGER, 
       allowNull: false, 
-      defaultValue: 1 // Por defecto, los nuevos usuarios tendrán el rol 1
+      defaultValue: 2 // Por defecto, los nuevos usuarios tendrán el rol 1
     },
     activo: { 
       type: DataTypes.BOOLEAN, 

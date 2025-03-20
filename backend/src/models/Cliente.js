@@ -8,11 +8,23 @@ const Cliente = sequelize.define("Cliente", {
     primaryKey: true // Clave primaria autoincremental
   },
   nombre: {
-    type: DataTypes.STRING(150),
+    type: DataTypes.STRING(50),
     allowNull: false
   },
-  apellido: {
+  primer_apellido: {
     type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  segundo_apellido: {
+    type: DataTypes.STRING(100),
+    allowNull: true // Se permiten NULL para casos de clientes con 1 solo apellido
+  },
+  fecha_nacimiento: {
+    type: DataTypes.DATE,
+    allowNull: false
+  },
+  sexo: {
+    type: DataTypes.ENUM("Masculino", "Femenino"),
     allowNull: false
   },
   tipo_documento: {
@@ -20,9 +32,13 @@ const Cliente = sequelize.define("Cliente", {
     allowNull: false // Solo permite valores predefinidos
   },
   numero_documento: {
-    type: DataTypes.STRING(30),
+    type: DataTypes.STRING(50),
     allowNull: false,
     unique: true // Asegura que no haya documentos repetidos
+  },
+  fecha_expedicion: {
+    type: DataTypes.DATE,
+    allowNull: false
   },
   direccion: {
     type: DataTypes.STRING(255),
@@ -37,7 +53,7 @@ const Cliente = sequelize.define("Cliente", {
     allowNull: true
   },
   codigo_postal: {
-    type: DataTypes.STRING(30),
+    type: DataTypes.STRING(20),
     allowNull: true
   },
   telefono: {
