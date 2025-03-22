@@ -42,9 +42,12 @@ CREATE TABLE Clientes (
 
 CREATE TABLE Empresas (
     id_empresa INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(200) NOT NULL,
-    cif VARCHAR(20) NOT NULL UNIQUE,
+    nombre VARCHAR(255) NOT NULL,
+    cif VARCHAR(50) NOT NULL UNIQUE,
     direccion VARCHAR(255),
+    ciudad VARCHAR(100),
+    pais VARCHAR(100),
+    codigo_postal VARCHAR(20),
     telefono VARCHAR(30),
     email VARCHAR(255),
     credito BOOLEAN NOT NULL DEFAULT FALSE,
