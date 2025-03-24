@@ -58,7 +58,7 @@ const Empresa = sequelize.define(
   },
   {
     tableName: "Empresas",
-    timestamps: true, // Incluye createdAt y updatedAt
+    timestamps: false, // no incluye createdAt y updatedAt
   }
 );
 

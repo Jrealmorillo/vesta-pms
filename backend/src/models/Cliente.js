@@ -73,7 +73,7 @@ const Cliente = sequelize.define("Cliente", {
   }
 }, {
   tableName: "Clientes",
-  timestamps: true // Agrega automáticamente las columnas createdAt y updatedAt
+  timestamps: false // no incluye createdAt y updatedAt
 });
 
 module.exports = Cliente;
