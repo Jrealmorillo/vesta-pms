@@ -20,12 +20,16 @@ const usuarioRoutes = require("./routes/usuarioRoutes");
 const clienteRoutes = require("./routes/clienteRoutes");
 const empresaRoutes = require("./routes/empresaRoutes");
 const habitacionRoutes = require("./routes/habitacionRoutes");
+const reservaRoutes = require("./routes/reservaRoutes");
+
 
 // Definir rutas de la API
 app.use("/usuarios", usuarioRoutes);
 app.use("/clientes", clienteRoutes);
 app.use("/empresas", empresaRoutes);
 app.use("/habitaciones", habitacionRoutes);
+app.use("/reservas", reservaRoutes);
+
 
 // Iniciar el servidor y escuchar en el puerto definido
 app.listen(PORT, () => {
