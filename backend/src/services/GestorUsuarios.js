@@ -22,7 +22,7 @@ class GestorUsuarios {
       nombre_usuario,
       email,
       contraseña: hashedPassword, // Se almacena la contraseña cifrada
-      id_rol: id_rol || 1, // Si no se proporciona, se asigna el rol por defecto (1)
+      id_rol: id_rol || 2, // Si no se proporciona, se asigna el rol por defecto (2)
       activo: activo !== undefined ? activo : true, // Por defecto, el usuario está activo
     });
   }
