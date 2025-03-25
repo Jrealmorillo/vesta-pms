@@ -11,12 +11,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 
-const sequelize = require("./config/database");
-
-sequelize.sync({ alter: true })
-  .then(() => console.log("Base de datos actualizada correctamente"))
-  .catch((error) => console.error("Error al sincronizar BBDD:", error));
-
 // Ruta de prueba para verificar que el servidor está activo
 app.get("/", (req, res) => {
     res.send("Vesta PMS Backend funcionando correctamente");
@@ -25,11 +19,13 @@ app.get("/", (req, res) => {
 const usuarioRoutes = require("./routes/usuarioRoutes");
 const clienteRoutes = require("./routes/clienteRoutes");
 const empresaRoutes = require("./routes/empresaRoutes");
+const habitacionRoutes = require("./routes/habitacionRoutes");
 
 // Definir rutas de la API
 app.use("/usuarios", usuarioRoutes);
 app.use("/clientes", clienteRoutes);
 app.use("/empresas", empresaRoutes);
+app.use("/habitaciones", habitacionRoutes);
 
 // Iniciar el servidor y escuchar en el puerto definido
 app.listen(PORT, () => {
