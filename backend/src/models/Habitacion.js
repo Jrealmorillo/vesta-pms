@@ -26,7 +26,7 @@ const Habitacion = sequelize.define("Habitacion", {
     },
     notas: {
         type: DataTypes.TEXT,
-        allowNull: TextTrackCue
+        allowNull: true
     },
     precio_oficial: {
         type: DataTypes.DECIMAL(10, 2),
@@ -34,7 +34,7 @@ const Habitacion = sequelize.define("Habitacion", {
     }
 },
     {
-        tablename: "Habitaciones",
+        tableName: "Habitaciones",
         timestamps: false
 });
 
