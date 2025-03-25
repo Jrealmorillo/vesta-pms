@@ -20,6 +20,7 @@ class GestorHabitaciones {
         const habitacion = await Habitacion.findByPk(numero_habitacion);
         if (!habitacion) throw new Error("Habitación no encontrada");
         await habitacion.destroy();
+        return { mensaje: `Habitación ${numero_habitacion} eliminada correctamente` };
     }
 
     // Obtener todas las habitaciones
