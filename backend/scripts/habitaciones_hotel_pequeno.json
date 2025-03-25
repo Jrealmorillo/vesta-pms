@@ -1,0 +1,194 @@
+[
+  {
+    "numero_habitacion": "101",
+    "tipo": "Individual",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 1,
+    "precio_oficial": 60.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "102",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "103",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "104",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "105",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "106",
+    "tipo": "Junior Suite",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 3,
+    "precio_oficial": 120.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "201",
+    "tipo": "Individual",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 1,
+    "precio_oficial": 60.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "202",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "203",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "204",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "205",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "206",
+    "tipo": "Junior Suite",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 3,
+    "precio_oficial": 120.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "301",
+    "tipo": "Individual",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 1,
+    "precio_oficial": 60.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "302",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "303",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "304",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "305",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "306",
+    "tipo": "Junior Suite",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 3,
+    "precio_oficial": 120.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "401",
+    "tipo": "Individual",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 1,
+    "precio_oficial": 60.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "402",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "403",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "404",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "405",
+    "tipo": "Doble Estándar",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 2,
+    "precio_oficial": 85.0,
+    "notas": ""
+  },
+  {
+    "numero_habitacion": "406",
+    "tipo": "Junior Suite",
+    "capacidad_minima": 1,
+    "capacidad_maxima": 3,
+    "precio_oficial": 120.0,
+    "notas": ""
+  }
+]

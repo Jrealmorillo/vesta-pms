@@ -1,0 +1,42 @@
+[
+  {
+    "nombre": "Juan Pérez",
+    "nombre_usuario": "jperez",
+    "email": "juan.perez@example.com",
+    "contraseña": "Password123!",
+    "id_rol": 1,
+    "activo": true
+  },
+  {
+    "nombre": "María Gómez",
+    "nombre_usuario": "mgomez",
+    "email": "maria.gomez@example.com",
+    "contraseña": "Maria456!",
+    "id_rol": 1,
+    "activo": true
+  },
+  {
+    "nombre": "Carlos Ramírez",
+    "nombre_usuario": "cramirez",
+    "email": "carlos.ramirez@example.com",
+    "contraseña": "Carlos789!",
+    "id_rol": 2,
+    "activo": true
+  },
+  {
+    "nombre": "Laura Fernández",
+    "nombre_usuario": "lfernandez",
+    "email": "laura.fernandez@example.com",
+    "contraseña": "Laura2024!",
+    "id_rol": 1,
+    "activo": true
+  },
+  {
+    "nombre": "Daniel Ortega",
+    "nombre_usuario": "dortega",
+    "email": "daniel.ortega@example.com",
+    "contraseña": "Ortega789!",
+    "id_rol": 2,
+    "activo": false
+  }
+]
