@@ -64,7 +64,7 @@ exports.obtenerReservaPorId = async (req, res) => {
 // Buscar por fecha de entrada
 exports.obtenerReservaPorFechaEntrada = async (req, res) => {
   try {
-    const reservas = await GestorReservas.buscarPorFechaEntrada(req.params.fecha);
+    const reservas = await GestorReservas.obtenerReservaPorFechaEntrada(req.params.fecha);
     res.json(reservas);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -74,7 +74,7 @@ exports.obtenerReservaPorFechaEntrada = async (req, res) => {
 // Buscar por apellido del huésped
 exports.obtenerReservaPorApellido = async (req, res) => {
   try {
-    const reservas = await GestorReservas.buscarPorApellido(req.params.apellido);
+    const reservas = await GestorReservas.obtenerReservaPorApellido(req.params.apellido);
     res.json(reservas);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -84,7 +84,7 @@ exports.obtenerReservaPorApellido = async (req, res) => {
 // Buscar por nombre de empresa
 exports.obtenerReservaPorEmpresa = async (req, res) => {
   try {
-    const reservas = await GestorReservas.buscarPorEmpresa(req.params.empresa);
+    const reservas = await GestorReservas.obtenerReservaPorEmpresa(req.params.empresa);
     res.json(reservas);
   } catch (error) {
     res.status(500).json({ error: error.message });
