@@ -10,8 +10,7 @@ class GestorEmpresas {
     if (empresaExistente) {
       throw new Error("Ya existe una empresa con ese CIF");
     }
-  
-    return await Empresa.create(datos);
+      return await Empresa.create(datos);
   }
   
 
