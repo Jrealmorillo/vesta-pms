@@ -27,6 +27,10 @@ const Reserva = sequelize.define("Reserva", {
     type: DataTypes.INTEGER,
     allowNull: true
   },
+  nombre_empresa: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+  },
   fecha_entrada: {
     type: DataTypes.DATEONLY,
     allowNull: false
