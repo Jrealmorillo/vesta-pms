@@ -84,7 +84,7 @@ class GestorReservas {
     try {
       return await Reserva.findAll({
         where: {
-          nombre_huesped: { [Op.startsWith]: `%${apellido}%` },
+          primer_apellido_huesped: { [Op.startsWith]: `%${apellido}%` },
         },
       });
     } catch (error) {
