@@ -12,10 +12,16 @@ class GestorReservas {
     }
   }
 
-  
   // Modificar los datos generales de una reserva
   static async modificarReserva(id, nuevosDatos) {
     try {
+      // Que no se pueda cambiar el estado de la reserva
+      if ("estado" in nuevosDatos) {
+        throw new Error(
+          "El campo 'estado' solo puede modificarse desde el endpoint específico"
+        );
+      }
+
       const reserva = await Reserva.findByPk(id);
       if (!reserva) throw new Error("Reserva no encontrada");
 
@@ -26,21 +32,30 @@ class GestorReservas {
     }
   }
 
-  // Cambiar el estado de la reserva (Anulada, Confirmada, Check-in, Check-out)
+  // Cambiar estado de reserva
   static async cambiarEstadoReserva(id, nuevoEstado) {
     try {
       const reserva = await Reserva.findByPk(id);
       if (!reserva) throw new Error("Reserva no encontrada");
+
+      // Validar que el nuevo estado sea uno permitido
+      const estadosValidos = ["Confirmada", "Anulada", "Check-in", "Check-out"];
+      if (!estadosValidos.includes(nuevoEstado)) {
+        throw new Error(
+          "Estado no válido. Debe ser: Confirmada, Anulada, Check-in o Check-out"
+        );
+      }
 
       reserva.estado = nuevoEstado;
       await reserva.save();
 
       return reserva;
     } catch (error) {
-      throw new Error("Error al cambiar el estado de la reserva: " + error.message);
+      throw new Error(
+        "Error al cambiar el estado de la reserva: " + error.message
+      );
     }
   }
-
 
   // Obtener una reserva por su ID
   static async obtenerReservaPorId(id) {
@@ -57,7 +72,7 @@ class GestorReservas {
   static async obtenerReservaPorFechaEntrada(fecha) {
     try {
       return await Reserva.findAll({
-        where: { fecha_entrada: fecha }
+        where: { fecha_entrada: fecha },
       });
     } catch (error) {
       throw new Error("Error al buscar por fecha de entrada: " + error.message);
@@ -69,8 +84,8 @@ class GestorReservas {
     try {
       return await Reserva.findAll({
         where: {
-          nombre_huesped: { [Op.like]: `%${apellido}%` }
-        }
+          nombre_huesped: { [Op.startsWith]: `%${apellido}%` },
+        },
       });
     } catch (error) {
       throw new Error("Error al buscar por apellido: " + error.message);
@@ -82,8 +97,8 @@ class GestorReservas {
     try {
       return await Reserva.findAll({
         where: {
-          nombre_huesped: { [Op.like]: `%${nombreEmpresa}%` }
-        }
+          nombre_huesped: { [Op.like]: `%${nombreEmpresa}%` },
+        },
       });
     } catch (error) {
       throw new Error("Error al buscar por empresa: " + error.message);

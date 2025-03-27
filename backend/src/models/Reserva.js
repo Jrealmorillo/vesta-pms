@@ -8,8 +8,16 @@ const Reserva = sequelize.define("Reserva", {
     autoIncrement: true
   },
   nombre_huesped: {
-    type: DataTypes.STRING(150),
+    type: DataTypes.STRING(50),
     allowNull: false
+  },
+  primer_apellido_huesped: {
+    type: DataTypes.STRING(100),
+    allowNull: false
+  },
+  segundo_apellido_huesped: {
+    type: DataTypes.STRING(100),
+    allowNull: true // Se permiten NULL para casos de clientes con 1 solo apellido
   },
   id_cliente: {
     type: DataTypes.INTEGER,

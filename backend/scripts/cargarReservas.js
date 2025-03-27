@@ -15,22 +15,6 @@ async function cargarReservas() {
     let duplicadas = 0;
 
     for (const reserva of reservas) {
-      // Comprobamos si ya existe una reserva igual en la misma fecha y habitación
-      const existe = await Reserva.findOne({
-        where: {
-          nombre_huesped: reserva.nombre_huesped,
-          fecha_entrada: reserva.fecha_entrada,
-          fecha_salida: reserva.fecha_salida,
-          numero_habitacion: reserva.numero_habitacion
-        }
-      });
-
-      if (existe) {
-        console.log(`Reserva duplicada de ${reserva.nombre_huesped} en habitación ${reserva.numero_habitacion}. Se omite.`);
-        duplicadas++;
-        continue;
-      }
-
       await Reserva.create(reserva);
       console.log(`Reserva de ${reserva.nombre_huesped} insertada.`);
       insertadas++;
