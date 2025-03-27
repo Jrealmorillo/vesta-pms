@@ -16,10 +16,10 @@ CREATE TABLE Usuarios (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     nombre_usuario VARCHAR(50) UNIQUE NOT NULL,
-    email VARCHAR(150) NOT NULL,
+    email VARCHAR(255) NOT NULL,
     contraseña VARCHAR(255) NOT NULL,
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    id_rol INT NOT NULL DEFAULT 1,
+    id_rol INT NOT NULL DEFAULT 2,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (id_rol) REFERENCES Roles(id_rol)
 );
@@ -27,14 +27,18 @@ CREATE TABLE Usuarios (
 
 CREATE TABLE Clientes (
 	id_cliente INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(150) NOT NULL,
-    apellido VARCHAR(100) NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    primer_apellido VARCHAR(100) NOT NULL,
+    segundo_apellido VARCHAR(100),
+    genero ENUM('Masculino', 'Femenino') NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
     tipo_documento ENUM ('DNI', 'Pasaporte', 'Documento de Identidad', 'Permiso de Residencia') NOT NULL,
-    numero_documento VARCHAR(30) NOT NULL UNIQUE,
+    numero_documento VARCHAR(50) NOT NULL UNIQUE,
+    fecha_expedicion DATE NOT NULL,
     direccion VARCHAR(255),
     ciudad VARCHAR(100),
     pais VARCHAR(100),
-    codigo_postal VARCHAR(30),
+    codigo_postal VARCHAR(20),
     telefono VARCHAR(30),
     email VARCHAR(255),
     observaciones TEXT
@@ -66,12 +70,15 @@ CREATE TABLE Habitaciones (
 
 CREATE TABLE Reservas (
     id_reserva INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_huesped VARCHAR(150) NOT NULL,
+    nombre_huesped VARCHAR(50) NOT NULL,
+    primer_apellido_huesped VARCHAR(100) NOT NULL,
+    segundo_apellido_huesped VARCHAR(100),
     id_cliente INT,
     id_empresa INT,
+    nombre_empresa VARCHAR(255),
     fecha_entrada DATE NOT NULL,
     fecha_salida DATE NOT NULL,
-    numero_habitacion VARCHAR(20) NULL,
+    numero_habitacion VARCHAR(20),
     precio_total DECIMAL(10,2) DEFAULT 0 NOT NULL,
     observaciones TEXT,
     estado ENUM('Confirmada', 'Anulada', 'Check-in', 'Check-out') NOT NULL,
@@ -137,11 +144,3 @@ CREATE TABLE Detalle_Factura (
     FOREIGN KEY (id_habitacion) REFERENCES Habitaciones(numero_habitacion),
     FOREIGN KEY (id_cliente) REFERENCES Clientes(id_cliente)
 );
-
-
-
-
-
-
-
-
