@@ -9,7 +9,7 @@ exports.registrarCliente = async (req, res) => {
       .json({ mensaje: "Cliente registrado exitosamente", cliente });
   } catch (error) {
     res
-      .status(500)
+      .status(400)
       .json({ error: "Error al registrar cliente", detalle: error.message });
   }
 };
