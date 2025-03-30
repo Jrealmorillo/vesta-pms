@@ -3,8 +3,6 @@ const habitacionController = require("../controllers/habitacionController");
 const authMiddleware = require("../middlewares/authMiddleware");
 // 1 = Adminisrador, 2 = usuario
 const verifyRole = require("../middlewares/roleMiddleware");
-const GestorHabitaciones = require("../services/GestorHabitaciones");
-
 
 const router = express.Router();
 

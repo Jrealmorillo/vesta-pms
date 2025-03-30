@@ -34,12 +34,13 @@ class GestorUsuarios {
     }
   }
 
+  // Retorna todos los usuarios de la base de datos
   async obtenerUsuarios() {
     try {
       return await Usuario.findAll();
     } catch (error) {
       throw new Error("Error al obtener usuarios: " + error.message);
-    } // Retorna todos los usuarios de la base de datos
+    }
   }
 
   async obtenerUsuarioPorId(id) {
