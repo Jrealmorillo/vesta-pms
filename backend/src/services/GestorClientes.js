@@ -6,51 +6,85 @@ const { Op } = require("sequelize");
 class GestorClientes {
   // Crear un nuevo cliente
   async registrarCliente(datos) {
-    return await Cliente.create(datos);
+    try {
+      const clienteExistente = await Cliente.findOne({
+        where: { numero_documento: datos.numero_documento },
+      });
+
+      if (clienteExistente) {
+        throw new Error("Ya existe un cliente con ese número de documento");
+      }
+
+      return await Cliente.create(datos);
+    } catch (error) {
+      throw new Error("Error al registrar cliente: " + error.message);
+    }
   }
 
   // Modificar un cliente
   async modificarCliente(id, nuevosDatos) {
-    const cliente = await Cliente.findByPk(id);
-    if (!cliente) throw new Error("Cliente no encontrado");
-    await cliente.update(nuevosDatos);
-    return cliente;
+    try {
+      const cliente = await Cliente.findByPk(id);
+      if (!cliente) throw new Error("Cliente no encontrado");
+      await cliente.update(nuevosDatos);
+      return cliente;
+    } catch (error) {
+      throw new Error("Error al modificar cliente: " + error.message);
+    }
   }
 
-  // 🔍 Buscar cliente por cuyo ID empìece por el filtro
+  // Buscar clientes por ID
   async buscarClientesPorId(filtro) {
-    const clientes = await Cliente.findAll({
-      where: { id_cliente: { [Op.startsWith]: filtro } },
-    });
+    try {
+      const clientes = await Cliente.findAll({
+        where: { id_cliente: { [Op.startsWith]: filtro } },
+      });
 
-    if (clientes.length === 0)
-      throw new Error("No se encontraron clientes con ese ID");
+      if (clientes.length === 0)
+        throw new Error("No se encontraron clientes con ese ID");
 
-    return clientes;
+      return clientes;
+    } catch (error) {
+      throw new Error("Error al buscar clientes por ID: " + error.message);
+    }
   }
 
-  // 🔍 Buscar clientes cuyo número de documento empiece por el filtro
+  // Buscar clientes por número de documento
   async buscarClientesPorNumeroDocumento(filtro) {
-    const clientes = await Cliente.findAll({
-      where: { numero_documento: { [Op.startsWith]: filtro } },
-    });
+    try {
+      const clientes = await Cliente.findAll({
+        where: { numero_documento: { [Op.startsWith]: filtro } },
+      });
 
-    if (clientes.length === 0)
-      throw new Error("No se encontraron clientes con ese número de documento");
+      if (clientes.length === 0)
+        throw new Error(
+          "No se encontraron clientes con ese número de documento"
+        );
 
-    return clientes;
+      return clientes;
+    } catch (error) {
+      throw new Error(
+        "Error al buscar clientes por número de documento: " + error.message
+      );
+    }
   }
 
-  // 🔍 Buscar clientes cuyo apellido empiece por el filtro
+  // Buscar clientes por apellido
   async buscarClientesPorApellido(filtro) {
-    const clientes = await Cliente.findAll({
-      where: { primer_apellido: { [Op.startsWith]: filtro } },
-    });
+    try {
+      const clientes = await Cliente.findAll({
+        where: { primer_apellido: { [Op.startsWith]: filtro } },
+      });
 
-    if (clientes.length === 0)
-      throw new Error("No se encontraron clientes con ese apellido");
+      if (clientes.length === 0)
+        throw new Error("No se encontraron clientes con ese apellido");
 
-    return clientes;
+      return clientes;
+    } catch (error) {
+      throw new Error(
+        "Error al buscar clientes por apellido: " + error.message
+      );
+    }
   }
 }
 
