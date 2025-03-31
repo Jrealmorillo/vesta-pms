@@ -22,6 +22,7 @@ exports.obtenerusuarios = async (req, res) => {
     const usuarios = await GestorUsuarios.obtenerUsuarios();
     res.json(usuarios);
   } catch (error) {
+    console.error("Error en obtenerUsuarios:", error.message);
     res.status(500).json({ error: "Error al obtener usuarios" });
   }
 };
@@ -40,7 +41,10 @@ exports.obtenerusuarioPorId = async (req, res) => {
 exports.modificarUsuario = async (req, res) => {
   try {
     const usuario = await GestorUsuarios.modificarUsuario(req.params.id, req.body);
-    res.json(usuario);
+    res.json({
+      mensaje: "Usuario modificado exitosamente", 
+      usuario: usuario 
+    });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }

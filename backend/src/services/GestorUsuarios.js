@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Usuario = require("../models/Usuario");
+const { Usuario, Rol } = require("../models");
 
 class GestorUsuarios {
   async registrarUsuario(datos) {
@@ -37,16 +37,40 @@ class GestorUsuarios {
   // Retorna todos los usuarios de la base de datos
   async obtenerUsuarios() {
     try {
-      return await Usuario.findAll();
+      const usuarios = await Usuario.findAll({
+        attributes: {
+          exclude: ["id_rol"],
+        },
+        include: {
+          model: Rol,
+          as: "rol",
+          attributes: ["id_rol", "nombre"],
+        },
+      });
+      return usuarios;
     } catch (error) {
       throw new Error("Error al obtener usuarios: " + error.message);
     }
   }
 
+  // Retorna un usario al buscarlo por su ID
   async obtenerUsuarioPorId(id) {
     try {
-      const usuario = await Usuario.findByPk(id); // Busca el usuario por ID
-      if (!usuario) throw new Error("Usuario no encontrado");
+      const usuario = await Usuario.findByPk(id, {
+        attributes: {
+          exclude: ["id_rol"],
+        },
+        include: {
+          model: Rol,
+          as: "rol",
+          attributes: ["id_rol", "nombre"],
+        },
+      });
+
+      if (!usuario) {
+        throw new Error("Usuario no encontrado");
+      }
+
       return usuario;
     } catch (error) {
       throw new Error("Error al obtener el usuario: " + error.message);
@@ -76,7 +100,9 @@ class GestorUsuarios {
         passwordActual,
         usuario.contraseña
       );
-      if (!passwordValida) throw new Error("Contraseña actual incorrecta");
+      if (!passwordValida) {
+        throw new Error("Contraseña actual incorrecta");
+      }
 
       // Cifra la nueva contraseña antes de actualizarla
       const salt = await bcrypt.genSalt();
@@ -92,7 +118,9 @@ class GestorUsuarios {
   async desactivarUsuario(id) {
     try {
       const usuario = await Usuario.findByPk(id);
-      if (!usuario) throw new Error("Usuario no encontrado");
+      if (!usuario) {
+        throw new Error("Usuario no encontrado");
+      }
 
       // Se cambia el estado del usuario a inactivo en lugar de eliminarlo
       await usuario.update({ activo: false });
