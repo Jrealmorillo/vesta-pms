@@ -35,7 +35,11 @@ const Usuario = sequelize.define(
     id_rol: { 
       type: DataTypes.INTEGER, 
       allowNull: false, 
-      defaultValue: 2 // Por defecto, los nuevos usuarios tendrán el rol 1
+      defaultValue: 2,
+      references: {
+        model: "Roles",
+        key: "id_rol"
+      }// Por defecto, los nuevos usuarios tendrán el rol 1
     },
     activo: { 
       type: DataTypes.BOOLEAN, 
