@@ -23,7 +23,7 @@ const Cliente = sequelize.define("Cliente", {
     type: DataTypes.DATE,
     allowNull: false
   },
-  sexo: {
+  genero: {
     type: DataTypes.ENUM("Masculino", "Femenino"),
     allowNull: false
   },

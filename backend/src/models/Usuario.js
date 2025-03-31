@@ -22,7 +22,6 @@ const Usuario = sequelize.define(
     email: { 
       type: DataTypes.STRING(255), 
       allowNull: false, 
-      unique: true // El email también debe ser único
     },
     contraseña: { 
       type: DataTypes.STRING(255), 
