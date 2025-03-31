@@ -1,7 +1,12 @@
-const fs = require("fs"); // Módulo para leer archivos
-const path = require("path"); // Módulo para rutas seguras
-const sequelize = require("../src/config/database"); // Conexión a la base de datos
-const Reserva = require("../src/models/Reserva"); // Modelo Sequelize de Reserva
+// Módulo para leer archivos
+const fs = require("fs"); 
+// Módulo para rutas seguras
+const path = require("path"); 
+// Conexión a la base de datos
+const sequelize = require("../src/config/database");
+// Modelos Sequelize de Reserva y LineaReserva
+const Reserva = require("../src/models/Reserva"); 
+const LineaReserva = require("../src/models/LineaReserva")
 
 async function cargarReservas() {
   try {
