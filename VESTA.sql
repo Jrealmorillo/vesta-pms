@@ -75,7 +75,6 @@ CREATE TABLE Reservas (
     segundo_apellido_huesped VARCHAR(100),
     id_cliente INT,
     id_empresa INT,
-    nombre_empresa VARCHAR(255),
     fecha_entrada DATE NOT NULL,
     fecha_salida DATE NOT NULL,
     numero_habitacion VARCHAR(20),
@@ -144,3 +143,22 @@ CREATE TABLE Detalle_Factura (
     FOREIGN KEY (id_habitacion) REFERENCES Habitaciones(numero_habitacion),
     FOREIGN KEY (id_cliente) REFERENCES Clientes(id_cliente)
 );
+
+
+DELETE FROM Reservas WHERE id_empresa >= 1;
+
+ALTER TABLE Reservas AUTO_INCREMENT = 1;
+
+SELECT * FROM Roles;
+SELECT * FROM Usuarios;
+-- select * FROM Clientes;
+-- select * FROM Empresas;
+SELECT * FROM Habitaciones;
+SELECT * FROM Reservas;
+
+
+
+
+
+
+
