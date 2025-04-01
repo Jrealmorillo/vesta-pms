@@ -1,19 +1,53 @@
 const { Op } = require("sequelize");
-const Reserva = require("../models/Reserva");
+const { Reserva, Cliente, Empresa, LineaReserva } = require("../models");
+const GestorLineasReserva = require("./GestorLineasReserva");
 
 class GestorReservas {
   // Crear una nueva reserva
-  static async crearReserva(datos) {
+  async crearReserva(datos) {
+    const { lineasReserva, ...datosReserva } = datos;
+
     try {
-      const nuevaReserva = await Reserva.create(datos);
-      return nuevaReserva;
+      if (!Array.isArray(lineasReserva) || lineasReserva.length === 0) {
+        throw new Error("Debe incluir al menos una línea de reserva");
+      }
+      
+      // Crear la reserva principal 
+      const nuevaReserva = await Reserva.create({
+        ...datosReserva,
+        precio_total: 0
+      });
+
+      // Registrar cada línea asociada y acumular precios
+      for (const linea of lineasReserva) {
+        await GestorLineasReserva.registrarLineaReserva({
+          ...linea,
+          id_reserva: nuevaReserva.id_reserva,
+        });
+        const incremento = parseFloat(linea.precio) * linea.cantidad_habitaciones;
+        const totalAnterior = parseFloat(nuevaReserva.precio_total);
+        nuevaReserva.precio_total = (totalAnterior + incremento).toFixed(2);
+        // Importante guardar el nuevo valor
+        await nuevaReserva.save(); 
+      }
+      
+      // Obtener las líneas recién creadas
+      const lineasCreadas = await GestorLineasReserva.obtenerLineasPorReserva(
+        nuevaReserva.id_reserva
+      );
+
+      // Devolver reserva y sus líneas
+      return {
+        reserva: nuevaReserva,
+        lineasReserva: lineasCreadas,
+      };
     } catch (error) {
       throw new Error("Error al crear la reserva: " + error.message);
     }
   }
 
   // Modificar los datos generales de una reserva
-  static async modificarReserva(id, nuevosDatos) {
+  async modificarReserva(id, nuevosDatos) {
     try {
       // Que no se pueda cambiar el estado de la reserva
       if ("estado" in nuevosDatos) {
@@ -33,7 +67,7 @@ class GestorReservas {
   }
 
   // Cambiar estado de reserva
-  static async cambiarEstadoReserva(id, nuevoEstado) {
+  async cambiarEstadoReserva(id, nuevoEstado) {
     try {
       const reserva = await Reserva.findByPk(id);
       if (!reserva) throw new Error("Reserva no encontrada");
@@ -58,21 +92,37 @@ class GestorReservas {
   }
 
   // Obtener una reserva por su ID
-  static async obtenerReservaPorId(id) {
+  async obtenerReservaPorId(id) {
     try {
-      const reserva = await Reserva.findByPk(id);
-      if (!reserva) throw new Error("Reserva no encontrada");
+      const reserva = await Reserva.findByPk(id, {
+        include: [
+          { model: Cliente, as: "cliente" },
+          { model: Empresa, as: "empresa" },
+          { model: LineaReserva, as: "lineas" }
+        ]
+      });
+  
+      if (!reserva) {
+        throw new Error("Reserva no encontrada");
+      }
+  
       return reserva;
     } catch (error) {
       throw new Error("Error al obtener la reserva: " + error.message);
     }
   }
+  
 
   // Buscar reservas por fecha de entrada exacta
-  static async obtenerReservaPorFechaEntrada(fecha) {
+  async obtenerReservaPorFechaEntrada(fecha) {
     try {
       return await Reserva.findAll({
         where: { fecha_entrada: fecha },
+        include: [
+          { model: Cliente, as: "cliente" },
+          { model: Empresa, as: "empresa" },
+          { model: LineaReserva, as: "lineas" }
+        ]
       });
     } catch (error) {
       throw new Error("Error al buscar por fecha de entrada: " + error.message);
@@ -80,12 +130,19 @@ class GestorReservas {
   }
 
   // Buscar reservas por apellido del huésped (primer apellido del campo nombre_huesped)
-  static async obtenerReservaPorApellido(apellido) {
+  async obtenerReservaPorApellido(apellido) {
     try {
       return await Reserva.findAll({
         where: {
-          primer_apellido_huesped: { [Op.startsWith]: `%${apellido}%` },
+          primer_apellido_huesped: {
+            [Op.startsWith]: apellido
+          }
         },
+        include: [
+          { model: Cliente, as: "cliente" },
+          { model: Empresa, as: "empresa" },
+          { model: LineaReserva, as: "lineas" }
+        ]
       });
     } catch (error) {
       throw new Error("Error al buscar por apellido: " + error.message);
@@ -93,12 +150,22 @@ class GestorReservas {
   }
 
   // Buscar reservas por nombre de empresa (también en nombre_huesped)
-  static async obtenerReservaPorEmpresa(nombreEmpresa) {
+  async obtenerReservaPorEmpresa(nombre) {
     try {
       return await Reserva.findAll({
-        where: {
-          nombre_huesped: { [Op.like]: `%${nombreEmpresa}%` },
-        },
+        include: [
+          {
+            model: Empresa,
+            as: "empresa",
+            where: {
+              nombre: {
+                [Op.like]: `%${nombre}%`
+              }
+            }
+          },
+          { model: Cliente, as: "cliente" },
+          { model: LineaReserva, as: "lineas" }
+        ]
       });
     } catch (error) {
       throw new Error("Error al buscar por empresa: " + error.message);
@@ -106,4 +173,4 @@ class GestorReservas {
   }
 }
 
-module.exports = GestorReservas;
+module.exports = new GestorReservas();

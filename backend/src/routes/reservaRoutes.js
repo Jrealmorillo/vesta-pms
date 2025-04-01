@@ -27,4 +27,16 @@ router.get("/apellido/:apellido", reservaController.obtenerReservaPorApellido);
 // Buscar reservas por nombre de empresa
 router.get("/empresa/:empresa", reservaController.obtenerReservaPorEmpresa);
 
+// Registrar una línea de reserva dentro de una reserva
+router.post("/:id/lineas", reservaController.registrarLineaEnReserva);
+
+// Obtener todas las líneas de una reserva
+router.get("/:id/lineas", reservaController.obtenerLineasDeReserva);
+
+// Modificar una línea de reserva concreta
+router.put("/:id/lineas/:id_linea", reservaController.modificarLineaReserva);
+
+// Anular una línea de reserva
+router.delete("/:id/lineas/:id_linea", reservaController.anularLineaReserva);
+
 module.exports = router;

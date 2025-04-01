@@ -1,12 +1,15 @@
 const GestorReservas = require("../services/GestorReservas");
+const GestorLineasReserva = require("../services/GestorLineasReserva");
+
 
 // Crear una nueva reserva
 exports.crearReserva = async (req, res) => {
   try {
-    const nuevaReserva = await GestorReservas.crearReserva(req.body);
+    const {reserva, lineasReserva} = await GestorReservas.crearReserva(req.body);
     res.status(201).json({
       mensaje: "Reserva creada exitosamente",
-      reserva: nuevaReserva
+      reserva,
+      lineasReserva
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -42,7 +45,7 @@ exports.modificarReserva = async (req, res) => {
         nuevoEstado
       );
       res.json({
-        mensaje: `Estado de la reserva actualizado a "${nuevoEstado}"`,
+        mensaje: `Estado de la reserva actualizado a ${nuevoEstado}`,
         reserva
       });
     } catch (error) {
@@ -88,5 +91,66 @@ exports.obtenerReservaPorEmpresa = async (req, res) => {
     res.json(reservas);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+};
+
+// Registrar una nueva línea de reserva dentro de una reserva
+exports.registrarLineaEnReserva = async (req, res) => {
+  try {
+    const datos = {
+      ...req.body,
+      id_reserva: req.params.id // Se añade automáticamente desde la ruta
+    };
+
+    const linea = await GestorLineasReserva.registrarLineaReserva(datos);
+    res.status(201).json({
+      mensaje: "Línea de reserva registrada correctamente",
+      linea
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// Modificar una línea de reserva existente
+exports.modificarLineaReserva = async (req, res) => {
+  try {
+    const linea = await GestorLineasReserva.modificarLineaReserva(
+      req.params.id_linea,
+      req.body
+    );
+    res.json({
+      mensaje: "Línea de reserva modificada correctamente",
+      linea
+    });
+  } catch (error) {
+    const status = error.message.includes("no encontrada") ? 404 : 400;
+    res.status(status).json({ error: error.message });
+  }
+};
+
+// Anular (desactivar) una línea de reserva
+exports.anularLineaReserva = async (req, res) => {
+  try {
+    const resultado = await GestorLineasReserva.anularLineaReserva(
+      req.params.id_linea
+    );
+    res.json(resultado);
+  } catch (error) {
+    const status = error.message.includes("no encontrada") ? 404 : 400;
+    res.status(status).json({ error: error.message });
+  }
+};
+
+// Obtener todas las líneas de una reserva específica
+exports.obtenerLineasDeReserva = async (req, res) => {
+  try {
+    const lineas = await GestorLineasReserva.obtenerLineasPorReserva(
+      req.params.id
+    );
+    res.json(lineas);
+  } catch (error) {
+    const status = error.message.includes("no se encontraron") ? 404 : 400;
+    res.status(status).json({ error: error.message });
   }
 };
