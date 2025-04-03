@@ -1,10 +1,11 @@
 // services/GestorLineasReserva.js
 const LineaReserva = require("../models/LineaReserva");
 const Reserva = require("../models/Reserva");
+const GestorHistorialReservas = require("./GestorHistorialReservas")
 
 class GestorLineasReserva {
   // Registrar una nueva línea de reserva
-  async registrarLineaReserva(datos) {
+  async registrarLineaReserva(datos, nombre_usuario) {
     try {
       const nuevaLinea = await LineaReserva.create(datos);
 
@@ -17,6 +18,14 @@ class GestorLineasReserva {
         reserva.precio_total = (totalAnterior + incremento).toFixed(2);
         await reserva.save();
       }
+      // Registrar acción en el historial
+      await GestorHistorialReservas.registrarAccionHistorial({
+        id_reserva: datos.id_reserva,
+        nombre_usuario,
+        accion: "Modificación",
+        detalles: `Línea añadida: ${datos.tipo_habitacion} (${datos.fecha}), ${datos.cantidad_habitaciones} habs, ${datos.precio} €/noche`,
+      });
+
       return nuevaLinea;
     } catch (error) {
       throw new Error("Error al registrar línea de reserva: " + error.message);
@@ -24,7 +33,7 @@ class GestorLineasReserva {
   }
 
   // Modificar una línea de reserva existente
-  async modificarLineaReserva(id, nuevosDatos) {
+  async modificarLineaReserva(id, nuevosDatos, nombre_usuario) {
     try {
       const linea = await LineaReserva.findByPk(id);
       if (!linea) {
@@ -58,6 +67,34 @@ class GestorLineasReserva {
         await reserva.save();
       }
 
+      // Registrar acción en el historial
+      let cambios = [];
+
+      for (const campo in nuevosDatos) {
+        const valorAnterior = linea[campo];
+        const valorNuevo = nuevosDatos[campo];
+
+        if (
+          valorAnterior !== undefined &&
+          valorNuevo !== undefined &&
+          valorAnterior != valorNuevo
+        ) {
+          cambios.push(`Campo '${campo}' cambiado de '${valorAnterior}' a '${valorNuevo}'`);
+        }
+      }
+
+      const descripcionCambios = cambios.length > 0
+        ? `Línea modificada: ${cambios.join("; ")}`
+        : "Modificación de línea sin cambios detectables";
+
+      await GestorHistorialReservas.registrarAccionHistorial({
+        id_reserva: linea.id_reserva,
+        nombre_usuario,
+        accion: "Modificación",
+        detalles: descripcionCambios
+      });
+
+
       return linea;
     } catch (error) {
       throw new Error(
@@ -67,7 +104,7 @@ class GestorLineasReserva {
   }
 
   // Anular una línea de reserva (marcar como inactiva)
-  async anularLineaReserva(id) {
+  async anularLineaReserva(id, nombre_usuario) {
     try {
       const linea = await LineaReserva.findByPk(id);
       if (!linea) {
@@ -88,6 +125,15 @@ class GestorLineasReserva {
 
       // Eliminar la línea de reserva
       await linea.destroy();
+
+      // Registrar acción en el historial
+      await GestorHistorialReservas.registrarAccionHistorial({
+        id_reserva: linea.id_reserva,
+        nombre_usuario,
+        accion: "Modificación",
+        detalles: `Línea eliminada: ${linea.tipo_habitacion} (${linea.fecha})`
+      });
+
 
       return { mensaje: "Línea de reserva eliminada correctamente" };
     } catch (error) {

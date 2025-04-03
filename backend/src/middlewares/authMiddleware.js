@@ -19,8 +19,12 @@ module.exports = (req, res, next) => {
       token.replace("Bearer ", ""),
       claveSecreta
     );
+    // Se almacena el nombre de usuario para su uso posterior
+    req.usuario = {
+      ...usuarioVerificado,
+      nombre_usuario: usuarioVerificado.nombre_usuario,
+    };
 
-    req.usuario = usuarioVerificado; // Se almacena la info del usuario en la petición para su uso posterior
     next(); // Se pasa el control al siguiente middleware o ruta
   } catch (error) {
     res.status(403).json({ error: "Token inválido" }); // 403 = Prohibido (token incorrecto o caducado)

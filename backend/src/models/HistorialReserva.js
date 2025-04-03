@@ -11,11 +11,11 @@ const HistorialReserva = sequelize.define("HistorialReserva", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  id_usuario: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+  nombre_usuario: {
+    type: DataTypes.STRING,
+    allowNull: false
   },
-  accion: {
+    accion: {
     type: DataTypes.ENUM("Creación", "Anulación", "Recuperación", "Modificación"),
     allowNull: false,
   },

@@ -39,4 +39,8 @@ router.put("/:id/lineas/:id_linea", reservaController.modificarLineaReserva);
 // Anular una línea de reserva
 router.delete("/:id/lineas/:id_linea", reservaController.anularLineaReserva);
 
+// Obtener el historial de una reserva
+router.get("/:id/historial", reservaController.obtenerHistorialReserva);
+
+
 module.exports = router;

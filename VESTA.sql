@@ -102,12 +102,11 @@ CREATE TABLE Lineas_Reserva (
 CREATE TABLE Historial_Reserva (
     id_historial INT AUTO_INCREMENT PRIMARY KEY,
     id_reserva INT NOT NULL,
-    id_usuario INT NOT NULL,
+    nombre_usuario VARCHAR(50) NOT NULL,
     accion ENUM('Creación', 'Anulación', 'Recuperación', 'Modificación') NOT NULL,
     fecha_accion DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     detalles TEXT,
-    FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva),
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+    FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva)
 );
 
 CREATE TABLE Facturas (

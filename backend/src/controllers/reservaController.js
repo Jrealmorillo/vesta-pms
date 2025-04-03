@@ -1,11 +1,15 @@
 const GestorReservas = require("../services/GestorReservas");
 const GestorLineasReserva = require("../services/GestorLineasReserva");
+const GestorHistorialReservas = require("../services/GestorHistorialReservas");
 
 
 // Crear una nueva reserva
 exports.crearReserva = async (req, res) => {
   try {
-    const {reserva, lineasReserva} = await GestorReservas.crearReserva(req.body);
+
+    const usuario = req.usuario.nombre_usuario;
+
+    const {reserva, lineasReserva} = await GestorReservas.crearReserva(req.body, usuario);
     res.status(201).json({
       mensaje: "Reserva creada exitosamente",
       reserva,
@@ -19,9 +23,12 @@ exports.crearReserva = async (req, res) => {
 // Modificar reserva
 exports.modificarReserva = async (req, res) => {
     try {
+      const usuario = req.usuario.nombre_usuario;
+
       const reservaActualizada = await GestorReservas.modificarReserva(
         req.params.id,
-        req.body
+        req.body,
+        usuario
       );
       res.json({
         mensaje: "Reserva actualizada correctamente",
@@ -39,10 +46,13 @@ exports.modificarReserva = async (req, res) => {
       if (!nuevoEstado) {
         return res.status(400).json({ error: "Debe proporcionar un nuevo estado" });
       }
+
+      const usuario = req.usuario.nombre_usuario;
   
       const reserva = await GestorReservas.cambiarEstadoReserva(
         req.params.id,
-        nuevoEstado
+        nuevoEstado,
+        usuario
       );
       res.json({
         mensaje: `Estado de la reserva actualizado a ${nuevoEstado}`,
@@ -97,12 +107,14 @@ exports.obtenerReservaPorEmpresa = async (req, res) => {
 // Registrar una nueva línea de reserva dentro de una reserva
 exports.registrarLineaEnReserva = async (req, res) => {
   try {
+    const usuario = req.usuario.nombre_usuario;
+
     const datos = {
       ...req.body,
       id_reserva: req.params.id // Se añade automáticamente desde la ruta
     };
 
-    const linea = await GestorLineasReserva.registrarLineaReserva(datos);
+    const linea = await GestorLineasReserva.registrarLineaReserva(datos, usuario);
     res.status(201).json({
       mensaje: "Línea de reserva registrada correctamente",
       linea
@@ -115,9 +127,12 @@ exports.registrarLineaEnReserva = async (req, res) => {
 // Modificar una línea de reserva existente
 exports.modificarLineaReserva = async (req, res) => {
   try {
+    const usuario = req.usuario.nombre_usuario;
+
     const linea = await GestorLineasReserva.modificarLineaReserva(
       req.params.id_linea,
-      req.body
+      req.body,
+      usuario
     );
     res.json({
       mensaje: "Línea de reserva modificada correctamente",
@@ -132,8 +147,11 @@ exports.modificarLineaReserva = async (req, res) => {
 // Anular (desactivar) una línea de reserva
 exports.anularLineaReserva = async (req, res) => {
   try {
+    const usuario = req.usuario.nombre_usuario;
+
     const resultado = await GestorLineasReserva.anularLineaReserva(
-      req.params.id_linea
+      req.params.id_linea,
+      usuario
     );
     res.json(resultado);
   } catch (error) {
@@ -152,5 +170,15 @@ exports.obtenerLineasDeReserva = async (req, res) => {
   } catch (error) {
     const status = error.message.includes("no se encontraron") ? 404 : 400;
     res.status(status).json({ error: error.message });
+  }
+};
+
+// Obtener el historial de una reserva
+exports.obtenerHistorialReserva = async (req, res) => {
+  try {
+    const historial = await GestorHistorialReservas.obtenerHistorialReserva(req.params.id);
+    res.json(historial);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener historial", detalles: error.message });
   }
 };
