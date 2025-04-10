@@ -78,6 +78,12 @@ Factura.belongsTo(Usuario, {
   as: "usuario",
 });
 
+// Factura tiene muchos detalles de factura
+Factura.hasMany(DetalleFactura, {
+  foreignKey: "id_factura",
+  as: "detalles" 
+});
+
 // DetalleFactura pertenece a una factura
 DetalleFactura.belongsTo(Factura, {
   foreignKey: "id_factura",

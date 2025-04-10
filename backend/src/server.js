@@ -24,6 +24,8 @@ const clienteRoutes = require("./routes/clienteRoutes");
 const empresaRoutes = require("./routes/empresaRoutes");
 const habitacionRoutes = require("./routes/habitacionRoutes");
 const reservaRoutes = require("./routes/reservaRoutes");
+const facturaRoutes = require("./routes/facturaRoutes");
+const detalleFacturaRoutes = require("./routes/detalleFacturaRoutes");
 
 
 // Definir rutas de la API
@@ -32,6 +34,8 @@ app.use("/clientes", clienteRoutes);
 app.use("/empresas", empresaRoutes);
 app.use("/habitaciones", habitacionRoutes);
 app.use("/reservas", reservaRoutes);
+app.use("/facturas", facturaRoutes);
+app.use("/detalles-factura", detalleFacturaRoutes);
 
 
 
