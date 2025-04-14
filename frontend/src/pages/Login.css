@@ -1,0 +1,64 @@
+.login-pantalla {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+  
+  .login-imagen {
+    flex: 1;
+    background-image: linear-gradient(
+        rgba(68, 64, 64, 0.4), 
+        rgba(158, 108, 108, 0.4)
+      ), url("../assets/vesta-logo.png");
+    background-size: cover;
+    background-position: center;
+  }
+
+  
+  .login-formulario {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    animation: fadeIn 0.8s ease-in-out;
+  }
+  
+  .login-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Fade-in suave */
+@keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Vista responsive para móviles o pantallas estrechas */
+@media (max-width: 768px) {
+    .login-pantalla {
+      flex-direction: column;
+    }
+  
+    .login-imagen {
+      height: 40vh;
+      width: 100%;
+    }
+  
+    .login-formulario {
+      height: 60vh;
+      width: 100%;
+    }
+  }
