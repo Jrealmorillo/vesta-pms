@@ -3,6 +3,8 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
+
 
 function Login() {
   const [datos, setDatos] = useState({ nombre_usuario: "", contraseña: "" });
@@ -19,9 +21,10 @@ function Login() {
       const res = await axios.post("http://localhost:5000/usuarios/login", datos);
       const { token, usuario } = res.data;
       login(token, usuario.nombre_usuario);
+      toast.success("Bienvenido a Vesta PMS");
       navigate("/dashboard");
-    } catch (err) {
-      alert("Usuario o contraseña incorrectos");
+    } catch {
+        toast.error("Usuario o contraseña incorrectos");
     }
   };
 

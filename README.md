@@ -86,10 +86,10 @@ JWT_SECRET=your_secret_key
 ```sh
 cd ../frontend
 npm install
-npm start
+npm run dev
 ```
 - The frontend will be available at:  
-  🔗 [http://localhost:3000](http://localhost:3000)
+  🔗 [http://localhost:5173](http://localhost:5173)
 
 ---
 
