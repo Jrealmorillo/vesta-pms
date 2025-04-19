@@ -1,11 +1,14 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "./Navbar";
 
 function Layout() {
+  const location = useLocation();
+  const esLogin = location.pathname === "/";
+
   return (
     <>
-      <Navbar />
-      <main className="container mt-4 d-flex justify-content-center text-center" style={{ paddingTop: "70px" }}>
+      {!esLogin && <Navbar />}
+      <main className={esLogin ? "" : "contenedor-general"}>
         <Outlet />
       </main>
     </>
@@ -13,3 +16,4 @@ function Layout() {
 }
 
 export default Layout;
+

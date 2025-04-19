@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { toast } from "react-toastify";
-
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Login() {
-  const [datos, setDatos] = useState({ nombre_usuario: "", contraseña: "" });
+  const [datos, setDatos] = useState({ nombre_usuario: "", contraseña: "", id_rol: "" });
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -18,9 +18,9 @@ function Login() {
   const manejarSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/usuarios/login", datos);
+      const res = await axios.post(`${API_URL}/usuarios/login`, datos);
       const { token, usuario } = res.data;
-      login(token, usuario.nombre_usuario);
+      login(token, usuario.nombre_usuario, usuario.id_rol);
       toast.success("Bienvenido a Vesta PMS");
       navigate("/dashboard");
     } catch {
