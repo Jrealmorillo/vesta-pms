@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import NuevoUsuario from "./pages/usuarios/NuevoUsuario";
 import BuscarUsuarios from "./pages/usuarios/BuscarUsuarios";
 import EditarUsuario from "./pages/usuarios/EditarUsuario";
+import CambiarPassword from "./pages/usuarios/CambiarPassword";
 import NuevoCliente from "./pages/clientes/NuevoCliente";
 import BuscarClientes from "./pages/clientes/BuscarClientes";
 import NuevaEmpresa from "./pages/empresas/NuevaEmpresa";
@@ -65,6 +66,7 @@ function App() {
               </RutaProtegidaPorRol>
             }
           />
+          <Route path="/usuarios/cambiar-password" element={<CambiarPassword />} />
           <Route path="/clientes/nuevo" element={<NuevoCliente />} />
           <Route path="/clientes/buscar" element={<BuscarClientes />} />
           <Route path="/empresas/nueva" element={<NuevaEmpresa />} />

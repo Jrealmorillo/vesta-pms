@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { toast } from "react-toastify";
+import CampoPassword from "../components/CampoPassword";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 function Login() {
@@ -20,7 +22,8 @@ function Login() {
     try {
       const res = await axios.post(`${API_URL}/usuarios/login`, datos);
       const { token, usuario } = res.data;
-      login(token, usuario.nombre_usuario, usuario.id_rol);
+      
+      login(token, usuario.id_usuario, usuario.nombre_usuario, usuario.id_rol);
       toast.success("Bienvenido a Vesta PMS");
       navigate("/dashboard");
     } catch {
@@ -48,14 +51,11 @@ function Login() {
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Contraseña</label>
-              <input
-                type="password"
+            <CampoPassword
+                label="Contraseña"
                 name="contraseña"
-                className="form-control"
                 value={datos.contraseña}
                 onChange={manejarCambio}
-                required
               />
             </div>
             <button className="btn btn-primary w-100">Entrar</button>

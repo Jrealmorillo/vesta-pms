@@ -149,7 +149,7 @@ class GestorUsuarios {
       // Genera un token JWT para la autenticación del usuario
       const token = jwt.sign(
         {
-          id: usuario.id_usuario, // Se asegura de usar el campo correcto
+          id_usuario: usuario.id_usuario, // Se asegura de usar el campo correcto
           nombre_usuario: usuario.nombre_usuario,
           id_rol: usuario.id_rol,
         },
@@ -159,7 +159,7 @@ class GestorUsuarios {
       return {
         token,
         usuario: {
-          id: usuario.id_usuario,
+          id_usuario: usuario.id_usuario,
           nombre_usuario: usuario.nombre_usuario,
           id_rol: usuario.id_rol,
         },

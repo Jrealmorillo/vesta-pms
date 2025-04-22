@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import CampoPassword from "../../components/CampoPassword";
 
 function NuevoUsuario() {
   const [datos, setDatos] = useState({
@@ -43,9 +44,7 @@ function NuevoUsuario() {
         id_rol: 2,
       });
     } catch (error) {
-      console.log("El usuario es: ", datos);
       toast.error("Error al registrar usuario");
-      console.error(error);
     }
   };
 
@@ -83,7 +82,7 @@ function NuevoUsuario() {
         </div>
 
         <div className="mb-3">
-          <label className="form-label">Contraseña</label>
+          {/* <label className="form-label">Contraseña</label>
           <input
             type="password"
             name="contraseña"
@@ -91,7 +90,13 @@ function NuevoUsuario() {
             value={datos.contraseña}
             onChange={manejarCambio}
             required
-          />
+          /> */}
+                      <CampoPassword
+                label="Contraseña"
+                name="contraseña"
+                value={datos.contraseña}
+                onChange={manejarCambio}
+              />
         </div>
 
         <div className="mb-3">

@@ -86,15 +86,31 @@ function Navbar() {
             })}
           </ul>
           {usuario && (
-            <span className="navbar-text text-white">
-              Hola 👋 {usuario.nombre_usuario} &nbsp;
+            <div className="dropdown">
               <button
-                className="btn btn-sm btn-outline-light ms-2"
-                onClick={manejarLogout}
+                className="btn btn-sm btn-outline-light dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                Cerrar sesión
+                <b>Usuario activo: {usuario.nombre_usuario}</b>
               </button>
-            </span>
+              <ul className="dropdown-menu dropdown-menu-end">
+                <li>
+                  <NavLink
+                    to="/usuarios/cambiar-password"
+                    className="dropdown-item"
+                  >
+                    Cambiar contraseña
+                  </NavLink>
+                </li>
+                <li>
+                  <button className="dropdown-item" onClick={manejarLogout}>
+                    Cerrar sesión
+                  </button>
+                </li>
+              </ul>
+            </div>
           )}
         </div>
       </div>
