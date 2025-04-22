@@ -1,0 +1,35 @@
+/* Centrado del contenedor */
+.buscar-usuarios-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  
+  /* Espaciado entre los elementos de búsqueda */
+  .buscar-usuarios-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Input ocupa todo el ancho en pantallas pequeñas */
+  .buscar-usuarios-form input {
+    flex: 1 1 200px;
+  }
+  
+  /* Tabla con borde y espaciado */
+  .table th,
+  .table td {
+    vertical-align: middle;
+    text-align: center;
+  }
+  
+  /* Mensaje de no resultados */
+  .mensaje-vacio {
+    font-style: italic;
+    color: #777;
+    text-align: center;
+    margin-top: 2rem;
+  }
+  

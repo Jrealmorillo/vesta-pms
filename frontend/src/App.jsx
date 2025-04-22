@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import NuevoUsuario from "./pages/usuarios/NuevoUsuario";
 import BuscarUsuarios from "./pages/usuarios/BuscarUsuarios";
+import EditarUsuario from "./pages/usuarios/EditarUsuario";
 import NuevoCliente from "./pages/clientes/NuevoCliente";
 import BuscarClientes from "./pages/clientes/BuscarClientes";
 import NuevaEmpresa from "./pages/empresas/NuevaEmpresa";
@@ -53,6 +54,14 @@ function App() {
             element={
               <RutaProtegidaPorRol rolRequerido={1}>
                 <BuscarUsuarios />
+              </RutaProtegidaPorRol>
+            }
+          />
+          <Route
+            path="/usuarios/editar/:id"
+            element={
+              <RutaProtegidaPorRol rolRequerido={1}>
+                <EditarUsuario />
               </RutaProtegidaPorRol>
             }
           />

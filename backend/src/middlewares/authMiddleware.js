@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
   // Obtener el token del encabezado "Authorization"
-  const token = req.header("Authorization");
+  const token = req.header("Authorization")?.split(" ")[1]; // Esto elimina el "Bearer"
 
   // Si no se proporciona un token, se deniega el acceso
   if (!token) {
