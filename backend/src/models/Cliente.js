@@ -50,7 +50,7 @@ const Cliente = sequelize.define("Cliente", {
   },
   pais: {
     type: DataTypes.STRING(100),
-    allowNull: true
+    allowNull: false
   },
   codigo_postal: {
     type: DataTypes.STRING(20),

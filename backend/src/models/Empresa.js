@@ -29,7 +29,7 @@ const Empresa = sequelize.define(
     },
     pais: {
       type: DataTypes.STRING(100),
-      allowNull: true,
+      allowNull: false,
     },
     codigo_postal: {
       type: DataTypes.STRING(20),
