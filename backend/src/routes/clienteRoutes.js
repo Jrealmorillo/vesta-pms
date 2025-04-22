@@ -11,7 +11,6 @@ router.use(authMiddleware);
 //Ruta para registrar un nuevo cliente
 router.post("/registro", clienteController.registrarCliente);
 
-
 // Ruta para modificar un cliente
 router.put("/:id", clienteController.modificarCliente);
 

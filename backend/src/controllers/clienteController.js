@@ -27,7 +27,7 @@ exports.modificarCliente = async (req, res) => {
   }
 };
 
-// 🔍 Buscar clientes por ID
+// Buscar clientes por ID
 exports.buscarClientesPorId = async (req, res) => {
   try {
     const clientes = await GestorClientes.buscarClientesPorId(req.params.filtro);
@@ -37,7 +37,7 @@ exports.buscarClientesPorId = async (req, res) => {
   }
 };
 
-// 🔍 Buscar clientes por número de documento
+// Buscar clientes por número de documento
 exports.buscarClientesPorNumeroDocumento = async (req, res) => {
   try {
     const clientes = await GestorClientes.buscarClientesPorNumeroDocumento(
@@ -49,7 +49,7 @@ exports.buscarClientesPorNumeroDocumento = async (req, res) => {
   }
 };
 
-// 🔍 Buscar clientes por apellido
+// Buscar clientes por apellido
 exports.buscarClientesPorApellido = async (req, res) => {
   try {
     const clientes = await GestorClientes.buscarClientesPorApellido(
