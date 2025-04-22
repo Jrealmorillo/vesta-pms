@@ -211,6 +211,7 @@ function NuevoCliente() {
               className="form-control"
               value={cliente.pais}
               onChange={manejarCambio}
+              required
             />
           </div>
           <div className="col-md-4 mb-3">
