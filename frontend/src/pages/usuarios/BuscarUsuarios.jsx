@@ -58,6 +58,12 @@ function BuscarUsuarios() {
           placeholder="Buscar por ID"
           value={idBuscado}
           onChange={(e) => setIdBuscado(e.target.value)}
+          onKeyDown={(e) => {
+            if(e.key === "Enter") {
+              e.preventDefault();
+              buscarPorId();
+            }
+          }}
         />
         <button className="btn btn-primary" onClick={buscarPorId}>
           Buscar
