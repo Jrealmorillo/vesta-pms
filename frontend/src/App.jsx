@@ -10,6 +10,7 @@ import EditarUsuario from "./pages/usuarios/EditarUsuario";
 import CambiarPassword from "./pages/usuarios/CambiarPassword";
 import NuevoCliente from "./pages/clientes/NuevoCliente";
 import BuscarClientes from "./pages/clientes/BuscarClientes";
+import EditarCliente from "./pages/clientes/EditarCliente";
 import NuevaEmpresa from "./pages/empresas/NuevaEmpresa";
 import BuscarEmpresas from "./pages/empresas/BuscarEmpresas";
 import NuevaHabitacion from "./pages/habitaciones/NuevaHabitacion";
@@ -66,9 +67,13 @@ function App() {
               </RutaProtegidaPorRol>
             }
           />
-          <Route path="/usuarios/cambiar-password" element={<CambiarPassword />} />
+          <Route
+            path="/usuarios/cambiar-password"
+            element={<CambiarPassword />}
+          />
           <Route path="/clientes/nuevo" element={<NuevoCliente />} />
           <Route path="/clientes/buscar" element={<BuscarClientes />} />
+          <Route path="/clientes/editar/:id" element={<EditarCliente />} />
           <Route path="/empresas/nueva" element={<NuevaEmpresa />} />
           <Route path="/empresas/buscar" element={<BuscarEmpresas />} />
           <Route

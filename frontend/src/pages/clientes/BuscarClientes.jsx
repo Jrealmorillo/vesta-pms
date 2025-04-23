@@ -42,10 +42,15 @@ function BuscarClientes() {
   };
 
   return (
-    <div className="container py-4">
+    <div className="container py-5 mt-1">
       <h2 className="mb-4 text-center">Buscar clientes</h2>
 
-      <div className="row g-2 mb-4 mx-auto"
+      <form 
+      onSubmit={(e) => {
+        e.preventDefault();
+        buscar();
+      }}
+      className="row g-2 mb-4 mx-auto"
        style={{ maxWidth: "700px", textAlign: "center" }}>
         <div className="col-md-3"
        >
@@ -71,11 +76,11 @@ function BuscarClientes() {
         </div>
 
         <div className="col-md-3 d-grid d-md-flex justify-content-md-start">
-          <button className="btn btn-primary me-2" onClick={buscar}>
+          <button className="btn btn-primary me-2">
             Buscar
           </button>
         </div>
-      </div>
+      </form>
 
       {clientes.length > 0 ? (
         <div className="table-responsive">
