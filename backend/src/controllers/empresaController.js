@@ -27,7 +27,7 @@ exports.modificarEmpresa = async (req, res) => {
   }
 };
 
-// 🔍 Buscar empresas por ID
+// Buscar empresas por ID
 exports.buscarEmpresasPorId = async (req, res) => {
   try {
     const empresas = await GestorEmpresas.buscarEmpresasPorId(req.params.filtro);
@@ -37,7 +37,7 @@ exports.buscarEmpresasPorId = async (req, res) => {
   }
 };
 
-// 🔍 Buscar empresas por CIF
+// Buscar empresas por CIF
 exports.buscarEmpresasPorCif = async (req, res) => {
   try {
     const empresas = await GestorEmpresas.buscarEmpresasPorCif(
@@ -49,7 +49,7 @@ exports.buscarEmpresasPorCif = async (req, res) => {
   }
 };
 
-// 🔍 Buscar empresas por nombre
+// Buscar empresas por nombre
 exports.buscarEmpresasPorNombre = async (req, res) => {
   try {
     const empresas = await GestorEmpresas.buscarEmpresasPorNombre(
