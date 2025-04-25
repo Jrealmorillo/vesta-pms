@@ -57,9 +57,7 @@ class GestorUsuarios {
   async obtenerUsuarioPorId(id) {
     try {
       const usuario = await Usuario.findByPk(id, {
-        attributes: {
-          exclude: ["id_rol"],
-        },
+        attributes: ["id_usuario", "nombre", "nombre_usuario", "email", "activo"],
         include: {
           model: Rol,
           as: "rol",

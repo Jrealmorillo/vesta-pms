@@ -82,15 +82,6 @@ function NuevoUsuario() {
         </div>
 
         <div className="mb-3">
-          {/* <label className="form-label">Contraseña</label>
-          <input
-            type="password"
-            name="contraseña"
-            className="form-control"
-            value={datos.contraseña}
-            onChange={manejarCambio}
-            required
-          /> */}
                       <CampoPassword
                 label="Contraseña"
                 name="contraseña"

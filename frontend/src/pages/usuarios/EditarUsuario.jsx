@@ -31,9 +31,9 @@ function EditarUsuario() {
         );
         const u = res.data;
         setDatos({
-          nombre: u.nombre_completo || "",
+          nombre: u.nombre || "",
           nombre_usuario: u.nombre_usuario || "",
-          mail: u.mail || "",
+          mail: u.email || "",
           id_rol: u.rol?.id_rol || 2,
           activo: u.activo,
         });
@@ -57,18 +57,14 @@ function EditarUsuario() {
   const manejarSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(
-        `${import.meta.env.VITE_API_URL}/usuarios/${id}`,
-        datos,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.put(`${import.meta.env.VITE_API_URL}/usuarios/${id}`, datos, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Usuario actualizado correctamente");
       navigate("/usuarios/buscar");
-    // eslint-disable-next-line no-unused-vars
+      // eslint-disable-next-line no-unused-vars
     } catch (error) {
       toast.error("Error al actualizar el usuario");
     }
@@ -144,11 +140,21 @@ function EditarUsuario() {
             Usuario activo
           </label>
         </div>
-
-        <div className="d-grid">
-          <button type="submit" className="btn btn-success">
-            Guardar cambios
-          </button>
+        <div className="row button-row">
+          <div className="col-4">
+            <button type="submit" className="btn btn-success">
+              Guardar cambios
+            </button>
+          </div>
+          <div className="col-4">
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => navigate("/usuarios/buscar")}
+            >
+              Cancelar
+            </button>
+          </div>
         </div>
       </form>
     </div>
