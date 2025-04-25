@@ -13,6 +13,7 @@ import BuscarClientes from "./pages/clientes/BuscarClientes";
 import EditarCliente from "./pages/clientes/EditarCliente";
 import NuevaEmpresa from "./pages/empresas/NuevaEmpresa";
 import BuscarEmpresas from "./pages/empresas/BuscarEmpresas";
+import EditarEmpresa from "./pages/empresas/EditarEmpresa";
 import NuevaHabitacion from "./pages/habitaciones/NuevaHabitacion";
 import ListadoHabitaciones from "./pages/habitaciones/ListadoHabitaciones";
 import NuevaReserva from "./pages/reservas/NuevaReserva";
@@ -76,6 +77,7 @@ function App() {
           <Route path="/clientes/editar/:id" element={<EditarCliente />} />
           <Route path="/empresas/nueva" element={<NuevaEmpresa />} />
           <Route path="/empresas/buscar" element={<BuscarEmpresas />} />
+          <Route path="/empresas/editar/:id" element={<EditarEmpresa />} />
           <Route
             path="/habitaciones/nueva"
             element={
@@ -106,7 +108,7 @@ function App() {
           />
         </Route>
       </Routes>
-      <ToastContainer position="top-right" autoClose={2000} />
+      <ToastContainer position="bottom-right" autoClose={2000} />
     </BrowserRouter>
   );
 }
