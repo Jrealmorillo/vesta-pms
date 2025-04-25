@@ -23,7 +23,7 @@ function EditarCliente() {
           }
         );
         setCliente(Array.isArray(res.data) ? res.data[0] : res.data);
-      // eslint-disable-next-line no-unused-vars
+        // eslint-disable-next-line no-unused-vars
       } catch (error) {
         toast.error("Error al cargar los datos del cliente");
         navigate("/clientes/buscar");
@@ -41,21 +41,26 @@ function EditarCliente() {
   const manejarSubmit = async (e) => {
     e.preventDefault();
 
-    // Opcional: evitar envío de email vacío
+    // Evitar envío de email vacío
     if (cliente.email?.trim() === "") {
       cliente.email = null;
     }
 
     try {
-      await axios.put(`${import.meta.env.VITE_API_URL}/clientes/${id}`, cliente, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/clientes/${id}`,
+        cliente,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       toast.success("Cliente actualizado correctamente");
       navigate("/clientes/buscar");
     } catch (error) {
-      const msg = error.response?.data?.detalle || "Error al actualizar cliente";
+      const msg =
+        error.response?.data?.detalle || "Error al actualizar cliente";
       toast.error(msg);
     }
   };
@@ -200,7 +205,7 @@ function EditarCliente() {
               type="text"
               name="pais"
               className="form-control"
-              value={cliente.pais || ""}
+              value={cliente.pais}
               onChange={manejarCambio}
             />
           </div>
@@ -249,11 +254,21 @@ function EditarCliente() {
             onChange={manejarCambio}
           ></textarea>
         </div>
-
-        <div className="d-grid">
-          <button type="submit" className="btn btn-success">
-            Guardar cambios
-          </button>
+        <div class="row button-row">
+          <div className="col-3">
+            <button type="submit" className="btn btn-success">
+              Guardar cambios
+            </button>
+          </div>
+          <div className="col-3">
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => navigate("/clientes/buscar")}
+            >
+              Cancelar
+            </button>
+          </div>
         </div>
       </form>
     </div>
