@@ -1,19 +1,35 @@
-import { useState, useContext } from "react";
+/* eslint-disable no-unused-vars */
+import { useState, useEffect, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
-function NuevaHabitacion() {
+function EditarHabitacion() {
+  const { id } = useParams(); // Aquí el 'id' será el número de habitación
+  const navigate = useNavigate();
   const { token } = useContext(AuthContext);
 
-  const [habitacion, setHabitacion] = useState({
-    numero_habitacion: "",
-    tipo: "",
-    capacidad_maxima: 1,
-    precio_oficial: "",
-    notas: "",
-    capacidad_minima: 1, // Fija, no se modifica
-  });
+  const [habitacion, setHabitacion] = useState(null);
+
+  useEffect(() => {
+    const obtenerHabitacion = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/habitaciones/${id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setHabitacion(res.data);
+      } catch (error) {
+        toast.error("Error al cargar la habitación");
+        navigate("/habitaciones");
+      }
+    };
+
+    obtenerHabitacion();
+  }, [id, token, navigate]);
 
   const manejarCambio = (e) => {
     const { name, value } = e.target;
@@ -24,33 +40,28 @@ function NuevaHabitacion() {
     e.preventDefault();
 
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/habitaciones/registro`,
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/habitaciones/${id}`,
         habitacion,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-      toast.success("Habitación registrada correctamente");
-      setHabitacion({
-        numero_habitacion: "",
-        tipo: "",
-        capacidad_maxima: 1,
-        precio_oficial: "",
-        notas: "",
-        capacidad_minima: 1,
-      });
+      toast.success("Habitación actualizada correctamente");
+      navigate("/habitaciones");
     } catch (error) {
-      const msg = error.response?.data?.error || "Error al registrar habitación";
+      const msg =
+        error.response?.data?.detalle || "Error al actualizar habitación";
       toast.error(msg);
     }
   };
 
+  if (!habitacion)
+    return <p className="text-center mt-5">Cargando habitación...</p>;
+
   return (
     <div className="container py-5 mt-1">
-      <h2 className="text-center mb-4">Registrar nueva habitación</h2>
+      <h2 className="text-center mb-4">Editar habitación</h2>
       <form
         onSubmit={manejarSubmit}
         className="mx-auto"
@@ -60,11 +71,9 @@ function NuevaHabitacion() {
           <label className="form-label">Número de habitación</label>
           <input
             type="text"
-            name="numero_habitacion"
             className="form-control"
             value={habitacion.numero_habitacion}
-            onChange={manejarCambio}
-            required
+            disabled
           />
         </div>
 
@@ -77,7 +86,6 @@ function NuevaHabitacion() {
             onChange={manejarCambio}
             required
           >
-            <option value="">-- Selecciona tipo --</option>
             <option value="Individual">Individual</option>
             <option value="Doble">Doble</option>
             <option value="Triple">Triple</option>
@@ -120,19 +128,29 @@ function NuevaHabitacion() {
             name="notas"
             className="form-control"
             rows="3"
-            value={habitacion.notas}
+            value={habitacion.notas || ""}
             onChange={manejarCambio}
           ></textarea>
         </div>
-
-        <div className="d-grid">
-          <button type="submit" className="btn btn-primary">
-            Registrar habitación
-          </button>
+        <div class="row button-row">
+          <div className="col-5">
+            <button type="submit" className="btn btn-success">
+              Guardar cambios
+            </button>
+          </div>
+          <div className="col-3">
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={() => navigate("/habitaciones")}
+            >
+              Cancelar
+            </button>
+          </div>
         </div>
       </form>
     </div>
   );
 }
 
-export default NuevaHabitacion;
+export default EditarHabitacion;

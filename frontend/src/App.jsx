@@ -16,6 +16,7 @@ import BuscarEmpresas from "./pages/empresas/BuscarEmpresas";
 import EditarEmpresa from "./pages/empresas/EditarEmpresa";
 import NuevaHabitacion from "./pages/habitaciones/NuevaHabitacion";
 import ListadoHabitaciones from "./pages/habitaciones/ListadoHabitaciones";
+import EditarHabitacion from "./pages/habitaciones/EditarHabitacion";
 import NuevaReserva from "./pages/reservas/NuevaReserva";
 import BuscarReservas from "./pages/reservas/BuscarReservas";
 import CheckIn from "./pages/reservas/CheckIn";
@@ -91,6 +92,14 @@ function App() {
             element={
               <RutaProtegidaPorRol rolRequerido={1}>
                 <ListadoHabitaciones />
+              </RutaProtegidaPorRol>
+            }
+          />
+                    <Route
+            path="/habitaciones/editar/:id"
+            element={
+              <RutaProtegidaPorRol rolRequerido={1}>
+                <EditarHabitacion />
               </RutaProtegidaPorRol>
             }
           />

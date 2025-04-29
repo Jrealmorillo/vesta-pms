@@ -25,7 +25,7 @@ const routes = [
     label: "Habitaciones",
     submenu: [
       { label: "Nueva habitación", path: "/habitaciones/nueva" },
-      { label: "Mostrar habitaciones", path: "/habitaciones" },
+      { label: "Mostrar habitaciones", path: "/habitaciones", exact: true },
     ],
   },
   {

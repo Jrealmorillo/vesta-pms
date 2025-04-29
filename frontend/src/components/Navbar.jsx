@@ -68,6 +68,7 @@ function Navbar() {
                           <li key={subindex}>
                             <NavLink
                               to={subitem.path}
+                              end={subitem.exact}
                               className="dropdown-item"
                             >
                               {subitem.label}
