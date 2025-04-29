@@ -37,7 +37,7 @@ CREATE TABLE Clientes (
     fecha_expedicion DATE NOT NULL,
     direccion VARCHAR(255),
     ciudad VARCHAR(100),
-    pais VARCHAR(100),
+    pais VARCHAR(100) NOT NULL,
     codigo_postal VARCHAR(20),
     telefono VARCHAR(30),
     email VARCHAR(255),
@@ -50,7 +50,7 @@ CREATE TABLE Empresas (
     cif VARCHAR(50) NOT NULL UNIQUE,
     direccion VARCHAR(255),
     ciudad VARCHAR(100),
-    pais VARCHAR(100),
+    pais VARCHAR(100) NOT NULL,
     codigo_postal VARCHAR(20),
     telefono VARCHAR(30),
     email VARCHAR(255),
@@ -60,12 +60,13 @@ CREATE TABLE Empresas (
 
 CREATE TABLE Habitaciones (
     numero_habitacion VARCHAR(20) PRIMARY KEY,
-    tipo VARCHAR(50) NOT NULL,
-    capacidad_minima INT NOT NULL CHECK (capacidad_minima > 0),
-    capacidad_maxima INT NOT NULL CHECK (capacidad_maxima > 0),
+    tipo ENUM('Individual', 'Doble', 'Triple', 'Suite') NOT NULL,
+    capacidad_minima INT NOT NULL DEFAULT 1 CHECK (capacidad_minima = 1),
+    capacidad_maxima INT NOT NULL CHECK (capacidad_maxima BETWEEN 1 AND 3),
     notas TEXT,
     precio_oficial DECIMAL(10,2) NOT NULL
 );
+
 
 
 CREATE TABLE Reservas (
@@ -144,16 +145,6 @@ CREATE TABLE Detalle_Factura (
 );
 
 
-DELETE FROM Reservas WHERE id_empresa >= 1;
-
-ALTER TABLE Reservas AUTO_INCREMENT = 1;
-
-SELECT * FROM Roles;
-SELECT * FROM Usuarios;
--- select * FROM Clientes;
--- select * FROM Empresas;
-SELECT * FROM Habitaciones;
-SELECT * FROM Reservas;
 
 
 
