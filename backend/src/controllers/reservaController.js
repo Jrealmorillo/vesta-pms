@@ -9,7 +9,14 @@ exports.crearReserva = async (req, res) => {
 
     const usuario = req.usuario.nombre_usuario;
 
-    const {reserva, lineasReserva} = await GestorReservas.crearReserva(req.body, usuario);
+    const { lineas, ...datosReserva } = req.body;
+
+    const { reserva, lineasReserva } = await GestorReservas.crearReserva(
+      {
+        ...datosReserva,
+        lineasReserva: lineas,
+      }, usuario);
+
     res.status(201).json({
       mensaje: "Reserva creada exitosamente",
       reserva,
@@ -22,46 +29,46 @@ exports.crearReserva = async (req, res) => {
 
 // Modificar reserva
 exports.modificarReserva = async (req, res) => {
-    try {
-      const usuario = req.usuario.nombre_usuario;
+  try {
+    const usuario = req.usuario.nombre_usuario;
 
-      const reservaActualizada = await GestorReservas.modificarReserva(
-        req.params.id,
-        req.body,
-        usuario
-      );
-      res.json({
-        mensaje: "Reserva actualizada correctamente",
-        reserva: reservaActualizada
-      });
-    } catch (error) {
-      res.status(404).json({ error: error.message });
-    }
-  };
-  
-  // Cambiar estado de una reserva
-  exports.cambiarEstado = async (req, res) => {
-    try {
-      const { nuevoEstado } = req.body;
-      if (!nuevoEstado) {
-        return res.status(400).json({ error: "Debe proporcionar un nuevo estado" });
-      }
+    const reservaActualizada = await GestorReservas.modificarReserva(
+      req.params.id,
+      req.body,
+      usuario
+    );
+    res.json({
+      mensaje: "Reserva actualizada correctamente",
+      reserva: reservaActualizada
+    });
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+};
 
-      const usuario = req.usuario.nombre_usuario;
-  
-      const reserva = await GestorReservas.cambiarEstadoReserva(
-        req.params.id,
-        nuevoEstado,
-        usuario
-      );
-      res.json({
-        mensaje: `Estado de la reserva actualizado a ${nuevoEstado}`,
-        reserva
-      });
-    } catch (error) {
-      res.status(400).json({ error: error.message });
+// Cambiar estado de una reserva
+exports.cambiarEstado = async (req, res) => {
+  try {
+    const { nuevoEstado } = req.body;
+    if (!nuevoEstado) {
+      return res.status(400).json({ error: "Debe proporcionar un nuevo estado" });
     }
-  };
+
+    const usuario = req.usuario.nombre_usuario;
+
+    const reserva = await GestorReservas.cambiarEstadoReserva(
+      req.params.id,
+      nuevoEstado,
+      usuario
+    );
+    res.json({
+      mensaje: `Estado de la reserva actualizado a ${nuevoEstado}`,
+      reserva
+    });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 
 // Obtener reserva por ID
 exports.obtenerReservaPorId = async (req, res) => {

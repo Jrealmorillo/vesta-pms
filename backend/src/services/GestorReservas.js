@@ -13,6 +13,21 @@ class GestorReservas {
         throw new Error("Debe incluir al menos una línea de reserva");
       }
 
+      // Comprobamos que las fechas de entrada y salida no son anteriores a la actual
+      // y que la salida no es anterior a la entrada
+      const entrada = new Date(datosReserva.fecha_entrada);
+      const salida = new Date(datosReserva.fecha_salida);
+      const hoy = new Date();
+      hoy.setHours(0, 0, 0, 0);
+
+      if (entrada < hoy) {
+        throw new Error("La fecha de entrada no puede ser anterior a la fecha actual.");
+      }
+
+      if (salida <= entrada) {
+        throw new Error("La fecha de salida debe ser posterior a la fecha de entrada.");
+      }
+
       // Crear la reserva principal
       const nuevaReserva = await Reserva.create({
         ...datosReserva,
@@ -30,6 +45,17 @@ class GestorReservas {
 
       // Registrar cada línea asociada y acumular precios
       for (const linea of lineasReserva) {
+
+        const fechaLinea = new Date(linea.fecha);
+
+        // Validar que la fecha esté dentro del rango permitido
+        if (fechaLinea < entrada || fechaLinea >= salida) {
+          throw new Error(
+            `La línea con fecha ${linea.fecha} está fuera del rango de estancia. Debe estar entre ${datosReserva.fecha_entrada} y ${datosReserva.fecha_salida}.`
+          );
+        }
+
+
         await GestorLineasReserva.registrarLineaReserva(
           {
             ...linea,
@@ -38,8 +64,7 @@ class GestorReservas {
           nombre_usuario
         );
 
-        const incremento =
-          parseFloat(linea.precio) * linea.cantidad_habitaciones;
+        const incremento = parseFloat(linea.precio) * linea.cantidad_habitaciones;
         const totalAnterior = parseFloat(nuevaReserva.precio_total);
         nuevaReserva.precio_total = (totalAnterior + incremento).toFixed(2);
         // Importante guardar el nuevo valor

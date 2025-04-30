@@ -40,8 +40,7 @@ const LineaReserva = sequelize.define("LineaReserva", {
       "Solo Alojamiento",
       "Alojamiento y Desayuno",
       "Media Pensión",
-      "Pensión Completa",
-      "Todo Incluido"
+      "Pensión Completa"
     ),
     allowNull: false
   },
