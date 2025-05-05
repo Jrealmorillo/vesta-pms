@@ -1,0 +1,12 @@
+.table thead th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+  }
+  
+  td {
+    min-width: 80px;
+    height: 40px;
+  }
+  
