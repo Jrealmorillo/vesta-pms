@@ -17,6 +17,8 @@ import EditarEmpresa from "./pages/empresas/EditarEmpresa";
 import NuevaHabitacion from "./pages/habitaciones/NuevaHabitacion";
 import ListadoHabitaciones from "./pages/habitaciones/ListadoHabitaciones";
 import EditarHabitacion from "./pages/habitaciones/EditarHabitacion";
+import Planning from "./pages/habitaciones/Planning";
+import RoomRack from "./pages/habitaciones/RoomRack";
 import NuevaReserva from "./pages/reservas/NuevaReserva";
 import BuscarReservas from "./pages/reservas/BuscarReservas";
 import CheckIn from "./pages/reservas/CheckIn";
@@ -103,6 +105,9 @@ function App() {
               </RutaProtegidaPorRol>
             }
           />
+          
+          <Route path="/habitaciones/planning" element={<Planning />} />
+          <Route path="habitaciones/roomrack" element={<RoomRack />} />
           <Route path="/reservas/nueva" element={<NuevaReserva />} />
           <Route path="/reservas/buscar" element={<BuscarReservas />} />
           <Route path="/reservas/check-in" element={<CheckIn />} />

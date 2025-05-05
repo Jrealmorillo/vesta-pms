@@ -3,8 +3,8 @@ const routes = [
   {
     label: "Usuarios",
     submenu: [
-      { label: "Nuevo usuario", path: "/usuarios/nuevo" },
-      { label: "Buscar usuarios", path: "/usuarios/buscar" },
+      { label: "Nuevo usuario", path: "/usuarios/nuevo", adminOnly: true  },
+      { label: "Buscar usuarios", path: "/usuarios/buscar",adminOnly: true  },
     ],
   },
   {
@@ -24,8 +24,10 @@ const routes = [
   {
     label: "Habitaciones",
     submenu: [
-      { label: "Nueva habitación", path: "/habitaciones/nueva" },
-      { label: "Mostrar habitaciones", path: "/habitaciones", exact: true },
+      { label: "Nueva habitación", path: "/habitaciones/nueva", adminOnly: true },
+      { label: "Mostrar habitaciones", path: "/habitaciones", exact: true, adminOnly: true  },
+      { label: "Planning", path: "/habitaciones/planning" },
+      { label: "RoomRack", path: "/habitaciones/roomrack" },
     ],
   },
   {

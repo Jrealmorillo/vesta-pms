@@ -36,9 +36,10 @@ function Navbar() {
         <div className="collapse navbar-collapse" id="navbarContenido">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             {routes.map((item, index) => {
-              // Ocultar secciones reservadas para admin (id_rol === 1)
+              // Si todos los submenús son solo para admin, y el usuario no lo es, ocultar
               if (
-                (item.label === "Usuarios" || item.label === "Habitaciones") &&
+                item.submenu &&
+                item.submenu.every((sub) => sub.adminOnly) &&
                 usuario.id_rol !== 1
               ) {
                 return null;
@@ -64,7 +65,12 @@ function Navbar() {
                         className="dropdown-menu"
                         aria-labelledby={`navbarDropdown${index}`}
                       >
-                        {item.submenu.map((subitem, subindex) => (
+                        {item.submenu
+                          .filter(
+                            (sub) =>
+                              !sub.adminOnly || usuario.id_rol === 1
+                          )
+                          .map((subitem, subindex) => (
                           <li key={subindex}>
                             <NavLink
                               to={subitem.path}
