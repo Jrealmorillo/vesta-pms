@@ -38,7 +38,7 @@ class GestorReservas {
       await GestorHistorialReservas.registrarAccionHistorial({
         id_reserva: nuevaReserva.id_reserva,
         nombre_usuario,
-        accion: "Creación",
+        accion: "Confirmada",
         detalles:
           "Reserva creada manualmente con " + lineasReserva.length + " líneas.",
       });
@@ -128,7 +128,7 @@ class GestorReservas {
         await GestorHistorialReservas.registrarAccionHistorial({
           id_reserva: reserva.id_reserva,
           nombre_usuario,
-          accion: "Modificación",
+          accion: "Modificada",
           detalles: `Línea de reserva desactivada (fuera del rango): ${linea.tipo_habitacion} (${linea.fecha})`
         });
       }
@@ -166,7 +166,7 @@ class GestorReservas {
       await GestorHistorialReservas.registrarAccionHistorial({
         id_reserva: reserva.id_reserva,
         nombre_usuario,
-        accion: "Modificación",
+        accion: "Modificada",
         detalles: descripcionCambios
       });
 

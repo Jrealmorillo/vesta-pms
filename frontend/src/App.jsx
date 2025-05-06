@@ -14,6 +14,8 @@ import EditarCliente from "./pages/clientes/EditarCliente";
 import NuevaEmpresa from "./pages/empresas/NuevaEmpresa";
 import BuscarEmpresas from "./pages/empresas/BuscarEmpresas";
 import EditarEmpresa from "./pages/empresas/EditarEmpresa";
+import VerReserva from "./pages/reservas/VerReserva";
+import EditarReserva from "./pages/reservas/EditarReserva";
 import NuevaHabitacion from "./pages/habitaciones/NuevaHabitacion";
 import ListadoHabitaciones from "./pages/habitaciones/ListadoHabitaciones";
 import EditarHabitacion from "./pages/habitaciones/EditarHabitacion";
@@ -110,6 +112,8 @@ function App() {
           <Route path="habitaciones/roomrack" element={<RoomRack />} />
           <Route path="/reservas/nueva" element={<NuevaReserva />} />
           <Route path="/reservas/buscar" element={<BuscarReservas />} />
+          <Route path="/reservas/editar/:id" element={<EditarReserva />} />
+          <Route path="/reservas/:id" element={<VerReserva />} />
           <Route path="/reservas/check-in" element={<CheckIn />} />
           <Route path="/facturas/nueva" element={<NuevaFactura />} />
           <Route path="/facturas/buscar" element={<BuscarFacturas />} />

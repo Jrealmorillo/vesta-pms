@@ -1,7 +1,7 @@
 // services/GestorLineasReserva.js
 const LineaReserva = require("../models/LineaReserva");
 const Reserva = require("../models/Reserva");
-const GestorHistorialReservas = require("./GestorHistorialReservas")
+const GestorHistorialReservas = require("./GestorHistorialReservas");
 
 class GestorLineasReserva {
   // Registrar una nueva línea de reserva
@@ -18,7 +18,7 @@ class GestorLineasReserva {
         reserva.precio_total = (totalAnterior + incremento).toFixed(2);
         await reserva.save();
       }
-      // Registrar acción en el historial
+
       await GestorHistorialReservas.registrarAccionHistorial({
         id_reserva: datos.id_reserva,
         nombre_usuario,
@@ -32,44 +32,32 @@ class GestorLineasReserva {
     }
   }
 
-  // Modificar una línea de reserva existente
+  // 🔁 Método completamente corregido
   async modificarLineaReserva(id, nuevosDatos, nombre_usuario) {
     try {
       const linea = await LineaReserva.findByPk(id);
-      if (!linea) {
-        throw new Error("Línea de reserva no encontrada");
-      }
+      if (!linea) throw new Error("Línea de reserva no encontrada");
 
-      // btener la reserva relacionada
-      const reserva = await Reserva.findByPk(linea.id_reserva);
-
-      // Calcular el importe original antes del cambio
-      const importeAnterior =
-        parseFloat(linea.precio) * linea.cantidad_habitaciones;
-
-      // Actualizar la línea con los nuevos datos
+      // Guardar cambios
       await linea.update(nuevosDatos);
 
-      // Comprobar si se modificó precio o cantidad_habitaciones
-      if ("precio" in nuevosDatos || "cantidad_habitaciones" in nuevosDatos) {
-        const nuevoPrecio = parseFloat(linea.precio);
-        const nuevaCantidad = linea.cantidad_habitaciones;
-        const nuevoImporte = nuevoPrecio * nuevaCantidad;
+      // ✅ Recalcular el total de la reserva sumando todas las líneas activas
+      const id_reserva = linea.id_reserva;
+      const lineasActivas = await LineaReserva.findAll({
+        where: { id_reserva, activa: true },
+      });
 
-        const totalActual = parseFloat(reserva.precio_total);
-        const nuevoTotal = (
-          totalActual -
-          importeAnterior +
-          nuevoImporte
-        ).toFixed(2);
+      const nuevoTotal = lineasActivas.reduce((suma, l) => {
+        return suma + (parseFloat(l.precio) * l.cantidad_habitaciones);
+      }, 0);
 
-        reserva.precio_total = nuevoTotal;
-        await reserva.save();
-      }
+      await Reserva.update(
+        { precio_total: nuevoTotal.toFixed(2) },
+        { where: { id_reserva } }
+      );
 
-      // Registrar acción en el historial
+      // Registrar cambios en historial
       let cambios = [];
-
       for (const campo in nuevosDatos) {
         const valorAnterior = linea[campo];
         const valorNuevo = nuevosDatos[campo];
@@ -88,30 +76,24 @@ class GestorLineasReserva {
         : "Modificación de línea sin cambios detectables";
 
       await GestorHistorialReservas.registrarAccionHistorial({
-        id_reserva: linea.id_reserva,
+        id_reserva,
         nombre_usuario,
         accion: "Modificación",
         detalles: descripcionCambios
       });
 
-
       return linea;
     } catch (error) {
-      throw new Error(
-        "Error al modificar la línea de reserva: " + error.message
-      );
+      throw new Error("Error al modificar la línea de reserva: " + error.message);
     }
   }
 
-  // Anular una línea de reserva (marcar como inactiva)
+  // Anular línea (sin tocar)
   async anularLineaReserva(id, nombre_usuario) {
     try {
       const linea = await LineaReserva.findByPk(id);
-      if (!linea) {
-        throw new Error("Línea de reserva no encontrada");
-      }
+      if (!linea) throw new Error("Línea de reserva no encontrada");
 
-      // Restar el importe de esta línea del total de la reserva
       const reserva = await Reserva.findByPk(linea.id_reserva);
       if (reserva) {
         const decremento =
@@ -123,10 +105,8 @@ class GestorLineasReserva {
         await reserva.save();
       }
 
-      // Eliminar la línea de reserva
       await linea.destroy();
 
-      // Registrar acción en el historial
       await GestorHistorialReservas.registrarAccionHistorial({
         id_reserva: linea.id_reserva,
         nombre_usuario,
@@ -134,25 +114,19 @@ class GestorLineasReserva {
         detalles: `Línea eliminada: ${linea.tipo_habitacion} (${linea.fecha})`
       });
 
-
       return { mensaje: "Línea de reserva eliminada correctamente" };
     } catch (error) {
-      throw new Error(
-        "Error al eliminar la línea de reserva: " + error.message
-      );
+      throw new Error("Error al eliminar la línea de reserva: " + error.message);
     }
   }
 
-  // Obtener todas las líneas de una reserva específica
   async obtenerLineasPorReserva(id_reserva) {
     try {
       const lineas = await LineaReserva.findAll({
         where: { id_reserva },
       });
       if (lineas.length === 0) {
-        throw new Error(
-          "No se encontraron líneas para la reserva especificada"
-        );
+        throw new Error("No se encontraron líneas para la reserva especificada");
       }
       return lineas;
     } catch (error) {
