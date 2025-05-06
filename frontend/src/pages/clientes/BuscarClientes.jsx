@@ -85,7 +85,7 @@ function BuscarClientes() {
       {clientes.length > 0 ? (
         <div className="table-responsive">
           <table className="table table-bordered table-striped align-middle">
-            <thead className="table-dark">
+            <thead className="table-light">
               <tr>
                 <th>ID</th>
                 <th>Nombre completo</th>
