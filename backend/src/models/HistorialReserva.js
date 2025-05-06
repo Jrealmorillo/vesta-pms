@@ -15,9 +15,9 @@ const HistorialReserva = sequelize.define("HistorialReserva", {
     type: DataTypes.STRING,
     allowNull: false
   },
-    accion: {
-    type: DataTypes.ENUM("Creación", "Anulación", "Recuperación", "Modificación"),
-    allowNull: false,
+  accion: {
+    type: DataTypes.ENUM("Confirmada", "Anulada", "Modificada", "Check-in", "Check-out"),
+    allowNull: false
   },
   fecha_accion: {
     type: DataTypes.DATE,
