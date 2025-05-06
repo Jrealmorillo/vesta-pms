@@ -3,18 +3,10 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import "./RoomRack.css";
 
-// Colores por estado
-const estilosEstado = {
-  limpia: { color: "green" },
-  sucia: { color: "red" },
-  libre: { backgroundColor: "white" },
-  ocupada: { backgroundColor: "blue", color: "white" },
-  asignada: { backgroundColor: "yellow" },
-  bloqueada: { backgroundColor: "black", color: "white" },
-};
 
 function RoomRack() {
   const { token } = useContext(AuthContext);
+  // eslint-disable-next-line no-unused-vars
   const [habitaciones, setHabitaciones] = useState([]);
   const [estados, setEstados] = useState([]);
   const [cargado, setCargado] = useState(false);
@@ -129,7 +121,7 @@ function RoomRack() {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container py-5 mt-4">
       <h2 className="mb-3">Room Rack – Estado de Habitaciones</h2>
       <div className="roomrack-container">
         {estados.map((estado) => renderHabitacion(estado))}

@@ -81,7 +81,7 @@ function ListadoHabitaciones() {
       {habitaciones.length > 0 ? (
         <div className="table-responsive">
           <table className="table table-bordered table-striped align-middle">
-            <thead className="table-dark">
+            <thead className="table-light">
               <tr>
                 <th>Nº Habitación</th>
                 <th>Tipo</th>
@@ -101,16 +101,16 @@ function ListadoHabitaciones() {
                   <td>{h.notas || "-"}</td>
                   <td className="d-flex justify-content-around">
                     <button
-                      className="btn btn-sm btn-outline-primary mx-2"
+                      className="btn btn-sm btn-outline-primary mx-2 d-flex align-items-center"
                       onClick={() => irAEditar(h.numero_habitacion)}
                     >
                       Editar
                     </button>
                     <button
-                      className="btn btn-sm btn-outline-danger mx-1"
+                      className="btn btn-sm btn-outline-danger mx-2 d-flex align-items-center"
                       onClick={() => confirmarEliminacionHabitacion(h.numero_habitacion)}
                     >
-                      <i class="bi bi-trash3-fill"></i>
+                     <i className="bi bi-trash3-fill"></i>
                     </button>
                   </td>
                 </tr>
