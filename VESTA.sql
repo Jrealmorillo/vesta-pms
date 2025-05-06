@@ -93,7 +93,7 @@ CREATE TABLE Lineas_Reserva (
     cantidad_habitaciones INT NOT NULL CHECK (cantidad_habitaciones > 0),
     fecha DATE NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
-    regimen ENUM('Solo Alojamiento', 'Alojamiento y Desayuno', 'Media Pensión', 'Pensión Completa', 'Todo Incluido') NOT NULL,
+    regimen ENUM('Solo Alojamiento', 'Alojamiento y Desayuno', 'Media Pensión', 'Pensión Completa') NOT NULL,
     cantidad_adultos INT NOT NULL CHECK (cantidad_adultos >= 0),
     cantidad_ninos INT NOT NULL CHECK (cantidad_ninos >= 0),
     activa BOOLEAN NOT NULL DEFAULT TRUE,
@@ -104,7 +104,7 @@ CREATE TABLE Historial_Reserva (
     id_historial INT AUTO_INCREMENT PRIMARY KEY,
     id_reserva INT NOT NULL,
     nombre_usuario VARCHAR(50) NOT NULL,
-    accion ENUM('Creación', 'Anulación', 'Recuperación', 'Modificación') NOT NULL,
+    accion ENUM('Confirmada', 'Anulada', 'Modificada', 'Check-in', 'Check-out') NOT NULL,
     fecha_accion DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     detalles TEXT,
     FOREIGN KEY (id_reserva) REFERENCES Reservas(id_reserva)
