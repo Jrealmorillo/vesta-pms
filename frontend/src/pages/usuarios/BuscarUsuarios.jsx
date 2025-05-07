@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import "./BuscarUsuarios.css";
 import { AuthContext } from "../../context/AuthContext";
 
-function BuscarUsuarios() {
+const BuscarUsuarios = () => {
   const [idBuscado, setIdBuscado] = useState("");
   const [usuarios, setUsuarios] = useState([]);
   const { token } = useContext(AuthContext);

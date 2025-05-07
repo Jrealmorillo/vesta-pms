@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import CampoPassword from "../../components/CampoPassword";
 
-function CambiarPassword() {
+const CambiarPassword = () => {
   const { usuario, token } = useContext(AuthContext);
   const [form, setForm] = useState({
     actual: "",

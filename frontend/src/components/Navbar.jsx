@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import routes from "../routes";
 
-function Navbar() {
+const Navbar = () => {
   const { usuario, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 

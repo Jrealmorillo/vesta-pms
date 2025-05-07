@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import CampoPassword from "../../components/CampoPassword";
 
-function NuevoUsuario() {
+const NuevoUsuario = () => {
   const [datos, setDatos] = useState({
     nombre: "",
     nombre_usuario: "",

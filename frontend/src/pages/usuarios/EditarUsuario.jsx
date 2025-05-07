@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
-function EditarUsuario() {
+const EditarUsuario = () => {
   const { id } = useParams();
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();

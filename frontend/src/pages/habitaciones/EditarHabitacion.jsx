@@ -5,7 +5,7 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 
-function EditarHabitacion() {
+const EditarHabitacion = () => {
   const { id } = useParams(); // Aquí el 'id' será el número de habitación
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);

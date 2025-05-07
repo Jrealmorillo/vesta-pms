@@ -3,7 +3,7 @@ import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-function NuevaReserva() {
+const NuevaReserva = () => {
   const { token } = useContext(AuthContext);
 
   const [reserva, setReserva] = useState({

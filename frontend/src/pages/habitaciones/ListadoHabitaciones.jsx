@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-function ListadoHabitaciones() {
+const ListadoHabitaciones = () => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 

@@ -3,7 +3,7 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import "./Planning.css"; // Puedes añadir estilos aquí
 
-function Planning() {
+const Planning = () => {
   const { token } = useContext(AuthContext);
   const [habitaciones, setHabitaciones] = useState([]);
   const [reservas, setReservas] = useState([]);

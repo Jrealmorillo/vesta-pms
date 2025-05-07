@@ -6,7 +6,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
-function VerReserva() {
+const VerReserva = () => {
   const { id } = useParams();
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();

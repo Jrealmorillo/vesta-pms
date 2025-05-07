@@ -4,7 +4,7 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 
-function BuscarReservas() {
+const BuscarReservas = () => {
   const { token } = useContext(AuthContext);
   const [tipoBusqueda, setTipoBusqueda] = useState("apellido");
   const [termino, setTermino] = useState("");

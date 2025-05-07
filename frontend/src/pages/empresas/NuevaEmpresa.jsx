@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
 
-function NuevaEmpresa() {
+const NuevaEmpresa = () => {
   const { token } = useContext(AuthContext);
 
   const [empresa, setEmpresa] = useState({

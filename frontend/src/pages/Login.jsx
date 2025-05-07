@@ -8,7 +8,7 @@ import CampoPassword from "../components/CampoPassword";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-function Login() {
+const Login = () => {
   const [datos, setDatos] = useState({ nombre_usuario: "", contraseña: "", id_rol: "" });
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();

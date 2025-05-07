@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
 
-function NuevoCliente() {
+const NuevoCliente = () => {
   const { token } = useContext(AuthContext);
 
   const [cliente, setCliente] = useState({

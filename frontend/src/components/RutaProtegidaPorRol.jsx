@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
-function RutaProtegidaPorRol({ children, rolRequerido }) {
+const RutaProtegidaPorRol = ({ children, rolRequerido }) => {
   const { usuario } = useContext(AuthContext);
 
   // Si no hay sesión → redirige al login

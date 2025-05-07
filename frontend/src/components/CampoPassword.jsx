@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 
-function CampoPassword({ label, name, value, onChange }) {
+const CampoPassword = ({ label, name, value, onChange }) => {
   const [mostrar, setMostrar] = useState(false);
 
   return (

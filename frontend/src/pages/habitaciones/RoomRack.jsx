@@ -4,7 +4,7 @@ import { AuthContext } from "../../context/AuthContext";
 import "./RoomRack.css";
 
 
-function RoomRack() {
+const RoomRack = () => {
   const { token } = useContext(AuthContext);
   // eslint-disable-next-line no-unused-vars
   const [habitaciones, setHabitaciones] = useState([]);

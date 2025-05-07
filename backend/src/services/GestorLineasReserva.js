@@ -22,7 +22,7 @@ class GestorLineasReserva {
       await GestorHistorialReservas.registrarAccionHistorial({
         id_reserva: datos.id_reserva,
         nombre_usuario,
-        accion: "Modificación",
+        accion: "Modificada",
         detalles: `Línea añadida: ${datos.tipo_habitacion} (${datos.fecha}), ${datos.cantidad_habitaciones} habs, ${datos.precio} €/noche`,
       });
 
@@ -78,7 +78,7 @@ class GestorLineasReserva {
       await GestorHistorialReservas.registrarAccionHistorial({
         id_reserva,
         nombre_usuario,
-        accion: "Modificación",
+        accion: "Modificada",
         detalles: descripcionCambios
       });
 
@@ -110,7 +110,7 @@ class GestorLineasReserva {
       await GestorHistorialReservas.registrarAccionHistorial({
         id_reserva: linea.id_reserva,
         nombre_usuario,
-        accion: "Modificación",
+        accion: "Modificada",
         detalles: `Línea eliminada: ${linea.tipo_habitacion} (${linea.fecha})`
       });
 
