@@ -42,5 +42,9 @@ router.delete("/:id/lineas/:id_linea", reservaController.anularLineaReserva);
 // Obtener el historial de una reserva
 router.get("/:id/historial", reservaController.obtenerHistorialReserva);
 
+// Obtener una reserva de check-in
+router.get("/habitacion/:numero/check-in", reservaController.obtenerReservaActivaPorHabitacion);
+
+
 
 module.exports = router;

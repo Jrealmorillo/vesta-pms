@@ -289,6 +289,32 @@ class GestorReservas {
       throw new Error("Error al buscar por empresa: " + error.message);
     }
   }
+
+
+  // Obtener una reserva de check-in por número de habitación
+  async obtenerReservaActivaPorHabitacion(numeroHabitacion) {
+    try {
+      const reserva = await Reserva.findOne({
+        where: {
+          numero_habitacion: numeroHabitacion,
+          estado: "Check-in"
+        },
+        include: [
+          { model: Cliente, as: "cliente" },
+          { model: Empresa, as: "empresa" },
+          { model: LineaReserva, as: "lineas" },
+        ]
+      });
+
+      if (!reserva) {
+        throw new Error("No hay reservas activas en esta habitación");
+      }
+
+      return reserva;
+    } catch (error) {
+      throw new Error("Error al obtener reserva activa por habitación: " + error.message);
+    }
+  }
 }
 
 module.exports = new GestorReservas();

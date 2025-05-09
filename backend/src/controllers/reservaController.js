@@ -189,3 +189,17 @@ exports.obtenerHistorialReserva = async (req, res) => {
     res.status(500).json({ error: "Error al obtener historial", detalles: error.message });
   }
 };
+
+
+// Obtener una reserva de check-in por número de habitación
+exports.obtenerReservaActivaPorHabitacion = async (req, res) => {
+  try {
+    const reserva = await GestorReservas.obtenerReservaActivaPorHabitacion(req.params.numero);
+    res.json(reserva);
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+};
+
+
+
