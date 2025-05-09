@@ -28,7 +28,13 @@ const BuscarEmpresas = () => {
       );
       // El backend puede devolver una única empresa o un array
       const resultado = Array.isArray(res.data) ? res.data : [res.data];
-      setEmpresas(resultado);
+      // Ordenar las empresas por nombre
+      const empresasOrdenadas = resultado.sort((a, b) => {
+        const nombreA = a.nombre.toLowerCase();
+        const nombreB = b.nombre.toLowerCase();
+        return nombreA.localeCompare(nombreB);
+      });
+      setEmpresas(empresasOrdenadas);
     } catch (error) {
       const msg = error.response?.data?.detalle || "Empresa no encontrada";
       toast.error(msg);

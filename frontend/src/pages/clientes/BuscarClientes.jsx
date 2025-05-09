@@ -28,7 +28,13 @@ const BuscarClientes = () => {
       );
       // El backend puede devolver un único cliente o un array
       const resultado = Array.isArray(res.data) ? res.data : [res.data];
-      setClientes(resultado);
+      // Ordenar los clientes por apellido
+      const clientesOrdenados = resultado.sort((a, b) => {
+        const apellidoA = a.primer_apellido.toLowerCase();
+        const apellidoB = b.primer_apellido.toLowerCase();
+        return apellidoA.localeCompare(apellidoB);
+      });
+      setClientes(clientesOrdenados);
     } catch (error) {
       const msg = error.response?.data?.detalle || "Cliente no encontrado";
       toast.error(msg);
@@ -99,7 +105,7 @@ const BuscarClientes = () => {
               {clientes.map((c) => (
                 <tr key={c.id_cliente}>
                   <td>{c.id_cliente}</td>
-                  <td>{`${c.nombre} ${c.primer_apellido} ${c.segundo_apellido || ""}`}</td>
+                  <td>{`${c.primer_apellido} ${c.segundo_apellido || ""}, ${c.nombre}`}</td>
                   <td>{`${c.tipo_documento} ${c.numero_documento}`}</td>
                   <td>{c.telefono || "-"}</td>
                   <td>{c.email || "-"}</td>
