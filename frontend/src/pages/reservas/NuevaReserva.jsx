@@ -32,8 +32,17 @@ const NuevaReserva = () => {
 
   const manejarCambioReserva = (e) => {
     const { name, value } = e.target;
-    setReserva({ ...reserva, [name]: value });
+  
+    // Convertir a null si está vacío, y a número si es id_cliente o id_empresa
+    let nuevoValor = value === "" ? null : value;
+  
+    if (["id_cliente", "id_empresa"].includes(name)) {
+      nuevoValor = value === "" ? null : parseInt(value, 10);
+    }
+  
+    setReserva({ ...reserva, [name]: nuevoValor });
   };
+  
 
   const manejarCambioLinea = (e) => {
     const { name, value } = e.target;
@@ -169,20 +178,22 @@ const NuevaReserva = () => {
               <div className="col-md-6">
                 <label className="form-label">Cliente</label>
                 <input
+                type="number"
                   name="id_cliente"
                   className="form-control"
                   placeholder="Cliente"
-                  value={reserva.id_cliente}
+                  value={reserva.id_cliente || ""}
                   onChange={manejarCambioReserva}
                 />
               </div>
               <div className="col-md-6">
                 <label className="form-label">Empresa</label>
                 <input
+                  type="number"
                   name="id_empresa"
                   className="form-control"
                   placeholder="Empresa"
-                  value={reserva.id_empresa}
+                  value={reserva.id_empresa || ""}
                   onChange={manejarCambioReserva}
                 />
               </div>
@@ -419,6 +430,6 @@ const NuevaReserva = () => {
       </form>
     </div>
   );
-}
+};
 
 export default NuevaReserva;

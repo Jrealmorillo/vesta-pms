@@ -24,6 +24,7 @@ import RoomRack from "./pages/habitaciones/RoomRack";
 import NuevaReserva from "./pages/reservas/NuevaReserva";
 import BuscarReservas from "./pages/reservas/BuscarReservas";
 import CheckIn from "./pages/reservas/CheckIn";
+import CheckInReserva from "./pages/reservas/CheckInReserva";
 import NuevaFactura from "./pages/facturas/NuevaFactura";
 import BuscarFacturas from "./pages/facturas/BuscarFacturas";
 import CheckOut from "./pages/facturas/CheckOut";
@@ -115,6 +116,7 @@ const App = () => {
           <Route path="/reservas/editar/:id" element={<EditarReserva />} />
           <Route path="/reservas/:id" element={<VerReserva />} />
           <Route path="/reservas/check-in" element={<CheckIn />} />
+          <Route path="/reservas/check-in/:id" element={<CheckInReserva />} />
           <Route path="/facturas/nueva" element={<NuevaFactura />} />
           <Route path="/facturas/buscar" element={<BuscarFacturas />} />
           <Route path="/facturas/check-out" element={<CheckOut />} />

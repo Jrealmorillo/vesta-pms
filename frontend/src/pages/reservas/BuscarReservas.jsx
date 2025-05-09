@@ -37,8 +37,14 @@ const BuscarReservas = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}${endpoint}`,
         { headers: { Authorization: `Bearer ${token}` } }
-      );
-      setResultados(response.data);
+      );  
+      const reservasOrdenadasPorApellido = response.data.sort((a, b) => {
+        const apellidoA = a.primer_apellido_huesped.toLowerCase();
+        const apellidoB = b.primer_apellido_huesped.toLowerCase();
+        return apellidoA.localeCompare(apellidoB);
+      });
+      console.log(reservasOrdenadasPorApellido);
+      setResultados(reservasOrdenadasPorApellido);
     } catch (error) {
       const msg = error.response?.data?.error || "Error al buscar reservas";
       toast.error(msg);
@@ -47,7 +53,7 @@ const BuscarReservas = () => {
 
   return (
     <div className="container py-5 mt-4"
-    style={{ maxWidth: "900px" }}>
+    style={{ maxWidth: "1000px" }}>
       <h2 className="mb-4">Buscar Reservas</h2>
 
       <div className="row mb-4">
@@ -101,7 +107,7 @@ const BuscarReservas = () => {
                 <tr key={res.id_reserva}>
                   <td>{res.id_reserva}</td>
                   <td>
-                    {res.nombre_huesped} {res.primer_apellido_huesped}
+                    {res.primer_apellido_huesped} {res.segundo_apellido_huesped} , {res.nombre_huesped} 
                   </td>
                   <td>{res.fecha_entrada}</td>
                   <td>{res.fecha_salida}</td>

@@ -152,7 +152,7 @@ const EditarReserva = () => {
             type="text"
             className="form-control"
             name="nombre_huesped"
-            value={reserva.nombre_huesped}
+            value={reserva.nombre_huesped || ""}
             onChange={manejarCambio}
           />
         </div>
@@ -163,7 +163,7 @@ const EditarReserva = () => {
             type="text"
             className="form-control"
             name="primer_apellido_huesped"
-            value={reserva.primer_apellido_huesped}
+            value={reserva.primer_apellido_huesped || ""}
             onChange={manejarCambio}
           />
         </div>
@@ -174,7 +174,7 @@ const EditarReserva = () => {
             type="text"
             className="form-control"
             name="segundo_apellido_huesped"
-            value={reserva.segundo_apellido_huesped}
+            value={reserva.segundo_apellido_huesped || ""}
             onChange={manejarCambio}
           />
         </div>
@@ -185,7 +185,7 @@ const EditarReserva = () => {
             type="date"
             className="form-control"
             name="fecha_entrada"
-            value={reserva.fecha_entrada}
+            value={reserva.fecha_entrada || ""}
             onChange={manejarCambio}
           />
         </div>
@@ -196,7 +196,7 @@ const EditarReserva = () => {
             type="date"
             className="form-control"
             name="fecha_salida"
-            value={reserva.fecha_salida}
+            value={reserva.fecha_salida || ""}
             onChange={manejarCambio}
           />
         </div>
@@ -268,7 +268,7 @@ const EditarReserva = () => {
           </thead>
           <tbody>
             {lineas.map((linea, index) => (
-              <tr key={linea.id_linea_reserva || index}>
+              <tr key={index}>
                 <td>
                   <input
                     type="date"
@@ -280,14 +280,20 @@ const EditarReserva = () => {
                   />
                 </td>
                 <td>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={linea.tipo_habitacion}
-                    onChange={(e) =>
-                      manejarCambioLinea(index, "tipo_habitacion", e.target.value)
-                    }
-                  />
+                <select
+                  name="tipo_habitacion"
+                  className="form-select"
+                  value={linea.tipo_habitacion || ""}
+                  onChange={(e) =>
+                    manejarCambioLinea(index, "tipo_habitacion", e.target.value)
+                  }
+                >
+                  <option value="">-- Selecciona tipo</option>
+                  <option value="Individual">Individual</option>
+                  <option value="Doble">Doble</option>
+                  <option value="Triple">Triple</option>
+                  <option value="Suite">Suite</option>
+                </select>
                 </td>
                 <td>
                   <select
@@ -297,6 +303,7 @@ const EditarReserva = () => {
                       manejarCambioLinea(index, "regimen", e.target.value)
                     }
                   >
+                    <option value="">-- Selecciona régimen</option>
                     <option value="Solo Alojamiento">Solo Alojamiento</option>
                     <option value="Alojamiento y Desayuno">Alojamiento y Desayuno</option>
                     <option value="Media Pensión">Media Pensión</option>
