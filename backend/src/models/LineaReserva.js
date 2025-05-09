@@ -17,7 +17,7 @@ const LineaReserva = sequelize.define("LineaReserva", {
     }
   },
   tipo_habitacion: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.ENUM("Individual", "Doble", "Triple", "Suite"),
     allowNull: false
   },
   cantidad_habitaciones: {

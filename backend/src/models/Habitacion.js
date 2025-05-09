@@ -7,7 +7,7 @@ const Habitacion = sequelize.define("Habitacion", {
         primaryKey: true,
     },
     tipo: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.ENUM("Individual", "Doble", "Triple", "Suite"),
         allowNull: false
     },
     capacidad_maxima: {
