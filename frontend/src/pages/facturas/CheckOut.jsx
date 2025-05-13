@@ -18,6 +18,12 @@ const CheckOut = () => {
   const [formaPago, setFormaPago] = useState("");
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const [editandoDetalleId, setEditandoDetalleId] = useState(null);
+  const [detalleEditado, setDetalleEditado] = useState({
+    concepto: "",
+    cantidad: 1,
+    precio_unitario: 0,
+  });
 
   const buscarReservaActiva = async () => {
     if (!numeroHabitacion) {
@@ -113,7 +119,7 @@ const CheckOut = () => {
       cancelButtonColor: "#6c757d",
     });
     if (!adelantoCargos.isConfirmed) return;
-  
+
     try {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/detalles-factura/adelantar/${
@@ -287,6 +293,86 @@ const CheckOut = () => {
     }
   };
 
+  const iniciarEdicion = (detalle) => {
+    setEditandoDetalleId(detalle.id_detalle);
+    setDetalleEditado({
+      concepto: detalle.concepto,
+      cantidad: detalle.cantidad,
+      precio_unitario: detalle.precio_unitario,
+    });
+  };
+
+  const guardarEdicion = async (id_detalle) => {
+    const total = (
+      detalleEditado.cantidad * detalleEditado.precio_unitario
+    ).toFixed(2);
+
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/detalles-factura/${id_detalle}`,
+        {
+          ...detalleEditado,
+          total,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const detallesActualizados = await axios.get(
+        `${import.meta.env.VITE_API_URL}/detalles-factura/pendientes/${
+          reserva.id_reserva
+        }`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setDetalleFactura(detallesActualizados.data);
+      setEditandoDetalleId(null);
+      toast.success("Cargo modificado correctamente");
+    } catch (_error) {
+      toast.error("Error al modificar el cargo");
+    }
+  };
+
+  const anularDetalle = async (id_detalle) => {
+    const confirmacion = await Swal.fire({
+      title: "¿Anular este cargo?",
+      text: "Este cargo dejará de estar activo",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, anular",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/detalles-factura/${id_detalle}/anular`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const detallesActualizados = await axios.get(
+        `${import.meta.env.VITE_API_URL}/detalles-factura/pendientes/${
+          reserva.id_reserva
+        }`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setDetalleFactura(detallesActualizados.data);
+      toast.success("Cargo anulado correctamente");
+    } catch (_error) {
+      toast.error("Error al anular el cargo");
+    }
+  };
+
   return (
     <div className="container py-5 mt-4" style={{ maxWidth: "800px" }}>
       <h2>Check-out</h2>
@@ -391,10 +477,94 @@ const CheckOut = () => {
               </div>
               <ul className="list-group list-group-flush">
                 {detalleFactura.map((detalle) => (
-                  <li key={detalle.id_detalle} className="list-group-item">
-                    {detalle.concepto} — {detalle.cantidad} x{" "}
-                    {detalle.precio_unitario} € ={" "}
-                    <strong>{detalle.total} €</strong>
+                  <li
+                    key={detalle.id_detalle}
+                    className="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    {editandoDetalleId === detalle.id_detalle ? (
+                      <div className="w-100">
+                        <div className="row">
+                          <div className="col-md-4">
+                            <input
+                              type="text"
+                              className="form-control"
+                              value={detalleEditado.concepto}
+                              onChange={(e) =>
+                                setDetalleEditado({
+                                  ...detalleEditado,
+                                  concepto: e.target.value,
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="col-md-2">
+                            <input
+                              type="number"
+                              min="1"
+                              className="form-control"
+                              value={detalleEditado.cantidad}
+                              onChange={(e) =>
+                                setDetalleEditado({
+                                  ...detalleEditado,
+                                  cantidad: parseInt(e.target.value, 10),
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="col-md-3">
+                            <input
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              className="form-control"
+                              value={detalleEditado.precio_unitario}
+                              onChange={(e) =>
+                                setDetalleEditado({
+                                  ...detalleEditado,
+                                  precio_unitario: parseFloat(e.target.value),
+                                })
+                              }
+                            />
+                          </div>
+                          <div className="col-md-3 text-end">
+                            <button
+                              className="btn btn-success btn-sm me-2"
+                              onClick={() => guardarEdicion(detalle.id_detalle)}
+                            >
+                              Guardar
+                            </button>
+                            <button
+                              className="btn btn-secondary btn-sm"
+                              onClick={() => setEditandoDetalleId(null)}
+                            >
+                              Cancelar
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <span>
+                          {detalle.concepto} — {detalle.cantidad} x{" "}
+                          {detalle.precio_unitario} € ={" "}
+                          <strong>{detalle.total} €</strong>
+                        </span>
+                        <div>
+                          <button
+                            className="btn btn-outline-primary btn-sm me-2"
+                            onClick={() => iniciarEdicion(detalle)}
+                          >
+                           <i class="bi bi-pencil-fill"></i> Editar
+                          </button>
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => anularDetalle(detalle.id_detalle)}
+                          >
+                            <i class="bi bi-trash3-fill"></i> Eliminar
+                          </button>
+                        </div>
+                      </>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -499,9 +669,12 @@ const CheckOut = () => {
                     }
                   />
                 </div>
-                <div className="col-md-2 mb-2 d-grid">
+                <div
+                  className="col-md-2 mb-2 d-grid"
+                  style={{ marginTop: "32px" }}
+                >
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-sm btn-primary"
                     onClick={guardarNuevoCargo}
                   >
                     Añadir

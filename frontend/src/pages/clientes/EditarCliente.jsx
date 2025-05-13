@@ -258,7 +258,7 @@ const EditarCliente = () => {
             onChange={manejarCambio}
           ></textarea>
         </div>
-        <div class="row button-row">
+        <div className="row button-row">
           <div className="col-3">
             <button type="submit" className="btn btn-success">
               Guardar cambios

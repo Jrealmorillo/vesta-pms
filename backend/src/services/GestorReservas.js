@@ -134,7 +134,6 @@ class GestorReservas {
         });
       }
 
-      console.log("Actualizando reserva con:", nuevosDatos);
       // Actualizar reserva con nuevos datos
       await reserva.update(nuevosDatos);
 

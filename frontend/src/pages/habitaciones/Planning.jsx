@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
-import "./Planning.css"; // Puedes añadir estilos aquí
+import "./Planning.css";
 
 const Planning = () => {
   const { token } = useContext(AuthContext);
@@ -27,9 +27,12 @@ const Planning = () => {
   useEffect(() => {
     const cargarHabitaciones = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/habitaciones`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/habitaciones`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setHabitaciones(res.data);
       } catch (error) {
         console.error("Error al cargar habitaciones:", error);
@@ -43,10 +46,20 @@ const Planning = () => {
   useEffect(() => {
     const cargarReservas = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/reservas`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setReservas(res.data.filter(r => r.estado !== "Anulada" && r.numero_habitacion));
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/reservas`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        console.log(res.data);
+        setReservas(
+          res.data.filter(
+            (r) =>
+              ["Confirmada", "Check-in"].includes(r.estado) &&
+              r.numero_habitacion
+          )
+        );
       } catch (error) {
         console.error("Error al cargar reservas:", error);
       }
@@ -55,16 +68,29 @@ const Planning = () => {
     cargarReservas();
   }, [token]);
 
-  // Verificar si una habitación está ocupada en una fecha
-  const estaOcupada = (habitacion, fecha) => {
-    return reservas.some((reserva) => {
+
+  const getEstadoColor = (estado) => {
+    if (estado === "Check-in") return "bg-primary text-white"; // Azul
+    if (estado === "Confirmada") return "bg-warning text-dark"; // Amarillo
+    return "";
+  };
+
+  const getReservaEnFecha = (habitacion, fechaString) => {
+    const fecha = new Date(fechaString);
+  
+    return reservas.find((reserva) => {
+      const entrada = new Date(reserva.fecha_entrada);
+      const salida = new Date(reserva.fecha_salida);
+  
       return (
         reserva.numero_habitacion === habitacion.numero_habitacion &&
-        fecha >= reserva.fecha_entrada &&
-        fecha < reserva.fecha_salida
+        fecha >= entrada &&
+        fecha < salida
       );
     });
   };
+  
+  
 
   return (
     <div className="container py-5 mt-4">
@@ -86,14 +112,21 @@ const Planning = () => {
                   <strong>{hab.numero_habitacion}</strong> <br />
                   <small>{hab.tipo}</small>
                 </td>
-                {fechas.map((fecha) => (
-                  <td
-                    key={fecha}
-                    className={estaOcupada(hab, fecha) ? "bg-danger text-white" : "bg-success-subtle"}
-                  >
-                    {estaOcupada(hab, fecha) ? "Ocupada" : ""}
-                  </td>
-                ))}
+                {fechas.map((fecha) => {
+                  const reserva = getReservaEnFecha(hab, fecha);
+                  return (
+                    <td
+                      key={fecha}
+                      className={
+                        reserva
+                          ? getEstadoColor(reserva.estado)
+                          : "bg-success-subtle"
+                      }
+                    >
+                      {reserva ? reserva.nombre_huesped || reserva.estado : ""}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
@@ -101,6 +134,6 @@ const Planning = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Planning;

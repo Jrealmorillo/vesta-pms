@@ -75,7 +75,7 @@ const EditarReserva = () => {
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
     });
-    
+
     if (resultado.isConfirmed) {
       try {
         await axios.delete(
@@ -103,7 +103,9 @@ const EditarReserva = () => {
       for (const linea of lineas) {
         if (linea.id_linea_reserva) {
           await axios.put(
-            `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas/${linea.id_linea_reserva}`,
+            `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas/${
+              linea.id_linea_reserva
+            }`,
             linea,
             { headers: { Authorization: `Bearer ${token}` } }
           );
@@ -124,8 +126,7 @@ const EditarReserva = () => {
   };
 
   return (
-    <div className="container py-5 mt-4"
-    style={{ maxWidth: "950px" }}>
+    <div className="container py-5 mt-4" style={{ maxWidth: "950px" }}>
       <h2 className="mb-4">Editar Reserva #{id}</h2>
       <div className="mb-3">
         <span className="fw-bold">Estado de la reserva: </span>
@@ -143,7 +144,6 @@ const EditarReserva = () => {
           {reserva.estado}
         </span>
       </div>
-
 
       <div className="row mb-3">
         <div className="col-md-4">
@@ -244,13 +244,10 @@ const EditarReserva = () => {
         </div>
       </div>
 
-      <div className="d-grid">
-        <button className="btn btn-success" onClick={guardarCambios}>
-          Guardar cambios
-        </button>
-      </div>
+      <span className="d-block p-1 text-bg-dark"></span>
 
-      <h4 className="mt-5">Líneas de Reserva</h4>
+
+      <h4 className="mt-1">Líneas de Reserva</h4>
 
       <div className="table-responsive">
         <table className="table table-bordered">
@@ -280,20 +277,26 @@ const EditarReserva = () => {
                   />
                 </td>
                 <td>
-                <select
-                  name="tipo_habitacion"
-                  className="form-select"
-                  value={linea.tipo_habitacion || ""}
-                  onChange={(e) =>
-                    manejarCambioLinea(index, "tipo_habitacion", e.target.value)
-                  }
-                >
-                  <option value="" disabled>-- Selecciona tipo</option>
-                  <option value="Individual">Individual</option>
-                  <option value="Doble">Doble</option>
-                  <option value="Triple">Triple</option>
-                  <option value="Suite">Suite</option>
-                </select>
+                  <select
+                    name="tipo_habitacion"
+                    className="form-select"
+                    value={linea.tipo_habitacion || ""}
+                    onChange={(e) =>
+                      manejarCambioLinea(
+                        index,
+                        "tipo_habitacion",
+                        e.target.value
+                      )
+                    }
+                  >
+                    <option value="" disabled>
+                      -- Selecciona tipo
+                    </option>
+                    <option value="Individual">Individual</option>
+                    <option value="Doble">Doble</option>
+                    <option value="Triple">Triple</option>
+                    <option value="Suite">Suite</option>
+                  </select>
                 </td>
                 <td>
                   <select
@@ -303,9 +306,13 @@ const EditarReserva = () => {
                       manejarCambioLinea(index, "regimen", e.target.value)
                     }
                   >
-                    <option value="" disabled>-- Selecciona régimen</option>
+                    <option value="" disabled>
+                      -- Selecciona régimen
+                    </option>
                     <option value="Solo Alojamiento">Solo Alojamiento</option>
-                    <option value="Alojamiento y Desayuno">Alojamiento y Desayuno</option>
+                    <option value="Alojamiento y Desayuno">
+                      Alojamiento y Desayuno
+                    </option>
                     <option value="Media Pensión">Media Pensión</option>
                     <option value="Pensión Completa">Pensión Completa</option>
                   </select>
@@ -316,7 +323,11 @@ const EditarReserva = () => {
                     className="form-control"
                     value={linea.cantidad_habitaciones}
                     onChange={(e) =>
-                      manejarCambioLinea(index, "cantidad_habitaciones", e.target.value)
+                      manejarCambioLinea(
+                        index,
+                        "cantidad_habitaciones",
+                        e.target.value
+                      )
                     }
                   />
                 </td>
@@ -326,7 +337,11 @@ const EditarReserva = () => {
                     className="form-control"
                     value={linea.cantidad_adultos}
                     onChange={(e) =>
-                      manejarCambioLinea(index, "cantidad_adultos", e.target.value)
+                      manejarCambioLinea(
+                        index,
+                        "cantidad_adultos",
+                        e.target.value
+                      )
                     }
                   />
                 </td>
@@ -336,7 +351,11 @@ const EditarReserva = () => {
                     className="form-control"
                     value={linea.cantidad_ninos}
                     onChange={(e) =>
-                      manejarCambioLinea(index, "cantidad_ninos", e.target.value)
+                      manejarCambioLinea(
+                        index,
+                        "cantidad_ninos",
+                        e.target.value
+                      )
                     }
                   />
                 </td>
@@ -357,6 +376,12 @@ const EditarReserva = () => {
                   >
                     Eliminar línea
                   </button>
+                  <button
+                    className="btn btn-sm btn-primary w-100 mb-2"
+                    onClick={añadirLinea}
+                  >
+                    Añadir línea
+                  </button>
                 </td>
               </tr>
             ))}
@@ -364,9 +389,10 @@ const EditarReserva = () => {
         </table>
       </div>
 
-      <div className="d-grid my-3">
-        <button className="btn btn-primary" onClick={añadirLinea}>
-          Añadir línea
+
+      <div className="d-grid">
+        <button className="btn btn-success" onClick={guardarCambios}>
+          Guardar cambios
         </button>
       </div>
     </div>

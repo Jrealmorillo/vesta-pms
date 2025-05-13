@@ -43,7 +43,6 @@ const BuscarReservas = () => {
         const apellidoB = b.primer_apellido_huesped.toLowerCase();
         return apellidoA.localeCompare(apellidoB);
       });
-      console.log(reservasOrdenadasPorApellido);
       setResultados(reservasOrdenadasPorApellido);
     } catch (error) {
       const msg = error.response?.data?.error || "Error al buscar reservas";
