@@ -39,10 +39,10 @@ const CheckInReserva = () => {
     email: "",
     observaciones: "",
   });
+  const [idClienteEncontrado, setIdClienteEncontrado] = useState(null);
+  const [clientesEncontrados, setClientesEncontrados] = useState([]);
   const [lineasReserva, setLineasReserva] = useState([]);
   const [estadoSeleccionado, setEstadoSeleccionado] = useState(null);
-
-  const [lineasReservaCargadas, setLineasReservaCargadas] = useState(false);
 
   const cargarReserva = async () => {
     try {
@@ -58,7 +58,6 @@ const CheckInReserva = () => {
         nombre: data.nombre_huesped,
         primer_apellido: data.primer_apellido_huesped,
         segundo_apellido: data.segundo_apellido_huesped,
-
       }));
     } catch (error) {
       toast.error("Error al cargar la reserva");
@@ -95,7 +94,6 @@ const CheckInReserva = () => {
 
   const manejarCambioHuesped = (e) => {
     setHuesped({ ...huesped, [e.target.name]: e.target.value });
-    console.log("huesped" + huesped);
   };
 
   const confirmarCheckIn = async () => {
@@ -103,64 +101,70 @@ const CheckInReserva = () => {
       toast.error("Debes seleccionar una habitación");
       return;
     }
-  // Validar campos obligatorios del huésped
-  const camposObligatorios = [
-    "nombre",
-    "primer_apellido",
-    "fecha_nacimiento",
-    "genero",
-    "tipo_documento",
-    "numero_documento",
-    "fecha_expedicion",
-    "pais",
-  ];
+    // Validar campos obligatorios del huésped
+    const camposObligatorios = [
+      "nombre",
+      "primer_apellido",
+      "fecha_nacimiento",
+      "genero",
+      "tipo_documento",
+      "numero_documento",
+      "fecha_expedicion",
+      "pais",
+    ];
 
-  const faltantes = camposObligatorios.filter((campo) => !huesped[campo]);
-  if (faltantes.length > 0) {
-    toast.error("Faltan campos obligatorios del huésped");
-    return;
-  }
-
-  try {
-    // Registrar al huésped como cliente
-    const clienteResponse = await axios.post(
-      `${import.meta.env.VITE_API_URL}/clientes/registro`,
-      huesped,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-
-    const id_cliente = clienteResponse.data.id_cliente;
-
-    // Asignar habitación e id_cliente a la reserva
-    await axios.put(
-      `${import.meta.env.VITE_API_URL}/reservas/${id}`,
-      {
-        numero_habitacion: habitacionSeleccionada,
-        id_cliente,
-      },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-
-    // Cambiar el estado visual de la habitación en localStorage
-    const estados = JSON.parse(localStorage.getItem("estadoHabitaciones")) || [];
-
-    const index = estados.findIndex((e) => e.numero === habitacionSeleccionada);
-    if (index !== -1) {
-      estados[index].ocupacion = "ocupada";
-      estados[index].limpieza = "sucia";
-    } else {
-      estados.push({
-        numero: habitacionSeleccionada,
-        ocupacion: "ocupada",
-        limpieza: "sucia",
-      });
+    const faltantes = camposObligatorios.filter((campo) => !huesped[campo]);
+    if (faltantes.length > 0) {
+      toast.error("Faltan campos obligatorios del huésped");
+      return;
     }
 
-    localStorage.setItem("estadoHabitaciones", JSON.stringify(estados));
+    try {
+      // Registrar al huésped como cliente
+      let id_cliente = idClienteEncontrado;
 
-    // Cambiar estado de la reserva a "Check-in"
+      if (!id_cliente) {
+        const clienteResponse = await axios.post(
+          `${import.meta.env.VITE_API_URL}/clientes/registro`,
+          huesped,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        id_cliente = clienteResponse.data.cliente.id_cliente;
+      }
+
+      // Asignar habitación e id_cliente a la reserva
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/reservas/${id}`,
+        {
+          numero_habitacion: habitacionSeleccionada,
+          id_cliente,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      // Cambiar el estado visual de la habitación en localStorage
+      const estados =
+        JSON.parse(localStorage.getItem("estadoHabitaciones")) || [];
+
+      const index = estados.findIndex(
+        (e) => e.numero === habitacionSeleccionada
+      );
+      if (index !== -1) {
+        estados[index].ocupacion = "ocupada";
+        estados[index].limpieza = "sucia";
+      } else {
+        estados.push({
+          numero: habitacionSeleccionada,
+          ocupacion: "ocupada",
+          limpieza: "sucia",
+        });
+      }
+
+      localStorage.setItem("estadoHabitaciones", JSON.stringify(estados));
+
+      // Cambiar estado de la reserva a "Check-in"
       await axios.put(
         `${import.meta.env.VITE_API_URL}/reservas/${id}/cambiar-estado`,
         { nuevoEstado: "Check-in" },
@@ -196,6 +200,61 @@ const CheckInReserva = () => {
     cargarLineasReserva();
     cargarHabitacionesDisponibles();
   }, []);
+
+  const buscarClientePorDocumento = async () => {
+    if (!huesped.numero_documento) {
+      toast.error("Introduce un número de documento");
+      return;
+    }
+
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/clientes/documento/${
+          huesped.numero_documento
+        }`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (data.length === 0) {
+        toast.error("No se encontró ningún cliente con ese documento");
+        setClientesEncontrados([]);
+      } else if (data.length === 1) {
+        seleccionarCliente(data[0]);
+      } else {
+        toast.info("Se han encontrado varios clientes. Selecciona uno.");
+        setClientesEncontrados(data);
+      }
+    } catch (_error) {
+      toast.error("Error al buscar cliente");
+      setClientesEncontrados([]);
+    }
+  };
+
+  const seleccionarCliente = (cliente) => {
+    setHuesped((prev) => ({
+      ...prev,
+      nombre: cliente.nombre || "",
+      primer_apellido: cliente.primer_apellido || "",
+      segundo_apellido: cliente.segundo_apellido || "",
+      fecha_nacimiento: cliente.fecha_nacimiento || "",
+      genero: cliente.genero || "",
+      tipo_documento: cliente.tipo_documento || "",
+      numero_documento: cliente.numero_documento || "",
+      fecha_expedicion: cliente.fecha_expedicion || "",
+      direccion: cliente.direccion || "",
+      ciudad: cliente.ciudad || "",
+      codigo_postal: cliente.codigo_postal || "",
+      pais: cliente.pais || "",
+      telefono: cliente.telefono || "",
+      email: cliente.email || "",
+      observaciones: cliente.observaciones || "",
+    }));
+    setIdClienteEncontrado(cliente.id_cliente);
+    setClientesEncontrados([]);
+    toast.success("Cliente seleccionado");
+  };
 
   if (!reserva) return <p>Cargando reserva...</p>;
 
@@ -242,7 +301,7 @@ const CheckInReserva = () => {
             value={habitacionSeleccionada}
             onChange={(e) => manejarSeleccionHabitacion(e.target.value)}
           >
-            <option value="">-- Selecciona una habitación --</option>
+            <option value="" disabled>-- Selecciona una habitación --</option>
             {habitaciones.map((hab) => {
               const estados =
                 JSON.parse(localStorage.getItem("estadoHabitaciones")) || [];
@@ -257,8 +316,7 @@ const CheckInReserva = () => {
               if (ocupacion === "libre" && limpieza === "limpia") icono = "🟢";
               else if (ocupacion === "ocupada" || limpieza === "sucia")
                 icono = "🔴";
-              else
-                icono = "🟡";
+              else icono = "🟡";
 
               return (
                 <option
@@ -326,7 +384,7 @@ const CheckInReserva = () => {
             value={huesped.genero}
             onChange={manejarCambioHuesped}
           >
-            <option value="">-- Selecciona un género --</option>
+            <option value="" disabled>-- Selecciona un género --</option>
             <option>Masculino</option>
             <option>Femenino</option>
           </select>
@@ -343,21 +401,47 @@ const CheckInReserva = () => {
             value={huesped.tipo_documento || ""}
             onChange={manejarCambioHuesped}
           >
-            <option value="">-- Selecciona un tipo de documento --</option>
-            <option>DNI</option>
-            <option>Pasaporte</option>
-            <option>NIE</option>
+            <option value="" disabled>-- Selecciona un tipo de documento --</option>
+            <option value="DNI">DNI</option>
+            <option value="Pasaporte">Pasaporte</option>
+            <option value="Documento de Identidad">Documento de Identidad</option>
+            <option value="Permiso de Residencia">Permiso de Residencia</option>
           </select>
         </div>
         <div className="col">
           <label className="form-label">Número de documento</label>
-          <input
-            name="numero_documento"
-            className="form-control"
-            value={huesped.numero_documento || ""}
-            onChange={manejarCambioHuesped}
-          />
+          <div className="input-group">
+            <input
+              name="numero_documento"
+              className="form-control"
+              value={huesped.numero_documento || ""}
+              onChange={manejarCambioHuesped}
+            />
+            <button
+              className="btn btn-secondary"
+              type="button"
+              onClick={buscarClientePorDocumento}
+            >
+              Buscar
+            </button>
+          </div>
+          {clientesEncontrados.length > 1 && (
+            <ul className="list-group mt-2">
+              {clientesEncontrados.map((cliente) => (
+                <li
+                  key={cliente.id_cliente}
+                  className="list-group-item list-group-item-action"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => seleccionarCliente(cliente)}
+                >
+                  {cliente.nombre} {cliente.primer_apellido} —{" "}
+                  {cliente.numero_documento}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
+
         <div className="col">
           <label className="form-label">Fecha de expedición</label>
           <input

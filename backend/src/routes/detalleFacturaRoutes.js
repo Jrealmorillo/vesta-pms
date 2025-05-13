@@ -17,4 +17,7 @@ router.delete("/:id", detalleFacturaController.anularDetalle);
 // Obtener cargos no facturados de una reserva
 router.get("/pendientes/:id_reserva", detalleFacturaController.obtenerPendientesPorReserva);
 
+// Adelantar cargos desde líneas de reserva
+router.post("/adelantar/:id_reserva", detalleFacturaController.adelantarCargosDesdeLineas);
+
 module.exports = router;

@@ -28,21 +28,30 @@ class GestorFacturas {
             }
 
             // Calcular el total
-            const total = detallesAFacturar.reduce((suma, d) => suma + d.total, 0);
-
+            const total = detallesAFacturar
+            .map((d) => parseFloat(d.total))
+            .filter((n) => !isNaN(n))
+            .reduce((suma, n) => suma + n, 0)
+            .toFixed(2);
+          
             if (total <= 0) {
                 throw new Error("El total de la factura debe ser mayor que 0");
             }
 
+            const reserva = await Reserva.findByPk(id_reserva);
+
             // Crear la factura
             const nuevaFactura = await Factura.create({
                 id_reserva,
-                id_cliente,
+                id_cliente: reserva.id_cliente,
+                nombre_huesped: reserva.nombre_huesped,
+                primer_apellido_huesped: reserva.primer_apellido_huesped,
+                segundo_apellido_huesped: reserva.segundo_apellido_huesped,
                 id_empresa,
                 id_usuario,
                 forma_pago,
                 total,
-                estado: "Pendiente"
+                estado: "Pagada"
             });
 
             // Asignar los detalles a la factura

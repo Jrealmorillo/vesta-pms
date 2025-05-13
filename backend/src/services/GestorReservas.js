@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Reserva, Cliente, Empresa, LineaReserva } = require("../models");
+const { Reserva, Cliente, Empresa, LineaReserva, Factura } = require("../models");
 const GestorLineasReserva = require("./GestorLineasReserva");
 const GestorHistorialReservas = require("./GestorHistorialReservas");
 
@@ -97,8 +97,9 @@ class GestorReservas {
 
       const reserva = await Reserva.findByPk(id);
       if (!reserva) throw new Error("Reserva no encontrada");
-
-      const valoresAnteriores = { ...reserva.dataValues }; // 🔐 guardar estado original
+      
+      // guardar estado original
+      const valoresAnteriores = { ...reserva.dataValues }; 
 
       // Obtener fechas actualizadas (antes del update)
       const nuevaEntrada = nuevosDatos.fecha_entrada || reserva.fecha_entrada;
@@ -133,6 +134,7 @@ class GestorReservas {
         });
       }
 
+      console.log("Actualizando reserva con:", nuevosDatos);
       // Actualizar reserva con nuevos datos
       await reserva.update(nuevosDatos);
 
@@ -303,6 +305,11 @@ class GestorReservas {
           { model: Cliente, as: "cliente" },
           { model: Empresa, as: "empresa" },
           { model: LineaReserva, as: "lineas" },
+          {
+            model: Factura,
+            as: "facturas",
+            required: false
+          }
         ]
       });
 

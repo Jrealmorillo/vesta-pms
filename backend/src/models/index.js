@@ -41,6 +41,13 @@ Reserva.hasMany(LineaReserva, {
   as: "lineas",
 });
 
+// Una misma reserva puede tener varias facturas asociadas
+Reserva.hasMany(Factura, { 
+  foreignKey: "id_reserva",
+  as: "facturas", 
+});
+
+
 // Línea de reserva pertenece a una reserva
 LineaReserva.belongsTo(Reserva, {
   foreignKey: "id_reserva",
@@ -81,7 +88,7 @@ Factura.belongsTo(Usuario, {
 // Factura tiene muchos detalles de factura
 Factura.hasMany(DetalleFactura, {
   foreignKey: "id_factura",
-  as: "detalles" 
+  as: "detalles"
 });
 
 // DetalleFactura pertenece a una factura

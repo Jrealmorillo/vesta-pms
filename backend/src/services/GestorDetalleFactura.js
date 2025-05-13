@@ -1,5 +1,4 @@
 const DetalleFactura = require("../models/DetalleFactura");
-const GestorHistorialReservas = require("./GestorHistorialReservas"); // si deseas dejar registro
 
 class GestorDetalleFactura {
     // Añadir una nueva línea de factura

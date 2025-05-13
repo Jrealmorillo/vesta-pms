@@ -148,9 +148,13 @@ const EditarCliente = () => {
               required
             >
               <option value="DNI">DNI</option>
-              <option value="NIE">NIE</option>
               <option value="Pasaporte">Pasaporte</option>
-              <option value="Otro">Otro</option>
+              <option value="Documento de Identidad">
+                Documento de Identidad
+              </option>
+              <option value="Permiso de Residencia">
+                Permiso de Residencia
+              </option>
             </select>
           </div>
           <div className="col-md-5 mb-3">
@@ -273,6 +277,6 @@ const EditarCliente = () => {
       </form>
     </div>
   );
-}
+};
 
 export default EditarCliente;

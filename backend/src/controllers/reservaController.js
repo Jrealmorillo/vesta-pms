@@ -195,11 +195,21 @@ exports.obtenerHistorialReserva = async (req, res) => {
 exports.obtenerReservaActivaPorHabitacion = async (req, res) => {
   try {
     const reserva = await GestorReservas.obtenerReservaActivaPorHabitacion(req.params.numero);
-    res.json(reserva);
+
+    // Verificamos si hay alguna factura pagada
+    const estado_factura = reserva.facturas?.some(f => f.estado === "Pagada")
+      ? "Pagada"
+      : "Pendiente";
+
+    res.json({
+      ...reserva.dataValues,
+      estado_factura,
+    });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
 };
+
 
 
 

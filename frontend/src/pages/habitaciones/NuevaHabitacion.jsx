@@ -77,7 +77,7 @@ const NuevaHabitacion = () => {
             onChange={manejarCambio}
             required
           >
-            <option value="">-- Selecciona tipo --</option>
+            <option value="" disabled>-- Selecciona tipo --</option>
             <option value="Individual">Individual</option>
             <option value="Doble">Doble</option>
             <option value="Triple">Triple</option>

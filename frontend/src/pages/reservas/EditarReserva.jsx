@@ -288,7 +288,7 @@ const EditarReserva = () => {
                     manejarCambioLinea(index, "tipo_habitacion", e.target.value)
                   }
                 >
-                  <option value="">-- Selecciona tipo</option>
+                  <option value="" disabled>-- Selecciona tipo</option>
                   <option value="Individual">Individual</option>
                   <option value="Doble">Doble</option>
                   <option value="Triple">Triple</option>
@@ -303,7 +303,7 @@ const EditarReserva = () => {
                       manejarCambioLinea(index, "regimen", e.target.value)
                     }
                   >
-                    <option value="">-- Selecciona régimen</option>
+                    <option value="" disabled>-- Selecciona régimen</option>
                     <option value="Solo Alojamiento">Solo Alojamiento</option>
                     <option value="Alojamiento y Desayuno">Alojamiento y Desayuno</option>
                     <option value="Media Pensión">Media Pensión</option>

@@ -20,7 +20,7 @@ const NuevoCliente = () => {
     pais: "",
     codigo_postal: "",
     telefono: "",
-    email: "", 
+    email: "",
     observaciones: "",
   });
 
@@ -35,7 +35,7 @@ const NuevoCliente = () => {
     // campo email debe ser null en vez de ""
     if (cliente.email === "") {
       cliente.email = null;
-    }    
+    }
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/clientes/registro`,
@@ -65,7 +65,8 @@ const NuevoCliente = () => {
         observaciones: "",
       });
     } catch (error) {
-      const mensaje = error.response?.data?.detalle || "Error al registrar cliente";
+      const mensaje =
+        error.response?.data?.detalle || "Error al registrar cliente";
       toast.error(mensaje);
       console.error("Error:", error);
     }
@@ -152,9 +153,13 @@ const NuevoCliente = () => {
               required
             >
               <option value="DNI">DNI</option>
-              <option value="NIE">NIE</option>
               <option value="Pasaporte">Pasaporte</option>
-              <option value="Otro">Otro</option>
+              <option value="Documento de Identidad">
+                Documento de Identidad
+              </option>
+              <option value="Permiso de Residencia">
+                Permiso de Residencia
+              </option>
             </select>
           </div>
           <div className="col-md-5 mb-3">
@@ -268,6 +273,6 @@ const NuevoCliente = () => {
       </form>
     </div>
   );
-}
+};
 
 export default NuevoCliente;

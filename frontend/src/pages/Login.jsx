@@ -24,6 +24,7 @@ const Login = () => {
       const { token, usuario } = res.data;
       
       login(token, usuario.id_usuario, usuario.nombre_usuario, usuario.id_rol);
+      localStorage.setItem("usuario", JSON.stringify(usuario));
       toast.success("Bienvenido a Vesta PMS");
       navigate("/dashboard");
     } catch {

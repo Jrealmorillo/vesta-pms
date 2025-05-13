@@ -311,7 +311,7 @@ const NuevaReserva = () => {
                   value={nuevaLinea.tipo_habitacion}
                   onChange={manejarCambioLinea}
                 >
-                  <option value="">Selecciona tipo</option>
+                  <option value="" disabled>Selecciona tipo</option>
                   <option value="Individual">Individual</option>
                   <option value="Doble">Doble</option>
                   <option value="Triple">Triple</option>
@@ -338,7 +338,7 @@ const NuevaReserva = () => {
                   value={nuevaLinea.regimen}
                   onChange={manejarCambioLinea}
                 >
-                  <option value="">Selecciona régimen</option>
+                  <option value="" disabled>Selecciona régimen</option>
                   <option value="Solo Alojamiento">Solo Alojamiento</option>
                   <option value="Alojamiento y Desayuno">
                     Alojamiento y Desayuno
