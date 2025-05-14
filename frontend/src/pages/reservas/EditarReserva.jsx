@@ -120,8 +120,7 @@ const EditarReserva = () => {
 
       toast.success("Reserva modificada correctamente");
     } catch (error) {
-      toast.error("Error al guardar los cambios");
-      console.error(error);
+      toast.error(error.response?.data?.error || "Error al modificar la reserva");
     }
   };
 

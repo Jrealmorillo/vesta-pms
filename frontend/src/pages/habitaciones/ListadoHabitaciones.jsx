@@ -63,7 +63,7 @@ const ListadoHabitaciones = () => {
     } catch (error) {
       const msg = error.response?.data?.detalle || "Error al eliminar habitación";
       toast.error(msg);
-      
+
     }
   };
 
@@ -106,7 +106,7 @@ const ListadoHabitaciones = () => {
                       style={{ width: '100px' }}
                       onClick={() => confirmarEliminacionHabitacion(h.numero_habitacion)}
                     >
-                     <i class="bi bi-trash3-fill me-2"></i> Eliminar
+                     <i className="bi bi-trash3-fill me-2"></i> Eliminar
                     </button>
                   </td>
                 </tr>

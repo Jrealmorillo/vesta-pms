@@ -1,9 +1,35 @@
 const { Op } = require("sequelize");
-const { Reserva, Cliente, Empresa, LineaReserva, Factura } = require("../models");
+const { Reserva, Cliente, Empresa, LineaReserva, Factura, Habitacion } = require("../models");
 const GestorLineasReserva = require("./GestorLineasReserva");
 const GestorHistorialReservas = require("./GestorHistorialReservas");
 
 class GestorReservas {
+
+
+  // Función auxiliar para validar disponibilidad real de una habitación
+  async validarDisponibilidadHabitacion(numero_habitacion, fecha_entrada, fecha_salida, idReservaActual = null) {
+    // Verificar que la habitación existe
+    const habitacion = await Habitacion.findByPk(numero_habitacion);
+    if (!habitacion) {
+      throw new Error(`La habitación nº ${numero_habitacion} no existe en el sistema`);
+    }
+
+    // Comprobar solapamientos con otras reservas activas
+    const conflictos = await Reserva.findAll({
+      where: {
+        numero_habitacion,
+        estado: { [Op.ne]: "Anulada" },
+        id_reserva: idReservaActual ? { [Op.ne]: idReservaActual } : { [Op.not]: null },
+        fecha_entrada: { [Op.lt]: fecha_salida },
+        fecha_salida: { [Op.gt]: fecha_entrada }
+      }
+    });
+
+    if (conflictos.length > 0) {
+      throw new Error(`La habitación nº ${numero_habitacion} no está disponible en esas fechas`);
+    }
+  }
+
   // Crear una nueva reserva
   async crearReserva(datos, nombre_usuario) {
     const { lineasReserva, ...datosReserva } = datos;
@@ -26,6 +52,15 @@ class GestorReservas {
 
       if (salida <= entrada) {
         throw new Error("La fecha de salida debe ser posterior a la fecha de entrada.");
+      }
+
+      // Validar que la habitación no esté ya asignada en otra reserva activa
+      if (datosReserva.numero_habitacion) {
+        await this.validarDisponibilidadHabitacion(
+          datosReserva.numero_habitacion,
+          datosReserva.fecha_entrada,
+          datosReserva.fecha_salida
+        );
       }
 
       // Crear la reserva principal
@@ -134,6 +169,17 @@ class GestorReservas {
         });
       }
 
+      // Validar que la habitación no esté ya asignada en otra reserva activa
+      if (nuevosDatos.numero_habitacion) {
+        await this.validarDisponibilidadHabitacion(
+          nuevosDatos.numero_habitacion,
+          nuevaEntrada,
+          nuevaSalida,
+          id // Excluimos esta misma reserva
+        );
+      }
+
+
       // Actualizar reserva con nuevos datos
       await reserva.update(nuevosDatos);
 
@@ -191,6 +237,21 @@ class GestorReservas {
           "Estado no válido. Debe ser: Confirmada, Anulada, Check-in o Check-out"
         );
       }
+
+      // Comprobar que la habitación no esté ya asignada a otra reserva activa
+      if (nuevoEstado === "Check-in") {
+        if (!reserva.numero_habitacion) {
+          throw new Error("No se puede hacer check-in: la reserva no tiene habitación asignada");
+        }
+
+        await this.validarDisponibilidadHabitacion(
+          reserva.numero_habitacion,
+          reserva.fecha_entrada,
+          reserva.fecha_salida,
+          reserva.id_reserva
+        );
+      }
+
 
       reserva.estado = nuevoEstado;
       await reserva.save();
@@ -362,6 +423,8 @@ class GestorReservas {
       throw new Error("Error al consultar reservas para el planning");
     }
   }
+
+
 
 }
 module.exports = new GestorReservas();

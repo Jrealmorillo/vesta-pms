@@ -554,13 +554,13 @@ const CheckOut = () => {
                             className="btn btn-outline-primary btn-sm me-2"
                             onClick={() => iniciarEdicion(detalle)}
                           >
-                           <i class="bi bi-pencil-fill"></i> Editar
+                           <i className="bi bi-pencil-fill"></i> Editar
                           </button>
                           <button
                             className="btn btn-outline-danger btn-sm"
                             onClick={() => anularDetalle(detalle.id_detalle)}
                           >
-                            <i class="bi bi-trash3-fill"></i> Eliminar
+                            <i className="bi bi-trash3-fill"></i> Eliminar
                           </button>
                         </div>
                       </>
