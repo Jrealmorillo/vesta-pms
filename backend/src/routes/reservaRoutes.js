@@ -45,6 +45,8 @@ router.get("/:id/historial", reservaController.obtenerHistorialReserva);
 // Obtener una reserva de check-in
 router.get("/habitacion/:numero/check-in", reservaController.obtenerReservaActivaPorHabitacion);
 
+// Obtener todas las reservas para el planning
+router.get("/planning", reservaController.obtenerReservasParaPlanning);
 
 
 module.exports = router;

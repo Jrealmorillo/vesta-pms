@@ -210,6 +210,23 @@ exports.obtenerReservaActivaPorHabitacion = async (req, res) => {
   }
 };
 
+// Obtener todas las reservas para el planning
+exports.obtenerReservasParaPlanning = async (req, res) => {
+  try {
+    const { desde, hasta } = req.query;
+
+    if (!desde || !hasta) {
+      return res.status(400).json({ error: "Debe especificar 'desde' y 'hasta'" });
+    }
+
+    const reservas = await GestorReservas.obtenerReservasParaPlanning(desde, hasta);
+    res.json(reservas);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener las reservas para el planning" });
+  }
+};
+
+
 
 
 

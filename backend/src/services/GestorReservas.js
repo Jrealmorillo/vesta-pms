@@ -97,9 +97,9 @@ class GestorReservas {
 
       const reserva = await Reserva.findByPk(id);
       if (!reserva) throw new Error("Reserva no encontrada");
-      
+
       // guardar estado original
-      const valoresAnteriores = { ...reserva.dataValues }; 
+      const valoresAnteriores = { ...reserva.dataValues };
 
       // Obtener fechas actualizadas (antes del update)
       const nuevaEntrada = nuevosDatos.fecha_entrada || reserva.fecha_entrada;
@@ -321,6 +321,47 @@ class GestorReservas {
       throw new Error("Error al obtener reserva activa por habitación: " + error.message);
     }
   }
-}
 
+
+
+  // Obtener todas las reservas para el planning
+  async obtenerReservasParaPlanning(desde, hasta) {
+    try {
+      return await Reserva.findAll({
+        where: {
+          estado: {
+            [Op.in]: ["Confirmada", "Check-in"]
+          },
+          numero_habitacion: {
+            [Op.ne]: null
+          },
+          [Op.or]: [
+            {
+              fecha_entrada: {
+                [Op.between]: [desde, hasta]
+              }
+            },
+            {
+              fecha_salida: {
+                [Op.between]: [desde, hasta]
+              }
+            },
+            {
+              fecha_entrada: { [Op.lte]: desde },
+              fecha_salida: { [Op.gte]: hasta }
+            }
+          ]
+        },
+        include: [
+          { model: Cliente, as: "cliente" },
+          { model: Empresa, as: "empresa" }
+        ],
+        order: [["numero_habitacion", "ASC"]]
+      });
+    } catch (error) {
+      throw new Error("Error al consultar reservas para el planning");
+    }
+  }
+
+}
 module.exports = new GestorReservas();

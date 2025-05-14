@@ -1,12 +1,23 @@
-.table thead th {
-    position: sticky;
-    top: 0;
-    background-color: white;
-    z-index: 1;
+
+  .celda-planning {
+    width: 60px;
+    height: 50px;
+    max-width: 60px;
+    max-height: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 4px;
+    vertical-align: middle;
+    text-align: center;
   }
-  
-  td {
-    min-width: 80px;
-    height: 40px;
+
+  .cuadro-color {
+    width: 25px;
+    height: 25px;
+    border: 1px solid #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
   }
-  
