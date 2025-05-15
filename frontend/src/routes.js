@@ -41,7 +41,6 @@ const routes = [
   {
     label: "Facturación",
     submenu: [
-      { label: "Emitir factura", path: "/facturas/nueva" },
       { label: "Buscar facturas", path: "/facturas/buscar" },
       { label: "Check-out", path: "/facturas/check-out" },
     ],

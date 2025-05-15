@@ -48,5 +48,8 @@ router.get("/habitacion/:numero/check-in", reservaController.obtenerReservaActiv
 // Obtener todas las reservas para el planning
 router.get("/planning", reservaController.obtenerReservasParaPlanning);
 
+// Comprobar si una reserva tiene líneas no facturadas
+router.get("/:id_reserva/tiene-lineas-no-facturadas", reservaController.tieneLineasNoFacturadas);
+
 
 module.exports = router;

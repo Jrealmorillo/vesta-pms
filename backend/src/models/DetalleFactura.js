@@ -27,6 +27,11 @@ const DetalleFactura = sequelize.define("DetalleFactura", {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
+  fecha: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
   cantidad: {
     type: DataTypes.INTEGER,
     allowNull: false,

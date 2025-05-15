@@ -115,6 +115,7 @@ const CheckInReserva = () => {
 
     const faltantes = camposObligatorios.filter((campo) => !huesped[campo]);
     if (faltantes.length > 0) {
+      console.log(faltantes);
       toast.error("Faltan campos obligatorios del huésped");
       return;
     }
@@ -262,7 +263,7 @@ const CheckInReserva = () => {
     <div className="container py-5 mt-4">
       <h2>Check-in de la reserva #{reserva.id_reserva}</h2>
 
-      <div className="mb-3">
+      <div className="mb-3 fs-2">
         <strong>Nombre Reserva:</strong> {reserva.nombre_huesped}{" "}
         {reserva.primer_apellido_huesped} {reserva.segundo_apellido_huesped}
       </div>
@@ -278,6 +279,7 @@ const CheckInReserva = () => {
               setReserva({ ...reserva, fecha_entrada: e.target.value })
             }
             required
+            
           />
         </div>
         <div className="col-md-2">
@@ -295,13 +297,45 @@ const CheckInReserva = () => {
           />
         </div>{" "}
         <div className="col-md-2">
+          <label className="form-label">Nombre</label>
+          <input
+            name="nombre"
+            className="form-control"
+            placeholder="Nombre"
+            value={huesped.nombre}
+            onChange={manejarCambioHuesped}
+          />
+        </div>
+        <div className="col-md-2">
+          <label className="form-label">Primer apellido</label>
+          <input
+            name="primer_apellido"
+            className="form-control"
+            placeholder="Primer apellido"
+            value={huesped.primer_apellido}
+            onChange={manejarCambioHuesped}
+          />
+        </div>
+        <div className="col-md-2">
+          <label className="form-label">Segundo apellido</label>
+          <input
+            name="segundo_apellido"
+            className="form-control"
+            placeholder="Segundo apellido"
+            value={huesped.segundo_apellido}
+            onChange={manejarCambioHuesped}
+          />
+        </div>
+        <div className="col-md-2">
           <label className="form-label">Habitación</label>
           <select
             className="form-select"
             value={habitacionSeleccionada}
             onChange={(e) => manejarSeleccionHabitacion(e.target.value)}
           >
-            <option value="" disabled>-- Selecciona una habitación --</option>
+            <option value="" disabled>
+              -- Selecciona una habitación --
+            </option>
             {habitaciones.map((hab) => {
               const estados =
                 JSON.parse(localStorage.getItem("estadoHabitaciones")) || [];
@@ -332,41 +366,9 @@ const CheckInReserva = () => {
         </div>
       </div>
 
-      <h5 className="mt-4">Datos del huésped</h5>
-
-      {/* Datos personales */}
-      <div className="row mb-3">
-        <div className="col">
-          <input
-            name="nombre"
-            className="form-control"
-            placeholder="Nombre"
-            value={huesped.nombre}
-            onChange={manejarCambioHuesped}
-          />
-        </div>
-        <div className="col">
-          <input
-            name="primer_apellido"
-            className="form-control"
-            placeholder="Primer apellido"
-            value={huesped.primer_apellido}
-            onChange={manejarCambioHuesped}
-          />
-        </div>
-        <div className="col">
-          <input
-            name="segundo_apellido"
-            className="form-control"
-            placeholder="Segundo apellido"
-            value={huesped.segundo_apellido}
-            onChange={manejarCambioHuesped}
-          />
-        </div>
-      </div>
 
       <div className="row mb-3">
-        <div className="col">
+        <div className="col-md-2">
           <label className="form-label">Fecha de nacimiento</label>
           <input
             type="date"
@@ -376,7 +378,7 @@ const CheckInReserva = () => {
             onChange={manejarCambioHuesped}
           />
         </div>
-        <div className="col">
+        <div className="col-md-2">
           <label className="form-label">Género</label>
           <select
             name="genero"
@@ -384,16 +386,14 @@ const CheckInReserva = () => {
             value={huesped.genero}
             onChange={manejarCambioHuesped}
           >
-            <option value="" disabled>-- Selecciona un género --</option>
+            <option value="" disabled>
+              -- Selecciona un género --
+            </option>
             <option>Masculino</option>
             <option>Femenino</option>
           </select>
         </div>
-      </div>
-
-      {/* Documento */}
-      <div className="row mb-3">
-        <div className="col">
+        <div className="col-md-2">
           <label className="form-label">Tipo de documento</label>
           <select
             name="tipo_documento"
@@ -401,14 +401,18 @@ const CheckInReserva = () => {
             value={huesped.tipo_documento || ""}
             onChange={manejarCambioHuesped}
           >
-            <option value="" disabled>-- Selecciona un tipo de documento --</option>
+            <option value="" disabled>
+              -- Selecciona un tipo de documento --
+            </option>
             <option value="DNI">DNI</option>
             <option value="Pasaporte">Pasaporte</option>
-            <option value="Documento de Identidad">Documento de Identidad</option>
+            <option value="Documento de Identidad">
+              Documento de Identidad
+            </option>
             <option value="Permiso de Residencia">Permiso de Residencia</option>
           </select>
         </div>
-        <div className="col">
+        <div className="col-md-4">
           <label className="form-label">Número de documento</label>
           <div className="input-group">
             <input
@@ -442,7 +446,7 @@ const CheckInReserva = () => {
           )}
         </div>
 
-        <div className="col">
+        <div className="col-md-2">
           <label className="form-label">Fecha de expedición</label>
           <input
             type="date"
@@ -454,9 +458,9 @@ const CheckInReserva = () => {
         </div>
       </div>
 
-      {/* Dirección y contacto */}
       <div className="row mb-3">
-        <div className="col">
+        <div className="col-md-6">
+          <label className="form-label">Dirección</label>
           <input
             name="direccion"
             className="form-control"
@@ -465,7 +469,8 @@ const CheckInReserva = () => {
             onChange={manejarCambioHuesped}
           />
         </div>
-        <div className="col">
+        <div className="col-md-2">
+          <label className="form-label">Ciudad</label>
           <input
             name="ciudad"
             className="form-control"
@@ -474,7 +479,8 @@ const CheckInReserva = () => {
             onChange={manejarCambioHuesped}
           />
         </div>
-        <div className="col">
+        <div className="col-md-2">
+          <label className="form-label">Código Postal</label>
           <input
             name="codigo_postal"
             className="form-control"
@@ -483,7 +489,8 @@ const CheckInReserva = () => {
             onChange={manejarCambioHuesped}
           />
         </div>
-        <div className="col">
+        <div className="col-md-2">
+          <label className="form-label">País</label>
           <input
             name="pais"
             className="form-control"
@@ -495,7 +502,8 @@ const CheckInReserva = () => {
       </div>
 
       <div className="row mb-3">
-        <div className="col">
+        <div className="col-md-2">
+          <label className="form-label">Teléfono</label>
           <input
             name="telefono"
             className="form-control"
@@ -504,7 +512,8 @@ const CheckInReserva = () => {
             onChange={manejarCambioHuesped}
           />
         </div>
-        <div className="col">
+        <div className="col-md-2 ">
+          <label className="form-label">Email</label>
           <input
             name="email"
             className="form-control"
@@ -513,18 +522,20 @@ const CheckInReserva = () => {
             onChange={manejarCambioHuesped}
           />
         </div>
+        <div className="col-md-8">
+          <label className="form-label">Observaciones</label>
+          <textarea
+            name="observaciones"
+            className="form-control"
+            placeholder="Observaciones"
+            rows={1}
+            value={huesped.observaciones}
+            onChange={manejarCambioHuesped}
+          />
+        </div>
       </div>
 
-      <div className="mb-3">
-        <textarea
-          name="observaciones"
-          className="form-control"
-          placeholder="Observaciones"
-          rows={2}
-          value={huesped.observaciones}
-          onChange={manejarCambioHuesped}
-        />
-      </div>
+
       <h5 className="mt-5">Líneas de reserva</h5>
       {lineasReserva.length === 0 ? (
         <p className="text-muted">

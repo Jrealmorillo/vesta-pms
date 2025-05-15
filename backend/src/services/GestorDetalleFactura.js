@@ -6,7 +6,7 @@ class GestorDetalleFactura {
         try {
             const nuevoDetalle = await DetalleFactura.create({
                 ...datos,
-                activa: true, // por defecto
+                activa: true, 
             });
 
             return nuevoDetalle;

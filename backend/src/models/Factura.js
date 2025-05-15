@@ -27,7 +27,7 @@ const Factura = sequelize.define("Factura", {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  fecha_emisión: {
+  fecha_emision: {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW,

@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const { Reserva, Cliente, Empresa, LineaReserva, Factura, Habitacion } = require("../models");
 const GestorLineasReserva = require("./GestorLineasReserva");
 const GestorHistorialReservas = require("./GestorHistorialReservas");
+const GestorDetalleFactura = require("./GestorDetalleFactura");
 
 class GestorReservas {
 
@@ -424,6 +425,35 @@ class GestorReservas {
     }
   }
 
+// Verificar si quedan líneas activas de reserva sin volcar a detalle de factura
+async tieneLineasNoFacturadas(id_reserva) {
+  try {
+    // Buscar líneas activas de tipo "Alojamiento"
+    const lineas = await LineaReserva.findAll({
+      where: {
+        id_reserva,
+        activa: true,
+        tipo_habitacion: { [Op.ne]: null }
+      }
+    });
+
+    // Buscar conceptos ya volcados como "Alojamiento" en DetalleFactura
+    const detalles = await GestorDetalleFactura.obtenerDetallesPendientesPorReserva(id_reserva);
+
+    const conceptosExistentes = detalles
+      .filter((d) =>
+        d.concepto.toLowerCase().includes("alojamiento")
+      )
+      .map((d) => d.fecha); // puedes usar otro criterio si es necesario
+
+    // Si hay más líneas que detalles, hay pendientes
+    const pendientes = lineas.length > conceptosExistentes.length;
+
+    return { pendientes };
+  } catch (error) {
+    throw new Error("Error al verificar líneas no facturadas: " + error.message);
+  }
+}
 
 
 }

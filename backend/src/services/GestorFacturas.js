@@ -1,4 +1,4 @@
-const { Factura, DetalleFactura, Reserva } = require("../models");
+const { Factura, DetalleFactura, Reserva, Cliente } = require("../models");
 const GestorDetalleFactura = require("./GestorDetalleFactura");
 const { Op } = require("sequelize");
 
@@ -8,7 +8,7 @@ class GestorFacturas {
     async crearFactura({ id_reserva, id_cliente, id_empresa = null, id_usuario, forma_pago, detalles }) {
         try {
             // Validar campos básicos
-            if (!id_reserva || !forma_pago || !id_usuario || !detalles || detalles.length === 0) {
+            if (!forma_pago || !id_usuario || !detalles || detalles.length === 0) {
                 throw new Error("Faltan datos necesarios para emitir la factura");
             }
 
@@ -29,11 +29,11 @@ class GestorFacturas {
 
             // Calcular el total
             const total = detallesAFacturar
-            .map((d) => parseFloat(d.total))
-            .filter((n) => !isNaN(n))
-            .reduce((suma, n) => suma + n, 0)
-            .toFixed(2);
-          
+                .map((d) => parseFloat(d.total))
+                .filter((n) => !isNaN(n))
+                .reduce((suma, n) => suma + n, 0)
+                .toFixed(2);
+
             if (total <= 0) {
                 throw new Error("El total de la factura debe ser mayor que 0");
             }
@@ -42,7 +42,7 @@ class GestorFacturas {
 
             // Crear la factura
             const nuevaFactura = await Factura.create({
-                id_reserva,
+                id_reserva: reserva.id_reserva || null,
                 id_cliente: reserva.id_cliente,
                 nombre_huesped: reserva.nombre_huesped,
                 primer_apellido_huesped: reserva.primer_apellido_huesped,
@@ -75,6 +75,11 @@ class GestorFacturas {
                         model: DetalleFactura,
                         as: "detalles",
                         required: false
+                    },
+                    {
+                        model: Cliente,
+                        as: "cliente",
+                        required: false
                     }
                 ]
             });
@@ -99,6 +104,54 @@ class GestorFacturas {
             throw new Error("Error al modificar factura: " + error.message);
         }
     }
+
+    // Buscar facturas con filtros flexibles
+    async buscarFacturas(filtros) {
+        try {
+            const condiciones = {};
+
+            if (filtros.id_factura) {
+                condiciones.id_factura = filtros.id_factura;
+            }
+
+            if (filtros.id_reserva) {
+                condiciones.id_reserva = filtros.id_reserva;
+            }
+
+
+            if (filtros.fecha_emision) {
+                const fecha = filtros.fecha_emision;
+                condiciones.fecha_emision = {
+                    [Op.gte]: `${fecha} 00:00:00`,
+                    [Op.lte]: `${fecha} 23:59:59`,
+                };
+            }
+
+
+
+            const facturas = await Factura.findAll({
+                where: condiciones,
+                order: [["fecha_emision", "ASC"]],
+                include: [
+                    {
+                        model: DetalleFactura,
+                        as: "detalles",
+                        required: false,
+                    },
+                    {
+                        model: Cliente,
+                        as: "cliente",
+                        required: false,
+                    }
+                ],
+            });
+
+            return facturas;
+        } catch (error) {
+            throw new Error("Error al buscar facturas: " + error.message);
+        }
+    }
+
 
     // Anular una factura (y sus detalles asociados)
     async anularFactura(id_factura) {

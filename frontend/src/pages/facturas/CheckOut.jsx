@@ -181,7 +181,7 @@ const CheckOut = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      toast.success("Factura creada correctamente");
+      toast.success("Factura cerrada correctamente");
 
       // Volver a consultar la reserva actualizada
       const reservaActualizada = await axios.get(
@@ -232,7 +232,32 @@ const CheckOut = () => {
       if (!salidaAnticipada.isConfirmed) return;
     }
 
-    // Verificar si hay cargos pendientes
+    // Verificar si aún hay líneas de reserva activas sin trasladar
+    try {
+      const respuesta = await axios.get(
+        `${import.meta.env.VITE_API_URL}/reservas/${
+          reserva.id_reserva
+        }/tiene-lineas-no-facturadas`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (respuesta.data?.pendientes) {
+        await Swal.fire({
+          icon: "warning",
+          title: "Cargos de alojamiento no generados",
+          text: "Hay líneas de reserva activas que no se han trasladado como cargos. Por favor, adelanta los cargos antes de hacer check-out.",
+          confirmButtonColor: "#3085d6",
+        });
+        return;
+      }
+    } catch (error) {
+      toast.error("Error al verificar cargos pendientes");
+      return;
+    }
+
+    // Verificar si hay cargos pendientes en la cuenta
     if (detalleFactura.length > 0) {
       await Swal.fire({
         icon: "error",
@@ -377,11 +402,11 @@ const CheckOut = () => {
     <div className="container py-5 mt-4" style={{ maxWidth: "800px" }}>
       <h2>Check-out</h2>
 
-      <div className="input-group mb-3">
+      <div className="input-group- mx-auto col-md-2 mb-3">
         <input
           type="text"
           className="form-control"
-          placeholder="Número de habitación"
+          placeholder="Habitación"
           value={numeroHabitacion}
           onChange={(e) => setNumeroHabitacion(e.target.value)}
           onKeyDown={(e) => {
@@ -390,9 +415,11 @@ const CheckOut = () => {
             }
           }}
         />
-        <button className="btn btn-primary" onClick={buscarReservaActiva}>
-          Buscar reserva
-        </button>
+        </div>
+        <div className="input-group-append">
+          <button className="btn btn-primary" onClick={buscarReservaActiva}>
+            Buscar
+          </button>
       </div>
 
       {error && <div className="alert alert-danger">{error}</div>}
@@ -554,7 +581,7 @@ const CheckOut = () => {
                             className="btn btn-outline-primary btn-sm me-2"
                             onClick={() => iniciarEdicion(detalle)}
                           >
-                           <i className="bi bi-pencil-fill"></i> Editar
+                            <i className="bi bi-pencil-fill"></i> Editar
                           </button>
                           <button
                             className="btn btn-outline-danger btn-sm"
@@ -629,6 +656,7 @@ const CheckOut = () => {
                     <option value="Cena">Cena</option>
                     <option value="Minibar">Minibar</option>
                     <option value="Room service">Room service</option>
+                    <option value="Parking">Parking</option>
                     <option value="Otros">Otros</option>
                   </select>
                 </div>

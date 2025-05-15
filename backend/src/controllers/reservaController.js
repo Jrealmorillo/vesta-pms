@@ -227,6 +227,15 @@ exports.obtenerReservasParaPlanning = async (req, res) => {
 };
 
 
+// Verificar si hay líneas de reserva no facturadas
+exports.tieneLineasNoFacturadas = async (req, res) => {
+  try {
+    const resultado = await GestorReservas.tieneLineasNoFacturadas(req.params.id_reserva);
+    res.json(resultado);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 
 

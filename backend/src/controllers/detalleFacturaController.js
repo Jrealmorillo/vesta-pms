@@ -101,6 +101,7 @@ exports.adelantarCargosDesdeLineas = async (req, res) => {
         cantidad: linea.cantidad_habitaciones,
         precio_unitario: linea.precio,
         total,
+        fecha: linea.fecha,
       });
 
       creados.push(detalle);

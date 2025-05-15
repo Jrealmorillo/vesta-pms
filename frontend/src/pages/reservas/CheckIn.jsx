@@ -27,6 +27,7 @@ const CheckIn = () => {
         return apellidoA.localeCompare(apellidoB);
       }
       );
+
       setReservasHoy(reservasOrdenadasPorApellido);
     } catch (error) {
       console.error(error);

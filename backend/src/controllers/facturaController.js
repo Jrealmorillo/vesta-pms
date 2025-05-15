@@ -42,3 +42,14 @@ exports.anularFactura = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+exports.buscarFacturas = async (req, res) => {
+  try {
+    const filtros = req.query; // Los filtros vienen por query string
+    const resultados = await GestorFacturas.buscarFacturas(filtros);
+    res.json(resultados);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+

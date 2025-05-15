@@ -12,7 +12,7 @@ router.post("/", detalleFacturaController.registrarDetalle);
 router.put("/:id", detalleFacturaController.modificarDetalle);
 
 // Anular un detalle (convertir a negativo)
-router.delete("/:id", detalleFacturaController.anularDetalle);
+router.put("/:id/anular", detalleFacturaController.anularDetalle);
 
 // Obtener cargos no facturados de una reserva
 router.get("/pendientes/:id_reserva", detalleFacturaController.obtenerPendientesPorReserva);

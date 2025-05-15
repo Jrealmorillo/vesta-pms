@@ -89,7 +89,7 @@ CREATE TABLE Reservas (
 CREATE TABLE Lineas_Reserva (
     id_linea_reserva INT AUTO_INCREMENT PRIMARY KEY,
     id_reserva INT NOT NULL,
-    tipo_habitacion VARCHAR(50) NOT NULL,
+    tipo_habitacion ENUM('Individual', 'Doble', 'Triple', 'Suite') NOT NULL,
     cantidad_habitaciones INT NOT NULL CHECK (cantidad_habitaciones > 0),
     fecha DATE NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
@@ -117,7 +117,7 @@ CREATE TABLE Facturas (
     id_empresa INT,
     id_reserva INT NOT NULL,
     id_usuario INT NOT NULL,
-    fecha_emisión DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fecha_emision DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     total DECIMAL(10,2) DEFAULT 0 NOT NULL,
     forma_pago ENUM('Efectivo', 'Transferencia', 'Visa', 'Amex', 'Crédito') NOT NULL,
     estado ENUM('Pendiente', 'Pagada', 'Anulada') NOT NULL,
@@ -134,6 +134,7 @@ CREATE TABLE Detalle_Factura (
     id_habitacion VARCHAR(20),
     id_cliente INT,
     concepto VARCHAR(255) NOT NULL,
+    fecha DATE NOT NULL,
     cantidad INT CHECK (cantidad > 0) NOT NULL,
     precio_unitario DECIMAL(10,2) DEFAULT 0 NOT NULL,
     total DECIMAL(10,2) DEFAULT 0 NOT NULL,
@@ -143,7 +144,6 @@ CREATE TABLE Detalle_Factura (
     FOREIGN KEY (id_habitacion) REFERENCES Habitaciones(numero_habitacion),
     FOREIGN KEY (id_cliente) REFERENCES Clientes(id_cliente)
 );
-
 
 
 
