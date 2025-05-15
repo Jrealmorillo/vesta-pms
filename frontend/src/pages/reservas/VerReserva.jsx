@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState, useContext } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
@@ -44,7 +44,9 @@ const VerReserva = () => {
     if (!resultado.isConfirmed) return;
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/reservas/${reserva.id_reserva}/cambiar-estado`,
+        `${import.meta.env.VITE_API_URL}/reservas/${
+          reserva.id_reserva
+        }/cambiar-estado`,
         { nuevoEstado: "Confirmada" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -76,7 +78,9 @@ const VerReserva = () => {
     if (!resultado.isConfirmed) return;
     try {
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/reservas/${reserva.id_reserva}/cambiar-estado`,
+        `${import.meta.env.VITE_API_URL}/reservas/${
+          reserva.id_reserva
+        }/cambiar-estado`,
         { nuevoEstado: "Anulada" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -95,8 +99,7 @@ const VerReserva = () => {
   if (!reserva) return <p className="mt-4">Cargando reserva...</p>;
 
   return (
-    <div className="container py-5 mt-4"
-    style={{ maxWidth: "800px" }}>
+    <div className="container py-5 mt-4" style={{ maxWidth: "800px" }}>
       <h2 className="mb-4">Detalle de la reserva #{reserva.id_reserva}</h2>
       <div className="mb-3">
         <span className="fw-bold">Estado: </span>
@@ -180,6 +183,13 @@ const VerReserva = () => {
           Modificar reserva
         </button>
       </div>
+      <Link
+        to={`/reservas/${reserva.id_reserva}/historial`}
+        className="btn btn-outline-secondary btn-sm"
+      >
+        Ver historial
+      </Link>
+
       {reserva.estado === "Confirmada" && (
         <div className="mb-3">
           <button
@@ -192,6 +202,6 @@ const VerReserva = () => {
       )}
     </div>
   );
-}
+};
 
 export default VerReserva;

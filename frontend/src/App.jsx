@@ -25,6 +25,7 @@ import NuevaReserva from "./pages/reservas/NuevaReserva";
 import BuscarReservas from "./pages/reservas/BuscarReservas";
 import CheckIn from "./pages/reservas/CheckIn";
 import CheckInReserva from "./pages/reservas/CheckInReserva";
+import VerHistorialReserva from "./pages/reservas/VerHistorialReserva";
 import BuscarFacturas from "./pages/facturas/BuscarFacturas";
 import CheckOut from "./pages/facturas/CheckOut";
 import VerFactura from "./pages/facturas/VerFactura";
@@ -115,6 +116,7 @@ const App = () => {
           <Route path="/reservas/buscar" element={<BuscarReservas />} />
           <Route path="/reservas/editar/:id" element={<EditarReserva />} />
           <Route path="/reservas/:id" element={<VerReserva />} />
+          <Route path="/reservas/:id/historial" element={<VerHistorialReserva />} />
           <Route path="/reservas/check-in" element={<CheckIn />} />
           <Route path="/reservas/check-in/:id" element={<CheckInReserva />} />
           <Route path="/facturas/buscar" element={<BuscarFacturas />} />

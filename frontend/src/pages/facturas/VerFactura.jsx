@@ -18,7 +18,6 @@ const VerFactura = () => {
           `${import.meta.env.VITE_API_URL}/facturas/${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        console.log(data);
         setFactura(data);
       } catch (error) {
         toast.error("Error al cargar la factura");
