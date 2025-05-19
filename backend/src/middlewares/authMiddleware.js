@@ -1,8 +1,11 @@
+// Middleware de autenticación JWT para proteger rutas privadas.
+// Verifica el token enviado en el encabezado Authorization y añade el usuario verificado al objeto req.
+
 const jwt = require("jsonwebtoken");
 
 module.exports = (req, res, next) => {
-  // Obtener el token del encabezado "Authorization"
-  const token = req.header("Authorization")?.split(" ")[1]; // Esto elimina el "Bearer"
+  // Extrae el token del encabezado "Authorization" (formato: Bearer <token>)
+  const token = req.header("Authorization")?.split(" ")[1];
 
   // Si no se proporciona un token, se deniega el acceso
   if (!token) {
@@ -12,21 +15,23 @@ module.exports = (req, res, next) => {
   }
 
   try {
-    const claveSecreta = process.env.JWT_SECRET; // Se obtiene la clave secreta desde las variables de entorno
+    // Obtiene la clave secreta desde las variables de entorno
+    const claveSecreta = process.env.JWT_SECRET;
 
-    // Se verifica y decodifica el token (eliminando "Bearer " si está presente)
+    // Verifica y decodifica el token JWT
     const usuarioVerificado = jwt.verify(
       token.replace("Bearer ", ""),
       claveSecreta
     );
-    // Se almacena el nombre de usuario para su uso posterior
+    // Añade el usuario verificado al objeto req para su uso en rutas protegidas
     req.usuario = {
       ...usuarioVerificado,
       nombre_usuario: usuarioVerificado.nombre_usuario,
     };
 
-    next(); // Se pasa el control al siguiente middleware o ruta
+    next(); // Pasa el control al siguiente middleware o ruta
   } catch (error) {
-    res.status(403).json({ error: "Token inválido" }); // 403 = Prohibido (token incorrecto o caducado)
+    // Si el token es inválido o ha expirado, deniega el acceso
+    res.status(403).json({ error: "Token inválido" }); // 403 = Prohibido
   }
 };

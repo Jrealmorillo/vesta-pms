@@ -1,3 +1,6 @@
+// Configuración y conexión a la base de datos MySQL usando Sequelize.
+// Este archivo exporta la instancia de Sequelize para ser utilizada en los modelos y otros módulos.
+
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
 
@@ -12,9 +15,9 @@ const sequelize = new Sequelize(
     logging: false, // evita que Sequielize muestre todas las consultas por consola
   });
 
-// Verificar conexión
+// Verificar conexión y mostrar mensaje en consola según el resultado
 sequelize.authenticate()
   .then(() => console.log("Conectado a la BBDD MySQL"))
   .catch(err => console.error("Error de conexión: ", err));
 
-  module.exports = sequelize;
+module.exports = sequelize;

@@ -1,3 +1,6 @@
+// Importa dotenv para cargar variables de entorno
+// Importa express para crear el servidor
+// Importa cors para permitir solicitudes de diferentes dominios
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -5,7 +8,9 @@ const cors = require("cors");
 // Cargar modelos y asociaciones
 require("./models");
 
+
 const app = express();
+// Configuración del puerto, se puede cambiar en el archivo .env
 const PORT = process.env.PORT || 5000;
 
 // Middlewares
@@ -38,8 +43,8 @@ app.use("/facturas", facturaRoutes);
 app.use("/detalles-factura", detalleFacturaRoutes);
 
 
-
 // Iniciar el servidor y escuchar en el puerto definido
 app.listen(PORT, () => {
+    // Mensaje informativo en consola cuando el servidor está listo
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

@@ -15,14 +15,14 @@ class GestorReservas {
       throw new Error(`La habitación nº ${numero_habitacion} no existe en el sistema`);
     }
 
-    // Comprobar solapamientos con otras reservas activas
+    // Comprobar solapamientos con otras reservas activas en el mismo rango de fechas
     const conflictos = await Reserva.findAll({
       where: {
         numero_habitacion,
-        estado: { [Op.ne]: "Anulada" },
-        id_reserva: idReservaActual ? { [Op.ne]: idReservaActual } : { [Op.not]: null },
-        fecha_entrada: { [Op.lt]: fecha_salida },
-        fecha_salida: { [Op.gt]: fecha_entrada }
+        estado: { [Op.ne]: "Anulada" }, // Solo reservas activas
+        id_reserva: idReservaActual ? { [Op.ne]: idReservaActual } : { [Op.not]: null }, // Excluye la reserva actual si aplica
+        fecha_entrada: { [Op.lt]: fecha_salida }, // Entrada antes de la salida solicitada
+        fecha_salida: { [Op.gt]: fecha_entrada }  // Salida después de la entrada solicitada
       }
     });
 
@@ -84,35 +84,36 @@ class GestorReservas {
 
         const fechaLinea = new Date(linea.fecha);
 
-        // Validar que la fecha esté dentro del rango permitido
+        // Validar que la fecha de la línea esté dentro del rango de la reserva
         if (fechaLinea < entrada || fechaLinea >= salida) {
           throw new Error(
             `La línea con fecha ${linea.fecha} está fuera del rango de estancia. Debe estar entre ${datosReserva.fecha_entrada} y ${datosReserva.fecha_salida}.`
           );
         }
 
-
+        // Registrar la línea de reserva y asociarla a la reserva principal
         await GestorLineasReserva.registrarLineaReserva(
           {
             ...linea,
-            id_reserva: nuevaReserva.id_reserva,
+            id_reserva: nuevaReserva.id_reserva, // Relaciona la línea con la reserva creada
           },
           nombre_usuario
         );
 
+        // Sumar el importe de la línea al total de la reserva
         const incremento = parseFloat(linea.precio) * linea.cantidad_habitaciones;
         const totalAnterior = parseFloat(nuevaReserva.precio_total);
         nuevaReserva.precio_total = (totalAnterior + incremento).toFixed(2);
-        // Importante guardar el nuevo valor
+        // Guardar el nuevo total acumulado
         await nuevaReserva.save();
       }
 
-      // Obtener las líneas recién creadas
+      // Obtener las líneas recién creadas para devolverlas junto a la reserva
       const lineasCreadas = await GestorLineasReserva.obtenerLineasPorReserva(
         nuevaReserva.id_reserva
       );
 
-      // Devolver reserva y sus líneas
+      // Devolver la reserva y sus líneas asociadas
       return {
         reserva: nuevaReserva,
         lineasReserva: lineasCreadas,

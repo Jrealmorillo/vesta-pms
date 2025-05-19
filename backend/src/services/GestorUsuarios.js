@@ -117,10 +117,10 @@ class GestorUsuarios {
     try {
       const usuario = await Usuario.findByPk(id);
       if (!usuario) {
-        throw new Error("Usuario no encontrado");
+        throw new Error("Usuario no encontrado"); // Validación de existencia
       }
 
-      // Se cambia el estado del usuario a inactivo en lugar de eliminarlo
+      // Se cambia el estado del usuario a inactivo en lugar de eliminarlo físicamente
       await usuario.update({ activo: false });
       return { mensaje: "Usuario desactivado correctamente" };
     } catch (error) {
@@ -130,18 +130,19 @@ class GestorUsuarios {
 
   async loginUsuario(nombre_usuario, contraseña) {
     try {
+      // Busca el usuario por su nombre de usuario
       const usuario = await Usuario.findOne({ where: { nombre_usuario } });
       if (!usuario) {
-        throw new Error("Usuario incorrecto");
+        throw new Error("Usuario incorrecto"); // Usuario no existe
       }
 
-      // Verifica si la contraseña ingresada es válida
+      // Verifica si la contraseña ingresada es válida comparando el hash
       const passwordValida = await bcrypt.compare(
         contraseña,
         usuario.contraseña
       );
       if (!passwordValida) {
-        throw new Error("Contraseña incorrecta");
+        throw new Error("Contraseña incorrecta"); // Contraseña no coincide
       }
 
       // Genera un token JWT para la autenticación del usuario

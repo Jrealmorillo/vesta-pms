@@ -1,22 +1,24 @@
+// Controlador para gestionar las operaciones relacionadas con reservas y sus líneas.
+// Utiliza los servicios GestorReservas, GestorLineasReserva y GestorHistorialReservas para la lógica de negocio y responde a las peticiones HTTP.
+
 const GestorReservas = require("../services/GestorReservas");
 const GestorLineasReserva = require("../services/GestorLineasReserva");
 const GestorHistorialReservas = require("../services/GestorHistorialReservas");
 
-
-// Crear una nueva reserva
+// Recibe los datos de la reserva y sus líneas, y la registra en la base de datos.
 exports.crearReserva = async (req, res) => {
   try {
-
+    // Extrae el usuario autenticado que realiza la operación
     const usuario = req.usuario.nombre_usuario;
-
+    // Separa las líneas de reserva del resto de datos
     const { lineas, ...datosReserva } = req.body;
-
+    // Llama al servicio para crear la reserva y sus líneas asociadas
     const { reserva, lineasReserva } = await GestorReservas.crearReserva(
       {
         ...datosReserva,
         lineasReserva: lineas,
       }, usuario);
-
+    // Devuelve la reserva y las líneas creadas
     res.status(201).json({
       mensaje: "Reserva creada exitosamente",
       reserva,
@@ -27,11 +29,12 @@ exports.crearReserva = async (req, res) => {
   }
 };
 
-// Modificar reserva
+// Actualiza los datos de una reserva identificada por su ID.
 exports.modificarReserva = async (req, res) => {
   try {
+    // Usuario autenticado
     const usuario = req.usuario.nombre_usuario;
-
+    // Actualiza la reserva con los nuevos datos
     const reservaActualizada = await GestorReservas.modificarReserva(
       req.params.id,
       req.body,
@@ -46,16 +49,17 @@ exports.modificarReserva = async (req, res) => {
   }
 };
 
-// Cambiar estado de una reserva
+// Cambia el estado de la reserva (Confirmada, Anulada, etc.)
 exports.cambiarEstado = async (req, res) => {
   try {
+    // Valida que se haya enviado un nuevo estado
     const { nuevoEstado } = req.body;
     if (!nuevoEstado) {
       return res.status(400).json({ error: "Debe proporcionar un nuevo estado" });
     }
-
+    // Usuario autenticado
     const usuario = req.usuario.nombre_usuario;
-
+    // Cambia el estado de la reserva
     const reserva = await GestorReservas.cambiarEstadoReserva(
       req.params.id,
       nuevoEstado,
@@ -70,9 +74,10 @@ exports.cambiarEstado = async (req, res) => {
   }
 };
 
-// Obtener reserva por ID
+// Devuelve la reserva correspondiente al ID proporcionado.
 exports.obtenerReservaPorId = async (req, res) => {
   try {
+    // Busca la reserva por su ID
     const reserva = await GestorReservas.obtenerReservaPorId(req.params.id);
     res.json(reserva);
   } catch (error) {
@@ -81,7 +86,7 @@ exports.obtenerReservaPorId = async (req, res) => {
 };
 
 
-// Buscar por fecha de entrada
+// Buscar por fecha de entrada proporcionada
 exports.obtenerReservaPorFechaEntrada = async (req, res) => {
   try {
     const reservas = await GestorReservas.obtenerReservaPorFechaEntrada(req.params.fecha);
@@ -111,16 +116,18 @@ exports.obtenerReservaPorEmpresa = async (req, res) => {
   }
 };
 
+
 // Registrar una nueva línea de reserva dentro de una reserva
 exports.registrarLineaEnReserva = async (req, res) => {
   try {
+    // Usuario autenticado
     const usuario = req.usuario.nombre_usuario;
-
+    // Prepara los datos de la línea de reserva
     const datos = {
       ...req.body,
       id_reserva: req.params.id // Se añade automáticamente desde la ruta
     };
-
+    // Llama al servicio para registrar la línea de reserva
     const linea = await GestorLineasReserva.registrarLineaReserva(datos, usuario);
     res.status(201).json({
       mensaje: "Línea de reserva registrada correctamente",
@@ -134,8 +141,9 @@ exports.registrarLineaEnReserva = async (req, res) => {
 // Modificar una línea de reserva existente
 exports.modificarLineaReserva = async (req, res) => {
   try {
+    // Usuario autenticado
     const usuario = req.usuario.nombre_usuario;
-
+    // Llama al servicio para modificar la línea de reserva
     const linea = await GestorLineasReserva.modificarLineaReserva(
       req.params.id_linea,
       req.body,
@@ -154,8 +162,9 @@ exports.modificarLineaReserva = async (req, res) => {
 // Anular (desactivar) una línea de reserva
 exports.anularLineaReserva = async (req, res) => {
   try {
+    // Usuario autenticado
     const usuario = req.usuario.nombre_usuario;
-
+    // Llama al servicio para anular la línea de reserva
     const resultado = await GestorLineasReserva.anularLineaReserva(
       req.params.id_linea,
       usuario
@@ -170,6 +179,7 @@ exports.anularLineaReserva = async (req, res) => {
 // Obtener todas las líneas de una reserva específica
 exports.obtenerLineasDeReserva = async (req, res) => {
   try {
+    // Busca todas las líneas de la reserva especificada
     const lineas = await GestorLineasReserva.obtenerLineasPorReserva(
       req.params.id
     );
@@ -183,6 +193,7 @@ exports.obtenerLineasDeReserva = async (req, res) => {
 // Obtener el historial de una reserva
 exports.obtenerHistorialReserva = async (req, res) => {
   try {
+    // Obtiene el historial de la reserva especificada
     const historial = await GestorHistorialReservas.obtenerHistorialReserva(req.params.id);
     res.json(historial);
   } catch (error) {
@@ -190,17 +201,15 @@ exports.obtenerHistorialReserva = async (req, res) => {
   }
 };
 
-
-// Obtener una reserva de check-in por número de habitación
+// Obtener una reserva activa (check-in) por número de habitación
 exports.obtenerReservaActivaPorHabitacion = async (req, res) => {
   try {
+    // Busca la reserva activa por el número de habitación
     const reserva = await GestorReservas.obtenerReservaActivaPorHabitacion(req.params.numero);
-
-    // Verificamos si hay alguna factura pagada
+    // Verifica si hay alguna factura pagada
     const estado_factura = reserva.facturas?.some(f => f.estado === "Pagada")
       ? "Pagada"
       : "Pendiente";
-
     res.json({
       ...reserva.dataValues,
       estado_factura,
@@ -210,15 +219,15 @@ exports.obtenerReservaActivaPorHabitacion = async (req, res) => {
   }
 };
 
-// Obtener todas las reservas para el planning
+// Obtener todas las reservas para el planning 
 exports.obtenerReservasParaPlanning = async (req, res) => {
   try {
+    // Valida que se hayan proporcionado las fechas requeridas
     const { desde, hasta } = req.query;
-
     if (!desde || !hasta) {
       return res.status(400).json({ error: "Debe especificar 'desde' y 'hasta'" });
     }
-
+    // Obtiene las reservas dentro del rango de fechas
     const reservas = await GestorReservas.obtenerReservasParaPlanning(desde, hasta);
     res.json(reservas);
   } catch (error) {
@@ -226,10 +235,10 @@ exports.obtenerReservasParaPlanning = async (req, res) => {
   }
 };
 
-
 // Verificar si hay líneas de reserva no facturadas
 exports.tieneLineasNoFacturadas = async (req, res) => {
   try {
+    // Verifica si la reserva tiene líneas no facturadas
     const resultado = await GestorReservas.tieneLineasNoFacturadas(req.params.id_reserva);
     res.json(resultado);
   } catch (error) {
