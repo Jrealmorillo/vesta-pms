@@ -31,14 +31,13 @@ const RoomRack = () => {
           `${import.meta.env.VITE_API_URL}/habitaciones`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-
         const guardado = localStorage.getItem("estadoHabitaciones");
 
         if (guardado) {
           const estadosGuardados = JSON.parse(guardado);
 
           // Sincroniza el estado guardado solo con habitaciones existentes
-          const sincronizado = response.data.map((habitacion) => {
+          const sincronizado = response.data.habitaciones.map((habitacion) => {
             const encontrado = estadosGuardados.find(
               (e) => e.numero === habitacion.numero_habitacion
             );
@@ -55,7 +54,7 @@ const RoomRack = () => {
           setCargado(true);
         } else {
           // Estado inicial: todas limpias y libres
-          const inicial = response.data.map((habitacion) => ({
+          const inicial = response.data.habitaciones.map((habitacion) => ({
             numero: habitacion.numero_habitacion,
             tipo: habitacion.tipo,
             limpieza: "limpia",
@@ -65,7 +64,7 @@ const RoomRack = () => {
           setEstados(inicial);
           setCargado(true);
         }
-        setHabitaciones(response.data);
+        setHabitaciones(response.data.habitaciones);
       } catch (error) {
         console.error("Error al cargar habitaciones:", error);
       }

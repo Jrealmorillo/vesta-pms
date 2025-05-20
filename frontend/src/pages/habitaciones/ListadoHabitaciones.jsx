@@ -22,7 +22,7 @@ const ListadoHabitaciones = () => {
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/habitaciones`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setHabitaciones(res.data);
+      setHabitaciones(res.data.habitaciones); // Actualiza el estado con la lista de habitaciones
     } catch (error) {
       toast.error("Error al obtener habitaciones");
     }
@@ -30,7 +30,7 @@ const ListadoHabitaciones = () => {
 
   useEffect(() => {
     obtenerHabitaciones(); // Carga la lista al montar el componente
-  });
+  }, []);
 
   // Navega a la pantalla de edición de la habitación seleccionada
   const irAEditar = (id) => {

@@ -49,7 +49,7 @@ const Planning = () => {
   // Carga las reservas cada vez que cambia la fecha de inicio
   useEffect(() => {
     cargarReservas();
-  }, [fechaInicio]);
+  }, []);
 
   // Obtiene habitaciones desde la API
   const cargarHabitaciones = async () => {
@@ -60,7 +60,7 @@ const Planning = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setHabitaciones(res.data);
+      setHabitaciones(res.data.habitaciones);
     } catch (error) {
       console.error("Error al cargar habitaciones");
     }
