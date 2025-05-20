@@ -1,3 +1,7 @@
+// Definición de las rutas principales y submenús de la aplicación 
+// Cada objeto representa una sección del menú de navegación y sus rutas asociadas.
+// Algunas rutas incluyen la propiedad adminOnly para restringir el acceso a administradores.
+
 const routes = [
   { label: "Inicio", path: "/dashboard" },
   {
@@ -55,7 +59,6 @@ const routes = [
   },
 ];
 
-
+// Exporta la configuración de rutas para ser utilizada en el componente de navegación principal
 export default routes;
 
-  

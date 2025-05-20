@@ -1,3 +1,8 @@
+
+// Página para realizar el check-in de una reserva concreta.
+// Permite asignar habitación, registrar o seleccionar huésped, validar datos y confirmar el check-in.
+// Gestiona el estado visual de la habitación y el estado de la reserva, mostrando líneas de reserva asociadas.
+
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -44,6 +49,7 @@ const CheckInReserva = () => {
   const [lineasReserva, setLineasReserva] = useState([]);
   const [estadoSeleccionado, setEstadoSeleccionado] = useState(null);
 
+  // Carga los datos de la reserva seleccionada
   const cargarReserva = async () => {
     try {
       const { data } = await axios.get(
@@ -64,6 +70,7 @@ const CheckInReserva = () => {
     }
   };
 
+  // Carga las líneas de la reserva (habitaciones, regímenes, etc.)
   const cargarLineasReserva = async () => {
     try {
       const { data } = await axios.get(
@@ -78,6 +85,7 @@ const CheckInReserva = () => {
     }
   };
 
+  // Carga todas las habitaciones disponibles para asignar
   const cargarHabitacionesDisponibles = async () => {
     try {
       const { data } = await axios.get(
@@ -92,10 +100,12 @@ const CheckInReserva = () => {
     }
   };
 
+  // Maneja cambios en los campos del formulario de huésped
   const manejarCambioHuesped = (e) => {
     setHuesped({ ...huesped, [e.target.name]: e.target.value });
   };
 
+  // Confirma el check-in: valida datos, registra huésped si es necesario, asigna habitación y cambia estado
   const confirmarCheckIn = async () => {
     if (!habitacionSeleccionada) {
       toast.error("Debes seleccionar una habitación");
@@ -182,6 +192,7 @@ const CheckInReserva = () => {
     }
   };
 
+  // Maneja la selección de habitación y actualiza el estado visual
   const manejarSeleccionHabitacion = (numero) => {
     setHabitacionSeleccionada(numero);
 
@@ -196,12 +207,14 @@ const CheckInReserva = () => {
     }
   };
 
+  // Carga datos iniciales al montar el componente
   useEffect(() => {
     cargarReserva();
     cargarLineasReserva();
     cargarHabitacionesDisponibles();
   }, []);
 
+  // Busca cliente por número de documento y permite seleccionarlo
   const buscarClientePorDocumento = async () => {
     if (!huesped.numero_documento) {
       toast.error("Introduce un número de documento");
@@ -233,6 +246,7 @@ const CheckInReserva = () => {
     }
   };
 
+  // Selecciona un cliente encontrado y rellena los datos del huésped
   const seleccionarCliente = (cliente) => {
     setHuesped((prev) => ({
       ...prev,
@@ -263,11 +277,13 @@ const CheckInReserva = () => {
     <div className="container py-5 mt-4">
       <h2>Check-in de la reserva #{reserva.id_reserva}</h2>
 
+      {/* Datos principales de la reserva */}
       <div className="mb-3 fs-2">
         <strong>Nombre Reserva:</strong> {reserva.nombre_huesped}{" "}
         {reserva.primer_apellido_huesped} {reserva.segundo_apellido_huesped}
       </div>
       <div className="row mb-3">
+        {/* Fechas de entrada y salida */}
         <div className="col-md-2">
           <label className="form-label">Fecha de entrada</label>
           <input
@@ -279,7 +295,6 @@ const CheckInReserva = () => {
               setReserva({ ...reserva, fecha_entrada: e.target.value })
             }
             required
-            
           />
         </div>
         <div className="col-md-2">
@@ -295,7 +310,8 @@ const CheckInReserva = () => {
             }
             required
           />
-        </div>{" "}
+        </div>
+        {/* Datos del huésped */}
         <div className="col-md-2">
           <label className="form-label">Nombre</label>
           <input
@@ -326,6 +342,7 @@ const CheckInReserva = () => {
             onChange={manejarCambioHuesped}
           />
         </div>
+        {/* Selector de habitación con iconos según estado visual */}
         <div className="col-md-2">
           <label className="form-label">Habitación</label>
           <select
@@ -337,6 +354,7 @@ const CheckInReserva = () => {
               -- Selecciona una habitación --
             </option>
             {habitaciones.map((hab) => {
+              // Obtiene el estado visual de la habitación desde localStorage
               const estados =
                 JSON.parse(localStorage.getItem("estadoHabitaciones")) || [];
               const estado = estados.find(
@@ -346,6 +364,7 @@ const CheckInReserva = () => {
               const ocupacion = estado?.ocupacion || "Desconocida";
               const limpieza = estado?.limpieza || "Desconocida";
 
+              // Icono visual según estado: 🟢 libre y limpia, 🔴 ocupada o sucia, 🟡 otro
               let icono = "⚪";
               if (ocupacion === "libre" && limpieza === "limpia") icono = "🟢";
               else if (ocupacion === "ocupada" || limpieza === "sucia")
@@ -366,7 +385,7 @@ const CheckInReserva = () => {
         </div>
       </div>
 
-
+      {/* Formulario de datos personales del huésped */}
       <div className="row mb-3">
         <div className="col-md-2">
           <label className="form-label">Fecha de nacimiento</label>
@@ -535,7 +554,7 @@ const CheckInReserva = () => {
         </div>
       </div>
 
-
+      {/* Tabla de líneas de reserva asociadas */}
       <h5 className="mt-5">Líneas de reserva</h5>
       {lineasReserva.length === 0 ? (
         <p className="text-muted">
@@ -572,6 +591,7 @@ const CheckInReserva = () => {
         </div>
       )}
 
+      {/* Botón para confirmar el check-in */}
       <div className="d-grid mt-4">
         <button className="btn btn-success" onClick={confirmarCheckIn}>
           Confirmar check-in

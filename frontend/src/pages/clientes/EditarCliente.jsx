@@ -1,3 +1,7 @@
+// Página para editar los datos de un cliente
+// Permite cargar los datos actuales, modificarlos y guardarlos mediante un formulario controlado.
+// Incluye validaciones, notificaciones y navegación tras la edición.
+
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -5,13 +9,15 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../../context/AuthContext";
 
 const EditarCliente = () => {
+  // Obtiene el ID del cliente desde la URL
   const { id } = useParams();
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
 
-  const [cliente, setCliente] = useState(null);
+  const [cliente, setCliente] = useState(null); // Estado del cliente a editar
 
   useEffect(() => {
+    // Carga los datos del cliente al montar el componente
     const obtenerCliente = async () => {
       try {
         const res = await axios.get(
@@ -33,15 +39,17 @@ const EditarCliente = () => {
     obtenerCliente();
   }, [id, token, navigate]);
 
+  // Maneja los cambios en los campos del formulario
   const manejarCambio = (e) => {
     const { name, value } = e.target;
     setCliente({ ...cliente, [name]: value });
   };
 
+  // Envía el formulario para actualizar el cliente
   const manejarSubmit = async (e) => {
     e.preventDefault();
 
-    // Evitar envío de email vacío
+    // Evitar envío de email vacío (lo convierte en null)
     if (cliente.email?.trim() === "") {
       cliente.email = null;
     }
@@ -65,16 +73,19 @@ const EditarCliente = () => {
     }
   };
 
+  // Muestra un mensaje mientras se cargan los datos
   if (!cliente) return <p className="text-center mt-5">Cargando cliente...</p>;
 
   return (
     <div className="container py-4 mt-4">
       <h2 className="text-center mb-4">Editar cliente</h2>
+      {/* Formulario de edición de cliente */}
       <form
         onSubmit={manejarSubmit}
         className="mx-auto"
         style={{ maxWidth: "750px", textAlign: "left" }}
       >
+        {/* Campos de datos personales */}
         <div className="row">
           <div className="col-md-4 mb-3">
             <label className="form-label">Nombre</label>

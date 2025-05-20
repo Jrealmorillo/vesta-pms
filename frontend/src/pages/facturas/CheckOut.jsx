@@ -1,3 +1,7 @@
+// Página de Check-out para reservas y facturación
+// Permite buscar reservas activas por habitación, gestionar cargos, cerrar factura y realizar el check-out.
+// Incluye validaciones, notificaciones, edición y anulación de cargos, y confirmaciones interactivas.
+
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import axios from "axios";
@@ -25,6 +29,7 @@ const CheckOut = () => {
     precio_unitario: 0,
   });
 
+  // Busca la reserva activa por número de habitación y carga los cargos pendientes
   const buscarReservaActiva = async () => {
     if (!numeroHabitacion) {
       toast.error("Introduce un número de habitación");
@@ -59,6 +64,7 @@ const CheckOut = () => {
     }
   };
 
+  // Añade un nuevo cargo a la reserva
   const guardarNuevoCargo = async () => {
     try {
       const { concepto, cantidad, precio } = nuevoCargo;
@@ -101,6 +107,7 @@ const CheckOut = () => {
     }
   };
 
+  // Adelanta los cargos pendientes a la factura
   const adelantarCargos = async () => {
     // Comprobar si la reserva tiene una factura ya cerrada
     if (reserva.estado_factura === "Pagada") {
@@ -148,6 +155,7 @@ const CheckOut = () => {
     }
   };
 
+  // Cierra la factura de la reserva actual
   const cerrarFactura = async () => {
     if (!detalleFactura.length) {
       toast.error("No hay cargos registrados en la cuenta");
@@ -212,6 +220,7 @@ const CheckOut = () => {
     }
   };
 
+  // Realiza el check-out de la reserva, cambiando su estado y liberando la habitación
   const hacerCheckOut = async () => {
     // Verificar si la fecha de salida coincide con hoy
     const hoy = new Date().toISOString().split("T")[0]; // formato YYYY-MM-DD
@@ -311,13 +320,14 @@ const CheckOut = () => {
       toast.success("Check-out realizado correctamente");
       setTimeout(() => {
         navigate("/facturas/check-out");
-        window.location.reload();
+        window.location.reload(); // Recarga la página para actualizar el estado
       }, 1500);
     } catch (error) {
       toast.error("Error al hacer check-out");
     }
   };
 
+  // Inicia la edición de un cargo
   const iniciarEdicion = (detalle) => {
     setEditandoDetalleId(detalle.id_detalle);
     setDetalleEditado({
@@ -327,6 +337,7 @@ const CheckOut = () => {
     });
   };
 
+  // Guarda los cambios realizados en un cargo editado
   const guardarEdicion = async (id_detalle) => {
     const total = (
       detalleEditado.cantidad * detalleEditado.precio_unitario
@@ -360,6 +371,7 @@ const CheckOut = () => {
     }
   };
 
+  // Anula (elimina) un cargo de la reserva
   const anularDetalle = async (id_detalle) => {
     const confirmacion = await Swal.fire({
       title: "¿Anular este cargo?",

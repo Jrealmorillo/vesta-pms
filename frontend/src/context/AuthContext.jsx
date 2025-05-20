@@ -1,13 +1,18 @@
+// Contexto global de autenticación para la aplicación Vesta PMS (Frontend)
+// Proporciona el usuario autenticado, el token y funciones para login/logout a toda la app.
+// Persiste la sesión en localStorage y restaura el estado al recargar la página.
+
 import { createContext, useState, useEffect } from "react";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [usuario, setUsuario] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
-  const [cargando, setCargando] = useState(true);
+  const [usuario, setUsuario] = useState(null); // Estado del usuario autenticado
+  const [token, setToken] = useState(localStorage.getItem("token") || null); // Token JWT
+  const [cargando, setCargando] = useState(true); // Estado de carga inicial
 
-  // Al cargar la app, intentamos leer el token guardado
+  // Al cargar la app, intentamos leer el token y datos del usuario guardados en localStorage
   useEffect(() => {
     const tokenAlmacenado = localStorage.getItem("token");
     const nombre_usuario = localStorage.getItem("nombre_usuario");
@@ -18,9 +23,10 @@ export function AuthProvider({ children }) {
       setUsuario({ nombre_usuario, id_rol: Number(id_rol), id_usuario: Number(id_usuario) });
       setToken(tokenAlmacenado);
     }
-    setCargando(false);
+    setCargando(false); // Finaliza la carga inicial
   }, []);
 
+  // Función para iniciar sesión y guardar datos en localStorage
   const login = (token, id_usuario, nombre_usuario, id_rol) => {
     localStorage.setItem("token", token);
     localStorage.setItem("id_usuario", id_usuario);
@@ -31,6 +37,7 @@ export function AuthProvider({ children }) {
   };
   
 
+  // Función para cerrar sesión y limpiar datos de localStorage
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("nombre_usuario");
@@ -40,6 +47,7 @@ export function AuthProvider({ children }) {
     setToken(null);
   };
 
+  // Provee el contexto de autenticación a toda la aplicación
   return (
     <AuthContext.Provider value={{ usuario, token, login, logout, cargando }}>
       {children}

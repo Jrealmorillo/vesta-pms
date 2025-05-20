@@ -1,3 +1,7 @@
+// Página para buscar usuarios por ID o mostrar todos los usuarios del sistema.
+// Permite filtrar por ID, muestra los resultados en una tabla y permite navegar a la edición de cada usuario.
+// Incluye feedback visual y validaciones de entrada.
+
 /* eslint-disable no-unused-vars */
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,12 +11,14 @@ import "./BuscarUsuarios.css";
 import { AuthContext } from "../../context/AuthContext";
 
 const BuscarUsuarios = () => {
+  // idBuscado: valor del input para buscar por ID
+  // usuarios: array de usuarios encontrados
   const [idBuscado, setIdBuscado] = useState("");
   const [usuarios, setUsuarios] = useState([]);
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-
+  // Busca un usuario por ID y actualiza la tabla
   const buscarPorId = async () => {
     if (!idBuscado.trim()) {
       toast.warning("Introduce un ID válido");
@@ -34,6 +40,7 @@ const BuscarUsuarios = () => {
     }
   };
 
+  // Obtiene todos los usuarios del sistema
   const obtenerTodos = async () => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/usuarios`, {
@@ -51,6 +58,7 @@ const BuscarUsuarios = () => {
     <div className="buscar-usuarios-container p-5">
       <h2 className="mb-4 py-5">Buscar usuarios</h2>
 
+      {/* Formulario de búsqueda por ID y botón para mostrar todos */}
       <div className="buscar-usuarios-form">
         <input
           type="text"
@@ -73,6 +81,7 @@ const BuscarUsuarios = () => {
         </button>
       </div>
 
+      {/* Tabla de resultados o mensaje si no hay usuarios */}
       {usuarios.length > 0 ? (
         <div className="table-responsive">
           <table className="table table-bordered table-striped">
@@ -95,6 +104,7 @@ const BuscarUsuarios = () => {
                   <td>{u.rol.id_rol == 1 ? "Administrador" : "Empleado"}</td>
                   <td>{u.activo ? "Sí" : "No"}</td>
                   <td>
+                    {/* Botón para navegar a la edición del usuario */}
                     <button
                       className="btn btn-sm btn-outline-primary"
                       onClick={() =>

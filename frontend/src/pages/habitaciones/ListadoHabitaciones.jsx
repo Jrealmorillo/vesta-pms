@@ -1,3 +1,7 @@
+// Página para listar, editar y eliminar habitaciones
+// Muestra una tabla con todas las habitaciones y permite acciones de edición y eliminación.
+// Incluye confirmaciones, notificaciones y recarga automática tras eliminar.
+
 /* eslint-disable no-unused-vars */
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
@@ -10,8 +14,9 @@ const ListadoHabitaciones = () => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const [habitaciones, setHabitaciones] = useState([]);
+  const [habitaciones, setHabitaciones] = useState([]); // Estado de la lista de habitaciones
 
+  // Obtiene todas las habitaciones del backend
   const obtenerHabitaciones = async () => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_URL}/habitaciones`, {
@@ -24,14 +29,15 @@ const ListadoHabitaciones = () => {
   };
 
   useEffect(() => {
-    obtenerHabitaciones();
+    obtenerHabitaciones(); // Carga la lista al montar el componente
   });
 
+  // Navega a la pantalla de edición de la habitación seleccionada
   const irAEditar = (id) => {
     navigate(`/habitaciones/editar/${id}`);
   };
 
-
+  // Muestra confirmación antes de eliminar una habitación
   const confirmarEliminacionHabitacion = async (id) => {
     const confirmacion = await Swal.fire({
       title: "¿Eliminar habitación?",
@@ -49,7 +55,7 @@ const ListadoHabitaciones = () => {
     }
   };
   
-  
+  // Elimina la habitación seleccionada y recarga la lista
   const eliminarHabitacion = async (id) => {
     try {
       await axios.delete(
@@ -63,7 +69,6 @@ const ListadoHabitaciones = () => {
     } catch (error) {
       const msg = error.response?.data?.detalle || "Error al eliminar habitación";
       toast.error(msg);
-
     }
   };
 
@@ -123,4 +128,3 @@ const ListadoHabitaciones = () => {
 
 export default ListadoHabitaciones;
 
-  

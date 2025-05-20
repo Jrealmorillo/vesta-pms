@@ -1,3 +1,7 @@
+// Componente para proteger rutas según el rol del usuario 
+// Solo permite el acceso si el usuario está autenticado y tiene el rol requerido.
+// Redirige al login si no hay sesión, o al dashboard si el rol no coincide.
+
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";

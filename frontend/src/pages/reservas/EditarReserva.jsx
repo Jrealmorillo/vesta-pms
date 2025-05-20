@@ -1,3 +1,7 @@
+// Página para editar una reserva existente y sus líneas asociadas.
+// Permite modificar datos del huésped, fechas, habitación, observaciones, cliente/empresa y líneas de reserva.
+// Incluye gestión de líneas (añadir, editar, eliminar) y guardado de cambios en la API.
+
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -12,15 +16,18 @@ const EditarReserva = () => {
   const [reserva, setReserva] = useState({});
   const [lineas, setLineas] = useState([]);
 
+  // Carga los datos de la reserva y sus líneas al montar el componente
   useEffect(() => {
     const obtenerDatos = async () => {
       try {
+        // Solicita datos de la reserva
         const { data: datosReserva } = await axios.get(
           `${import.meta.env.VITE_API_URL}/reservas/id/${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setReserva(datosReserva);
 
+        // Solicita líneas asociadas a la reserva
         const { data: datosLineas } = await axios.get(
           `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas`,
           { headers: { Authorization: `Bearer ${token}` } }
@@ -34,16 +41,19 @@ const EditarReserva = () => {
     obtenerDatos();
   }, [id, token]);
 
+  // Maneja cambios en los campos de la reserva principal
   const manejarCambio = (e) => {
     setReserva({ ...reserva, [e.target.name]: e.target.value });
   };
 
+  // Maneja cambios en los campos de una línea de reserva
   const manejarCambioLinea = (index, campo, valor) => {
     const nuevasLineas = [...lineas];
     nuevasLineas[index][campo] = valor;
     setLineas(nuevasLineas);
   };
 
+  // Añade una nueva línea de reserva vacía
   const añadirLinea = () => {
     const nuevaLinea = {
       fecha: "",
@@ -57,6 +67,7 @@ const EditarReserva = () => {
     setLineas([...lineas, nuevaLinea]);
   };
 
+  // Elimina una línea de reserva (pide confirmación si ya existe en la base de datos)
   const eliminarLinea = async (linea) => {
     const idLinea = linea.id_linea_reserva;
     if (!idLinea) {
@@ -91,6 +102,7 @@ const EditarReserva = () => {
     }
   };
 
+  // Guarda los cambios de la reserva y sus líneas en la API
   const guardarCambios = async () => {
     try {
       const { estado, ...reservaSinEstado } = reserva;
@@ -127,6 +139,7 @@ const EditarReserva = () => {
   return (
     <div className="container py-5 mt-4" style={{ maxWidth: "950px" }}>
       <h2 className="mb-4">Editar Reserva #{id}</h2>
+      {/* Estado visual de la reserva */}
       <div className="mb-3">
         <span className="fw-bold">Estado de la reserva: </span>
         <span
@@ -144,6 +157,7 @@ const EditarReserva = () => {
         </span>
       </div>
 
+      {/* Formulario de datos principales de la reserva */}
       <div className="row mb-3">
         <div className="col-md-4">
           <label className="form-label">Nombre huésped</label>
@@ -245,9 +259,8 @@ const EditarReserva = () => {
 
       <span className="d-block p-1 text-bg-dark"></span>
 
-
+      {/* Tabla editable de líneas de reserva */}
       <h4 className="mt-1">Líneas de Reserva</h4>
-
       <div className="table-responsive">
         <table className="table table-bordered">
           <thead className="table-light">
@@ -388,7 +401,7 @@ const EditarReserva = () => {
         </table>
       </div>
 
-
+      {/* Botón para guardar todos los cambios */}
       <div className="d-grid">
         <button className="btn btn-success" onClick={guardarCambios}>
           Guardar cambios

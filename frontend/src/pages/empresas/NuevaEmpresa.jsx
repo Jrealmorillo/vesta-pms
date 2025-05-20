@@ -1,3 +1,7 @@
+// Página para registrar una nueva empresa en Vesta PMS (Frontend)
+// Permite ingresar los datos de la empresa y enviarlos al backend para su registro.
+// Incluye validaciones, notificaciones y reseteo del formulario tras el registro exitoso.
+
 import { useState, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -27,7 +31,7 @@ const NuevaEmpresa = () => {
   const manejarSubmit = async (e) => {
     e.preventDefault();
 
-    // campo email debe ser null en vez de ""
+    // campo email debe ser null en vez de "" para evitar problemas en el backend
     if (empresa.email === "") {
       empresa.email = null;
     }
@@ -42,6 +46,7 @@ const NuevaEmpresa = () => {
         }
       );
       toast.success("Empresa registrado correctamente");
+      // Resetea el formulario tras registrar
       setEmpresa({
         nombre: "",
         cif: "",

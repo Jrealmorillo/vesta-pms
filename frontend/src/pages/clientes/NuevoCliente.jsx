@@ -1,3 +1,7 @@
+// Página para registrar un nuevo cliente
+// Permite ingresar los datos del cliente y enviarlos al backend para su registro.
+// Incluye validaciones, notificaciones y reseteo del formulario tras el registro exitoso.
+
 import { useState, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -32,7 +36,7 @@ const NuevoCliente = () => {
   const manejarSubmit = async (e) => {
     e.preventDefault();
 
-    // campo email debe ser null en vez de ""
+    // campo email debe ser null en vez de "" para evitar problemas en el backend
     if (cliente.email === "") {
       cliente.email = null;
     }
@@ -47,6 +51,7 @@ const NuevoCliente = () => {
         }
       );
       toast.success("Cliente registrado correctamente");
+      // Resetea el formulario tras registrar
       setCliente({
         nombre: "",
         primer_apellido: "",

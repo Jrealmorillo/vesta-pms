@@ -1,3 +1,7 @@
+// Página para visualizar el detalle de una reserva concreta.
+// Permite ver datos generales, líneas asociadas, estado, anular o recuperar la reserva y acceder al historial.
+// Incluye feedback visual y navegación a edición o historial de la reserva.
+
 /* eslint-disable no-unused-vars */
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -7,12 +11,16 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 
 const VerReserva = () => {
+  // Obtiene el id de la reserva desde la URL
   const { id } = useParams();
+  // Token de autenticación desde el contexto
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // Estado local para la reserva
   const [reserva, setReserva] = useState(null);
 
+  // Carga la reserva al montar el componente o cambiar id/token
   useEffect(() => {
     const obtenerReserva = async () => {
       try {
@@ -29,6 +37,7 @@ const VerReserva = () => {
     obtenerReserva();
   }, [id, token]);
 
+  // Cambia el estado de la reserva a 'Confirmada' (recuperar)
   const recuperarReserva = async () => {
     const resultado = await Swal.fire({
       title: "¿Recuperar reserva?",
@@ -63,6 +72,7 @@ const VerReserva = () => {
     }
   };
 
+  // Cambia el estado de la reserva a 'Anulada'
   const anularReserva = async () => {
     const resultado = await Swal.fire({
       title: "¿Anular reserva?",
@@ -101,6 +111,7 @@ const VerReserva = () => {
   return (
     <div className="container py-5 mt-4" style={{ maxWidth: "800px" }}>
       <h2 className="mb-4">Detalle de la reserva #{reserva.id_reserva}</h2>
+      {/* Estado visual de la reserva */}
       <div className="mb-3">
         <span className="fw-bold">Estado: </span>
         <span
@@ -118,6 +129,7 @@ const VerReserva = () => {
         </span>
       </div>
 
+      {/* Datos generales de la reserva */}
       <div className="card mb-4">
         <div className="card-header bg-secondary text-white">
           Datos generales
@@ -149,6 +161,7 @@ const VerReserva = () => {
         </div>
       </div>
 
+      {/* Líneas de reserva asociadas */}
       <div className="card mb-4">
         <div className="card-header bg-info text-white">Líneas de reserva</div>
         <div className="card-body">
@@ -167,6 +180,7 @@ const VerReserva = () => {
           )}
         </div>
       </div>
+      {/* Botón para recuperar reserva anulada */}
       {reserva.estado === "Anulada" && (
         <div className="mb-3">
           <button className="btn btn-warning btn-lg" onClick={recuperarReserva}>
@@ -175,6 +189,7 @@ const VerReserva = () => {
         </div>
       )}
 
+      {/* Botón para modificar la reserva */}
       <div className="mb-3">
         <button
           className="btn btn-primary btn-lg"
@@ -183,6 +198,7 @@ const VerReserva = () => {
           Modificar reserva
         </button>
       </div>
+      {/* Enlace al historial de la reserva */}
       <Link
         to={`/reservas/${reserva.id_reserva}/historial`}
         className="btn btn-outline-secondary btn-sm"
@@ -190,6 +206,7 @@ const VerReserva = () => {
         Ver historial
       </Link>
 
+      {/* Botón para anular reserva confirmada */}
       {reserva.estado === "Confirmada" && (
         <div className="mb-3">
           <button

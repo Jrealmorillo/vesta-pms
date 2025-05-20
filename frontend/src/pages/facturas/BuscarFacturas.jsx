@@ -1,3 +1,7 @@
+// Página para buscar facturas en el sistema
+// Permite filtrar por ID de factura, ID de reserva o fecha de emisión y muestra los resultados en una tabla.
+// Incluye validaciones, notificaciones y acceso a la visualización de cada factura.
+
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import axios from "axios";
@@ -11,13 +15,16 @@ const BuscarFacturas = () => {
     fecha_emision: "",
   });
 
-  const [resultados, setResultados] = useState([]);
-  const token = localStorage.getItem("token");
+  const [resultados, setResultados] = useState([]); // Resultados de la búsqueda
+  const token = localStorage.getItem("token"); // Token de autenticación
   const navigate = useNavigate();
+
+  // Actualiza los filtros según el input del usuario
   const handleChange = (e) => {
     setFiltros({ ...filtros, [e.target.name]: e.target.value });
   };
 
+  // Realiza la búsqueda de facturas según los filtros
   const buscarFacturas = async () => {
     try {
       const { data } = await axios.get(
@@ -27,7 +34,7 @@ const BuscarFacturas = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log(filtros)
+      console.log(filtros); // Muestra los filtros en la consola para depuración
       setResultados(data);
       if (data.length === 0) {
         toast.info("No se encontraron facturas con esos criterios.");
@@ -107,13 +114,11 @@ const BuscarFacturas = () => {
                   </td>
                   <td>{factura.id_reserva}</td>
                   <td>
-                    
-                      {factura.cliente
-                        ? `${factura.cliente.nombre} ${
-                            factura.cliente.primer_apellido ?? ""
-                          } ${factura.cliente.segundo_apellido ?? ""}`
-                        : "—"}
-                    
+                    {factura.cliente
+                      ? `${factura.cliente.nombre} ${
+                          factura.cliente.primer_apellido ?? ""
+                        } ${factura.cliente.segundo_apellido ?? ""}`
+                      : "—"}
                   </td>
                   <td>{parseFloat(factura.total).toFixed(2)}</td>
                   <td>

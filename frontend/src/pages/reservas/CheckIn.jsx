@@ -1,17 +1,25 @@
+// Página para mostrar y gestionar los check-in del día actual.
+// Lista las reservas con entrada hoy y permite realizar el check-in si la reserva está confirmada.
+// Incluye feedback visual y navegación al proceso de check-in.
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 const CheckIn = () => {
+  // reservasHoy: array de reservas con entrada hoy
   const [reservasHoy, setReservasHoy] = useState([]);
+  // Token de autenticación
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
+  // Devuelve la fecha actual en formato YYYY-MM-DD
   const obtenerFechaActual = () => {
     return new Date().toISOString().split("T")[0];
   };
 
+  // Carga las reservas con entrada hoy desde la API
   const cargarReservasHoy = async () => {
     try {
       const fechaHoy = obtenerFechaActual();
@@ -21,6 +29,7 @@ const CheckIn = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      // Ordena por primer apellido del huésped
       const reservasOrdenadasPorApellido = data.sort((a, b) => {
         const apellidoA = a.primer_apellido_huesped.toLowerCase();
         const apellidoB = b.primer_apellido_huesped.toLowerCase();
@@ -35,6 +44,7 @@ const CheckIn = () => {
     }
   };
 
+  // Carga reservas al montar el componente
   useEffect(() => {
     cargarReservasHoy();
   }, []);
@@ -42,6 +52,7 @@ const CheckIn = () => {
   return (
     <div className="container py-5 mt-4">
       <h2 className="mb-5">Check-in de hoy ({obtenerFechaActual()})</h2>
+      {/* Si no hay reservas, muestra mensaje informativo */}
       {reservasHoy.length === 0 ? (
         <p className="text-muted">No hay reservas para hoy.</p>
       ) : (
@@ -82,11 +93,11 @@ const CheckIn = () => {
                   </td>
                   <td>{reserva.numero_habitacion || "-"}</td>
                   <td>
+                    {/* Si la reserva está confirmada, permite hacer check-in */}
                     {reserva.estado === "Confirmada" ? (
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => navigate(`/reservas/check-in/${reserva.id_reserva}`)}
-
                       >
                         Realizar check-in
                       </button>

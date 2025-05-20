@@ -1,3 +1,7 @@
+// Página para editar los datos de un usuario existente.
+// Permite modificar nombre, usuario, correo, rol y estado de actividad, mostrando feedback y validaciones.
+// Realiza la petición a la API para actualizar los datos y redirige tras guardar.
+
 /* eslint-disable no-unused-vars */
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -6,10 +10,13 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 
 const EditarUsuario = () => {
+  // Obtiene el id del usuario desde la URL
   const { id } = useParams();
+  // Token de autenticación desde el contexto
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // Estado local para los datos del usuario
   const [datos, setDatos] = useState({
     nombre: "",
     nombre_usuario: "",
@@ -18,6 +25,7 @@ const EditarUsuario = () => {
     activo: true,
   });
 
+  // Carga los datos del usuario al montar el componente o cambiar id/token
   useEffect(() => {
     const cargarUsuario = async () => {
       try {
@@ -46,6 +54,7 @@ const EditarUsuario = () => {
     cargarUsuario();
   }, [id, token, navigate]);
 
+  // Maneja cambios en los campos del formulario
   const manejarCambio = (e) => {
     const { name, value, type, checked } = e.target;
     setDatos({
@@ -54,6 +63,7 @@ const EditarUsuario = () => {
     });
   };
 
+  // Envía la petición para actualizar el usuario
   const manejarSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -78,6 +88,7 @@ const EditarUsuario = () => {
         className="mx-auto"
         style={{ maxWidth: "600px", textAlign: "left" }}
       >
+        {/* Campos principales del usuario */}
         <div className="mb-3">
           <label className="form-label">Nombre completo</label>
           <input
@@ -127,6 +138,7 @@ const EditarUsuario = () => {
           </select>
         </div>
 
+        {/* Checkbox para marcar usuario como activo o inactivo */}
         <div className="form-check mb-4">
           <input
             type="checkbox"

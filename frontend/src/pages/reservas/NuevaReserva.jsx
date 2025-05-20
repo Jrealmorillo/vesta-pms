@@ -1,3 +1,7 @@
+// Página para registrar una nueva reserva y sus líneas asociadas.
+// Permite introducir datos del huésped, fechas, habitación, observaciones y añadir múltiples líneas de reserva.
+// Incluye validaciones de fechas, cantidades y feedback visual.
+
 import { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
@@ -6,6 +10,7 @@ import { toast } from "react-toastify";
 const NuevaReserva = () => {
   const { token } = useContext(AuthContext);
 
+  // Estado para los datos de la reserva principal
   const [reserva, setReserva] = useState({
     nombre_huesped: "",
     primer_apellido_huesped: "",
@@ -18,8 +23,10 @@ const NuevaReserva = () => {
     observaciones: "",
   });
 
+  // Estado para las líneas de reserva
   const [lineas, setLineas] = useState([]);
 
+  // Estado para la línea de reserva en edición
   const [nuevaLinea, setNuevaLinea] = useState({
     tipo_habitacion: "",
     fecha: "",
@@ -30,25 +37,27 @@ const NuevaReserva = () => {
     cantidad_ninos: 0,
   });
 
+  // Maneja cambios en los campos de la reserva principal
   const manejarCambioReserva = (e) => {
     const { name, value } = e.target;
-  
+
     // Convertir a null si está vacío, y a número si es id_cliente o id_empresa
     let nuevoValor = value === "" ? null : value;
-  
+
     if (["id_cliente", "id_empresa"].includes(name)) {
       nuevoValor = value === "" ? null : parseInt(value, 10);
     }
-  
+
     setReserva({ ...reserva, [name]: nuevoValor });
   };
-  
 
+  // Maneja cambios en los campos de la línea de reserva en edición
   const manejarCambioLinea = (e) => {
     const { name, value } = e.target;
     setNuevaLinea({ ...nuevaLinea, [name]: value });
   };
 
+  // Añade una nueva línea de reserva tras validar los campos
   const añadirLinea = () => {
     if (
       !nuevaLinea.tipo_habitacion ||
@@ -86,12 +95,14 @@ const NuevaReserva = () => {
     });
   };
 
+  // Elimina una línea de reserva de la lista
   const eliminarLinea = (index) => {
     const nuevas = [...lineas];
     nuevas.splice(index, 1);
     setLineas(nuevas);
   };
 
+  // Envía la reserva y sus líneas a la API tras validar los datos
   const manejarSubmit = async (e) => {
     e.preventDefault();
 
@@ -174,11 +185,12 @@ const NuevaReserva = () => {
             <strong>Datos de reserva</strong>
           </div>
           <div className="card-body">
+            {/* Campos para los datos del cliente y empresa */}
             <div className="row mb-3">
               <div className="col-md-6">
                 <label className="form-label">Cliente</label>
                 <input
-                type="number"
+                  type="number"
                   name="id_cliente"
                   className="form-control"
                   placeholder="Cliente"
@@ -198,6 +210,7 @@ const NuevaReserva = () => {
                 />
               </div>
             </div>
+            {/* Campos para los datos del huésped */}
             <div className="row mb-3">
               <div className="col-md-4">
                 <label className="form-label">Nombre del huésped</label>
@@ -232,7 +245,7 @@ const NuevaReserva = () => {
                 />
               </div>
             </div>
-
+            {/* Campos para las fechas y observaciones */}
             <div className="row mb-3">
               <div className="col-md-4">
                 <label className="form-label">Fecha de entrada</label>
@@ -269,7 +282,6 @@ const NuevaReserva = () => {
                 />
               </div>
             </div>
-
             <div className="mb-3">
               <label className="form-label">Observaciones</label>
               <textarea
@@ -290,6 +302,7 @@ const NuevaReserva = () => {
             <strong>Líneas de reserva</strong>
           </div>
           <div className="card-body">
+            {/* Formulario para añadir línea de reserva */}
             <div className="row mb-3">
               <div className="col-md-3">
                 <label className="form-label">Fecha</label>
@@ -318,7 +331,6 @@ const NuevaReserva = () => {
                   <option value="Suite">Suite</option>
                 </select>
               </div>
-
               <div className="col-md-2">
                 <label className="form-label">Cantidad</label>
                 <input
@@ -348,7 +360,6 @@ const NuevaReserva = () => {
                 </select>
               </div>
             </div>
-
             <div className="row mb-3">
               <div className="col-md-2">
                 <label className="form-label">Adultos</label>
@@ -422,6 +433,7 @@ const NuevaReserva = () => {
           </div>
         </div>
 
+        {/* Botón para registrar la reserva */}
         <div className="d-grid mt-4">
           <button type="submit" className="btn btn-primary btn-lg">
             Registrar reserva

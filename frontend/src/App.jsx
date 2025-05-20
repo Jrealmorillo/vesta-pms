@@ -1,3 +1,8 @@
+// Componente principal de la aplicación 
+// Define la estructura de rutas protegidas y públicas usando React Router.
+// Aplica protección por autenticación y por rol en rutas sensibles.
+// Incluye el layout general y el sistema de notificaciones globales.
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import RutaPrivada from "./components/RutaPrivada";
@@ -50,7 +55,8 @@ const App = () => {
             </RutaPrivada>
           }
         >
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Rutas protegidas por rol de administrador (rolRequerido={1}) */}
+          {/* Usuarios */}
           <Route
             path="/usuarios/nuevo"
             element={
@@ -75,16 +81,20 @@ const App = () => {
               </RutaProtegidaPorRol>
             }
           />
+          {/* Cambio de contraseña (accesible para cualquier usuario autenticado) */}
           <Route
             path="/usuarios/cambiar-password"
             element={<CambiarPassword />}
           />
+          {/* Clientes */}
           <Route path="/clientes/nuevo" element={<NuevoCliente />} />
           <Route path="/clientes/buscar" element={<BuscarClientes />} />
           <Route path="/clientes/editar/:id" element={<EditarCliente />} />
+          {/* Empresas */}
           <Route path="/empresas/nueva" element={<NuevaEmpresa />} />
           <Route path="/empresas/buscar" element={<BuscarEmpresas />} />
           <Route path="/empresas/editar/:id" element={<EditarEmpresa />} />
+          {/* Habitaciones (solo admin) */}
           <Route
             path="/habitaciones/nueva"
             element={
@@ -101,7 +111,7 @@ const App = () => {
               </RutaProtegidaPorRol>
             }
           />
-                    <Route
+          <Route
             path="/habitaciones/editar/:id"
             element={
               <RutaProtegidaPorRol rolRequerido={1}>
@@ -109,9 +119,10 @@ const App = () => {
               </RutaProtegidaPorRol>
             }
           />
-          
+          {/* Habitaciones: planning y roomrack (accesibles para usuarios autenticados) */}
           <Route path="/habitaciones/planning" element={<Planning />} />
           <Route path="habitaciones/roomrack" element={<RoomRack />} />
+          {/* Reservas */}
           <Route path="/reservas/nueva" element={<NuevaReserva />} />
           <Route path="/reservas/buscar" element={<BuscarReservas />} />
           <Route path="/reservas/editar/:id" element={<EditarReserva />} />
@@ -119,9 +130,11 @@ const App = () => {
           <Route path="/reservas/:id/historial" element={<VerHistorialReserva />} />
           <Route path="/reservas/check-in" element={<CheckIn />} />
           <Route path="/reservas/check-in/:id" element={<CheckInReserva />} />
+          {/* Facturación */}
           <Route path="/facturas/buscar" element={<BuscarFacturas />} />
           <Route path="/facturas/check-out" element={<CheckOut />} />
           <Route path="/facturas/:id" element={<VerFactura />} />
+          {/* Informes */}
           <Route path="/informes/reservas" element={<InformeReservas />} />
           <Route path="/informes/ocupacion" element={<InformeOcupacion />} />
           <Route
@@ -130,6 +143,7 @@ const App = () => {
           />
         </Route>
       </Routes>
+      {/* Contenedor global para notificaciones tipo toast */}
       <ToastContainer position="bottom-right" autoClose={2000} />
     </BrowserRouter>
   );

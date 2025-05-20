@@ -1,3 +1,7 @@
+// Página para registrar una nueva habitación
+// Permite ingresar los datos de la habitación y enviarlos al backend para su registro.
+// Incluye validaciones, notificaciones y reseteo del formulario tras el registro exitoso.
+
 import { useState, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -6,6 +10,7 @@ import { AuthContext } from "../../context/AuthContext";
 const NuevaHabitacion = () => {
   const { token } = useContext(AuthContext);
 
+  // Estado inicial para los datos de la habitación
   const [habitacion, setHabitacion] = useState({
     numero_habitacion: "",
     tipo: "",
@@ -15,11 +20,13 @@ const NuevaHabitacion = () => {
     capacidad_minima: 1, // Fija, no se modifica
   });
 
+  // Maneja los cambios en los campos del formulario
   const manejarCambio = (e) => {
     const { name, value } = e.target;
     setHabitacion({ ...habitacion, [name]: value });
   };
 
+  // Maneja el envío del formulario
   const manejarSubmit = async (e) => {
     e.preventDefault();
 
@@ -51,11 +58,13 @@ const NuevaHabitacion = () => {
   return (
     <div className="container py-5 mt-1">
       <h2 className="text-center mb-4">Registrar nueva habitación</h2>
+      {/* Formulario de registro de habitación */}
       <form
         onSubmit={manejarSubmit}
         className="mx-auto"
         style={{ maxWidth: "450px", textAlign: "left" }}
       >
+        {/* Campo para el número de habitación */}
         <div className="mb-3">
           <label className="form-label">Número de habitación</label>
           <input
@@ -68,6 +77,7 @@ const NuevaHabitacion = () => {
           />
         </div>
 
+        {/* Selector de tipo de habitación */}
         <div className="mb-3">
           <label className="form-label">Tipo de habitación</label>
           <select
@@ -85,6 +95,7 @@ const NuevaHabitacion = () => {
           </select>
         </div>
 
+        {/* Selector de capacidad máxima */}
         <div className="mb-3">
           <label className="form-label">Capacidad máxima</label>
           <select
@@ -100,6 +111,7 @@ const NuevaHabitacion = () => {
           </select>
         </div>
 
+        {/* Campo para el precio oficial */}
         <div className="mb-3">
           <label className="form-label">Precio oficial (€)</label>
           <input
@@ -114,6 +126,7 @@ const NuevaHabitacion = () => {
           />
         </div>
 
+        {/* Campo para observaciones */}
         <div className="mb-4">
           <label className="form-label">Observaciones</label>
           <textarea

@@ -1,24 +1,29 @@
+/* eslint-disable no-unused-vars */
+// Página visual para gestión rápida del estado de habitaciones (ocupación y limpieza).
+// Permite cambiar el estado de limpieza y bloqueo de cada habitación, mostrando colores y estilos según el estado.
+// El estado se sincroniza con localStorage para persistencia temporal.
+
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import "./RoomRack.css";
 
-
+// Componente principal RoomRack
 const RoomRack = () => {
   const { token } = useContext(AuthContext);
-  // eslint-disable-next-line no-unused-vars
+  // Estado de habitaciones (datos originales) y estados visuales (ocupación/limpieza)
   const [habitaciones, setHabitaciones] = useState([]);
   const [estados, setEstados] = useState([]);
   const [cargado, setCargado] = useState(false);
 
-
+  // Sincroniza el estado visual con localStorage cada vez que cambia
   useEffect(() => {
     if (cargado) {
       localStorage.setItem("estadoHabitaciones", JSON.stringify(estados));
     }
   }, [estados, cargado]);
-  
 
+  // Carga habitaciones desde la API y sincroniza con localStorage si existe
   useEffect(() => {
     const cargarHabitaciones = async () => {
       try {
@@ -32,7 +37,7 @@ const RoomRack = () => {
         if (guardado) {
           const estadosGuardados = JSON.parse(guardado);
 
-          // Validar que las habitaciones actuales existan en el estado guardado
+          // Sincroniza el estado guardado solo con habitaciones existentes
           const sincronizado = response.data.map((habitacion) => {
             const encontrado = estadosGuardados.find(
               (e) => e.numero === habitacion.numero_habitacion
@@ -49,6 +54,7 @@ const RoomRack = () => {
           setEstados(sincronizado);
           setCargado(true);
         } else {
+          // Estado inicial: todas limpias y libres
           const inicial = response.data.map((habitacion) => ({
             numero: habitacion.numero_habitacion,
             tipo: habitacion.tipo,
@@ -68,6 +74,7 @@ const RoomRack = () => {
     cargarHabitaciones();
   }, [token]);
 
+  // Cambia el estado de limpieza u ocupación de una habitación
   const cambiarEstado = (numero, tipo, nuevoValor) => {
     setEstados((prev) =>
       prev.map((hab) =>
@@ -76,7 +83,9 @@ const RoomRack = () => {
     );
   };
 
+  // Renderiza la tarjeta visual de cada habitación
   const renderHabitacion = (estado) => {
+    // Determina clases CSS según estado de ocupación y limpieza
     const claseFondo = `fondo-${estado.ocupacion}`;
     const claseTexto = `texto-${estado.limpieza}`;
 
@@ -91,7 +100,7 @@ const RoomRack = () => {
           {estado.ocupacion} / {estado.limpieza}
         </div>
 
-        {/* Selector de limpieza */}
+        {/* Selector de limpieza: permite marcar la habitación como limpia o sucia */}
         <select
           value={estado.limpieza}
           onChange={(e) =>
@@ -103,10 +112,11 @@ const RoomRack = () => {
           <option value="sucia">Sucia</option>
         </select>
 
-        {/* Selector de bloqueo */}
+        {/* Selector de bloqueo: permite marcar la habitación como bloqueada o disponible */}
         <select
           value={estado.ocupacion === "bloqueada" ? "bloqueada" : "normal"}
           onChange={(e) => {
+            // Si se selecciona 'bloqueada', se marca como tal; si no, vuelve a 'libre'
             const nuevaOcupacion =
               e.target.value === "bloqueada" ? "bloqueada" : "libre";
             cambiarEstado(estado.numero, "ocupacion", nuevaOcupacion);
@@ -123,11 +133,13 @@ const RoomRack = () => {
   return (
     <div className="container py-5 mt-4">
       <h2 className="mb-3">Room Rack – Estado de Habitaciones</h2>
+      {/* Muestra todas las habitaciones como tarjetas visuales */}
       <div className="roomrack-container">
         {estados.map((estado) => renderHabitacion(estado))}
       </div>
       <hr className="my-4" />
 
+      {/* Leyenda de colores y estilos para interpretar el estado de cada habitación */}
       <h5>Leyenda de colores</h5>
       <div className="d-flex flex-wrap gap-3">
         <div className="d-flex align-items-center">
@@ -167,6 +179,6 @@ const RoomRack = () => {
       </div>
     </div>
   );
-}
+};
 
 export default RoomRack;

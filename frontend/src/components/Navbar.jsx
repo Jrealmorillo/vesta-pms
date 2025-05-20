@@ -1,3 +1,7 @@
+// Barra de navegación principal de la aplicación
+// Muestra enlaces y menús desplegables según el rol del usuario autenticado.
+// Permite cerrar sesión y acceder a opciones de usuario.
+
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
@@ -7,6 +11,7 @@ const Navbar = () => {
   const { usuario, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // Maneja el cierre de sesión y redirige al login
   const manejarLogout = () => {
     logout();
     navigate("/");
@@ -15,11 +20,12 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3 fixed-top">
       <div className="container-fluid">
+        {/* Logo y enlace principal */}
         <Link className="navbar-brand" to="/">
           Vesta PMS
         </Link>
 
-        {/* Botón hamburguesa */}
+        {/* Botón hamburguesa para menú colapsable en móvil */}
         <button
           className="navbar-toggler"
           type="button"
@@ -52,6 +58,7 @@ const Navbar = () => {
                 >
                   {item.submenu ? (
                     <>
+                      {/* Menú desplegable para secciones con submenú */}
                       <span
                         className="nav-link dropdown-toggle"
                         id={`navbarDropdown${index}`}
@@ -92,6 +99,7 @@ const Navbar = () => {
               );
             })}
           </ul>
+          {/* Menú de usuario activo y opciones */}
           {usuario && (
             <div className="dropdown">
               <button

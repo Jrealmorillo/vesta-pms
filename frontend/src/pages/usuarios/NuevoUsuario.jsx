@@ -1,3 +1,7 @@
+// Página para registrar un nuevo usuario en el sistema.
+// Permite introducir nombre, usuario, contraseña, email, rol y estado de actividad, mostrando feedback y validaciones.
+// Realiza la petición a la API para crear el usuario y limpia el formulario tras el registro.
+
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -5,6 +9,7 @@ import axios from "axios";
 import CampoPassword from "../../components/CampoPassword";
 
 const NuevoUsuario = () => {
+  // Estado local para los datos del nuevo usuario
   const [datos, setDatos] = useState({
     nombre: "",
     nombre_usuario: "",
@@ -14,6 +19,7 @@ const NuevoUsuario = () => {
     id_rol: 2, // Valor por defecto: Empleado
   });
 
+  // Maneja cambios en los campos del formulario
   const manejarCambio = (e) => {
     const { name, value, type, checked } = e.target;
     setDatos({
@@ -22,6 +28,7 @@ const NuevoUsuario = () => {
     });
   };
 
+  // Envía la petición para registrar el usuario
   const manejarSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -57,6 +64,7 @@ const NuevoUsuario = () => {
         className="mx-auto"
         style={{ maxWidth: "400px", textAlign: "left" }}
       >
+        {/* Campo para el nombre completo */}
         <div className="mb-3">
           <label className="form-label">Nombre completo</label>
           <input
@@ -69,6 +77,7 @@ const NuevoUsuario = () => {
           />
         </div>
 
+        {/* Campo para el nombre de usuario */}
         <div className="mb-3">
           <label className="form-label">Nombre de usuario</label>
           <input
@@ -81,15 +90,17 @@ const NuevoUsuario = () => {
           />
         </div>
 
+        {/* Campo para la contraseña (con componente reutilizable) */}
         <div className="mb-3">
-                      <CampoPassword
-                label="Contraseña"
-                name="contraseña"
-                value={datos.contraseña}
-                onChange={manejarCambio}
-              />
+          <CampoPassword
+            label="Contraseña"
+            name="contraseña"
+            value={datos.contraseña}
+            onChange={manejarCambio}
+          />
         </div>
 
+        {/* Campo para el correo electrónico */}
         <div className="mb-3">
           <label className="form-label">Correo electrónico</label>
           <input
@@ -102,6 +113,7 @@ const NuevoUsuario = () => {
           />
         </div>
 
+        {/* Selector de rol */}
         <div className="mb-3">
           <label className="form-label">Rol</label>
           <select
@@ -115,6 +127,7 @@ const NuevoUsuario = () => {
           </select>
         </div>
 
+        {/* Checkbox para marcar usuario como activo o inactivo */}
         <div className="form-check mb-4">
           <input
             type="checkbox"
@@ -129,6 +142,7 @@ const NuevoUsuario = () => {
           </label>
         </div>
 
+        {/* Botón para registrar el usuario */}
         <div className="d-grid">
           <button type="submit" className="btn btn-primary">
             Registrar usuario

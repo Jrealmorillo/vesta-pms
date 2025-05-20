@@ -1,14 +1,20 @@
+// Página de planificación visual de ocupación de habitaciones en el hotel.
+// Permite seleccionar una fecha de inicio y muestra el estado de cada habitación durante 15 días.
+// Incluye leyenda de colores para interpretar el estado de cada celda.
+
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Planning.css";
 
+// Suma 'dias' días a una fecha dada y retorna la nueva fecha
 const addDays = (fecha, dias) => {
   const nueva = new Date(fecha);
   nueva.setDate(nueva.getDate() + dias);
   return nueva;
 };
 
+// Formatea una fecha a 'YYYY-MM-DD' para inputs tipo date
 const formatearFechaInput = (fecha) => {
   const y = fecha.getFullYear();
   const m = String(fecha.getMonth() + 1).padStart(2, "0");
@@ -16,6 +22,7 @@ const formatearFechaInput = (fecha) => {
   return `${y}-${m}-${d}`;
 };
 
+// Formatea una fecha a 'DD/MM' para mostrar en la cabecera de la tabla
 const formatearDiaMes = (fecha) => {
   return `${String(fecha.getDate()).padStart(2, "0")}/${String(
     fecha.getMonth() + 1
@@ -23,22 +30,28 @@ const formatearDiaMes = (fecha) => {
 };
 
 const Planning = () => {
+  // Estado para habitaciones, reservas y fecha de inicio del planning
   const [habitaciones, setHabitaciones] = useState([]);
   const [reservas, setReservas] = useState([]);
   const [fechaInicio, setFechaInicio] = useState(new Date());
 
+  // Token de autenticación para las peticiones
   const token = localStorage.getItem("token");
 
+  // Array de fechas a mostrar (15 días a partir de la fecha de inicio)
   const fechas = Array.from({ length: 15 }, (_, i) => addDays(fechaInicio, i));
 
+  // Carga la lista de habitaciones al montar el componente
   useEffect(() => {
     cargarHabitaciones();
   }, []);
 
+  // Carga las reservas cada vez que cambia la fecha de inicio
   useEffect(() => {
     cargarReservas();
   }, [fechaInicio]);
 
+  // Obtiene habitaciones desde la API
   const cargarHabitaciones = async () => {
     try {
       const res = await axios.get(
@@ -53,6 +66,7 @@ const Planning = () => {
     }
   };
 
+  // Obtiene reservas para el rango de fechas mostrado
   const cargarReservas = async () => {
     const desde = formatearFechaInput(fechaInicio);
     const hasta = formatearFechaInput(addDays(fechaInicio, 15));
@@ -72,6 +86,7 @@ const Planning = () => {
     }
   };
 
+  // Busca si una habitación tiene reserva en una fecha específica
   const getReservaEnFecha = (habitacion, fecha) => {
     const f = new Date(fecha);
     return reservas.find((reserva) => {
@@ -85,12 +100,14 @@ const Planning = () => {
     });
   };
 
+  // Devuelve la clase de color según el estado de la reserva
   const getEstadoColor = (estado) => {
     if (estado === "Check-in") return "bg-primary text-white";
     if (estado === "Confirmada") return "bg-warning text-dark";
     return "";
   };
 
+  // Formatea fecha a 'DD/MM/YYYY' para mostrar en tooltip
   const formatearFecha = (fecha) => {
     const d = new Date(fecha);
     const dia = String(d.getDate()).padStart(2, "0");
@@ -102,16 +119,18 @@ const Planning = () => {
   return (
     <div className="container py-5 mt-4">
       <h3>Planning de habitaciones</h3>
-        <div className="col-3 mb-3 text-start">
-          <label className="form-label">Selecciona la fecha de inicio</label>
-          <input
-            type="date"
-            className="form-control w-auto"
-            value={formatearFechaInput(fechaInicio)}
-            onChange={(e) => setFechaInicio(new Date(e.target.value))}
-          />
-        </div>
-        <h5 className="text-start mt-5 mb-2">Leyenda de colores</h5>
+      {/* Selector de fecha de inicio para el planning */}
+      <div className="col-3 mb-3 text-start">
+        <label className="form-label">Selecciona la fecha de inicio</label>
+        <input
+          type="date"
+          className="form-control w-auto"
+          value={formatearFechaInput(fechaInicio)}
+          onChange={(e) => setFechaInicio(new Date(e.target.value))}
+        />
+      </div>
+      {/* Leyenda de colores para interpretar el estado de las habitaciones */}
+      <h5 className="text-start mt-5 mb-2">Leyenda de colores</h5>
       <div className="d-flex flex-wrap gap-3 mb-5">
         <div className="d-flex align-items-center">
           <div className="cuadro-color bg-success-subtle me-2"></div>
@@ -131,6 +150,7 @@ const Planning = () => {
         </div>
       </div>
 
+      {/* Tabla principal de planificación: filas = habitaciones, columnas = días */}
       <div className="table-responsive">
         <table className="table table-bordered table-sm">
           <thead>
@@ -148,6 +168,7 @@ const Planning = () => {
               <tr key={hab.numero_habitacion}>
                 <td className="celda-planning">{hab.numero_habitacion}</td>
                 {fechas.map((fecha, i) => {
+                  // Busca si la habitación está reservada en la fecha
                   const reserva = getReservaEnFecha(hab, fecha);
                   return (
                     <td
@@ -157,6 +178,7 @@ const Planning = () => {
                           ? getEstadoColor(reserva.estado)
                           : "bg-success-subtle"
                       }`}
+                      // Tooltip con información de la reserva si existe
                       title={
                         reserva
                           ? `Reserva nº: ${reserva.id_reserva}\n` +
@@ -173,6 +195,7 @@ const Planning = () => {
                           : ""
                       }
                     >
+                      {/* Muestra el nombre del huésped si hay reserva */}
                       {reserva
                         ? `${reserva.nombre_huesped} ${
                             reserva.primer_apellido_huesped

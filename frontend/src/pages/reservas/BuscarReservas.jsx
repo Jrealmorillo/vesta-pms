@@ -1,3 +1,7 @@
+// Página para buscar reservas por apellido, empresa o fecha de entrada.
+// Permite filtrar reservas y muestra los resultados en una tabla ordenada por apellido del huésped.
+// Incluye feedback visual y navegación a la reserva seleccionada.
+
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,11 +10,15 @@ import { toast } from "react-toastify";
 
 const BuscarReservas = () => {
   const { token } = useContext(AuthContext);
+  // tipoBusqueda: criterio de búsqueda (apellido, empresa, fecha)
+  // termino: valor introducido por el usuario
+  // resultados: array de reservas encontradas
   const [tipoBusqueda, setTipoBusqueda] = useState("apellido");
   const [termino, setTermino] = useState("");
   const [resultados, setResultados] = useState([]);
   const navigate = useNavigate();
 
+  // Realiza la búsqueda según el tipo y término introducido
   const buscar = async () => {
     if (!termino.trim()) {
       toast.warning("Introduce un término de búsqueda");
@@ -19,6 +27,7 @@ const BuscarReservas = () => {
 
     let endpoint = "";
 
+    // Selecciona el endpoint según el tipo de búsqueda
     switch (tipoBusqueda) {
       case "apellido":
         endpoint = `/reservas/apellido/${termino}`;
@@ -34,10 +43,12 @@ const BuscarReservas = () => {
     }
 
     try {
+      // Solicita reservas filtradas a la API
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}${endpoint}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );  
+      // Ordena los resultados por primer apellido del huésped
       const reservasOrdenadasPorApellido = response.data.sort((a, b) => {
         const apellidoA = a.primer_apellido_huesped.toLowerCase();
         const apellidoB = b.primer_apellido_huesped.toLowerCase();
@@ -45,6 +56,7 @@ const BuscarReservas = () => {
       });
       setResultados(reservasOrdenadasPorApellido);
     } catch (error) {
+      // Muestra error amigable si la búsqueda falla
       const msg = error.response?.data?.error || "Error al buscar reservas";
       toast.error(msg);
     }
@@ -55,6 +67,7 @@ const BuscarReservas = () => {
     style={{ maxWidth: "1000px" }}>
       <h2 className="mb-4">Buscar Reservas</h2>
 
+      {/* Filtros de búsqueda: tipo y término */}
       <div className="row mb-4">
         <div className="col-md-3">
           <select
@@ -86,6 +99,7 @@ const BuscarReservas = () => {
         </div>
       </div>
 
+      {/* Tabla de resultados o mensaje si no hay resultados */}
       {resultados.length > 0 ? (
         <div className="table-responsive">
           <table className="table table-bordered table-striped">
@@ -128,6 +142,7 @@ const BuscarReservas = () => {
                   <td>{res.precio_total} €</td>
                   <td>{res.numero_habitacion || "-"}</td>
                   <td>
+                    {/* Botón para navegar a la página de detalle de la reserva */}
                     <button
                       className="btn btn-sm btn-outline-primary me-2"
                       onClick={() => navigate(`/reservas/${res.id_reserva}`)}

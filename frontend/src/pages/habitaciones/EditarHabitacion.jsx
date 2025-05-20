@@ -1,3 +1,7 @@
+// Página para editar los datos de una habitación
+// Permite cargar los datos actuales, modificarlos y guardarlos mediante un formulario controlado.
+// Incluye validaciones, notificaciones y navegación tras la edición.
+
 /* eslint-disable no-unused-vars */
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -6,13 +10,15 @@ import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 
 const EditarHabitacion = () => {
-  const { id } = useParams(); // Aquí el 'id' será el número de habitación
+  // Obtiene el número de habitación desde la URL
+  const { id } = useParams();
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
 
-  const [habitacion, setHabitacion] = useState(null);
+  const [habitacion, setHabitacion] = useState(null); // Estado de la habitación a editar
 
   useEffect(() => {
+    // Carga los datos de la habitación al montar el componente
     const obtenerHabitacion = async () => {
       try {
         const res = await axios.get(
@@ -31,11 +37,13 @@ const EditarHabitacion = () => {
     obtenerHabitacion();
   }, [id, token, navigate]);
 
+  // Maneja los cambios en los campos del formulario
   const manejarCambio = (e) => {
     const { name, value } = e.target;
     setHabitacion({ ...habitacion, [name]: value });
   };
 
+  // Envía el formulario para actualizar la habitación
   const manejarSubmit = async (e) => {
     e.preventDefault();
 
@@ -56,17 +64,20 @@ const EditarHabitacion = () => {
     }
   };
 
+  // Muestra un mensaje mientras se cargan los datos
   if (!habitacion)
     return <p className="text-center mt-5">Cargando habitación...</p>;
 
   return (
     <div className="container py-5 mt-1">
       <h2 className="text-center mb-4">Editar habitación</h2>
+      {/* Formulario de edición de habitación */}
       <form
         onSubmit={manejarSubmit}
         className="mx-auto"
         style={{ maxWidth: "450px", textAlign: "left" }}
       >
+        {/* Campos de datos de la habitación */}
         <div className="mb-3">
           <label className="form-label">Número de habitación</label>
           <input
