@@ -1,4 +1,4 @@
-// Componente principal de la aplicación 
+// Componente principal de la aplicación
 // Define la estructura de rutas protegidas y públicas usando React Router.
 // Aplica protección por autenticación y por rol en rutas sensibles.
 // Incluye el layout general y el sistema de notificaciones globales.
@@ -36,7 +36,8 @@ import CheckOut from "./pages/facturas/CheckOut";
 import VerFactura from "./pages/facturas/VerFactura";
 import InformeReservas from "./pages/informes/InformeReservas";
 import InformeOcupacion from "./pages/informes/InformeOcupacion";
-import InformeFacturacion from "./pages/informes/InformeFacturacion";
+import FacturacionDiaria from "./pages/informes/FacturacionDiaria";
+import FacturacionEntreFechas from "./pages/informes/FacturacionEntreFechas";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
@@ -57,6 +58,8 @@ const App = () => {
         >
           {/* Rutas protegidas por rol de administrador (rolRequerido={1}) */}
           {/* Usuarios */}
+          <Route path="/dashboard" element={<Dashboard />} />
+
           <Route
             path="/usuarios/nuevo"
             element={
@@ -127,7 +130,10 @@ const App = () => {
           <Route path="/reservas/buscar" element={<BuscarReservas />} />
           <Route path="/reservas/editar/:id" element={<EditarReserva />} />
           <Route path="/reservas/:id" element={<VerReserva />} />
-          <Route path="/reservas/:id/historial" element={<VerHistorialReserva />} />
+          <Route
+            path="/reservas/:id/historial"
+            element={<VerHistorialReserva />}
+          />
           <Route path="/reservas/check-in" element={<CheckIn />} />
           <Route path="/reservas/check-in/:id" element={<CheckInReserva />} />
           {/* Facturación */}
@@ -138,15 +144,17 @@ const App = () => {
           <Route path="/informes/reservas" element={<InformeReservas />} />
           <Route path="/informes/ocupacion" element={<InformeOcupacion />} />
           <Route
-            path="/informes/facturacion"
-            element={<InformeFacturacion />}
+            path="/informes/facturacion-diaria"
+            element={<FacturacionDiaria />}
           />
+          <Route path="/informes/facturacion/rango" element={<FacturacionEntreFechas />} />
+
         </Route>
       </Routes>
       {/* Contenedor global para notificaciones tipo toast */}
       <ToastContainer position="bottom-right" autoClose={2000} />
     </BrowserRouter>
   );
-}
+};
 
 export default App;

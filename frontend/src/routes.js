@@ -54,7 +54,8 @@ const routes = [
     submenu: [
       { label: "Reservas por fecha", path: "/informes/reservas" },
       { label: "Ocupación por día", path: "/informes/ocupacion" },
-      { label: "Facturación por mes", path: "/informes/facturacion" },
+      { label: "Facturación diaria", path: "/informes/facturacion-diaria" },
+      { label: "Facturación entre fechas", path: "/informes/facturacion/rango" },
     ],
   },
 ];
