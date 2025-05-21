@@ -1,8 +1,8 @@
+/* eslint-disable no-unused-vars */
 // Página para editar una reserva existente y sus líneas asociadas.
 // Permite modificar datos del huésped, fechas, habitación, observaciones, cliente/empresa y líneas de reserva.
 // Incluye gestión de líneas (añadir, editar, eliminar) y guardado de cambios en la API.
 
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -34,7 +34,7 @@ const EditarReserva = () => {
         );
         setLineas(datosLineas);
       } catch (error) {
-        toast.error("Error al cargar la reserva");
+        toast.error(`Error al cargar la reserva: ${error.response?.data?.message || error.message}`);
       }
     };
 
@@ -132,7 +132,7 @@ const EditarReserva = () => {
 
       toast.success("Reserva modificada correctamente");
     } catch (error) {
-      toast.error(error.response?.data?.error || "Error al modificar la reserva");
+      toast.error(`Error al modificar la reserva: ${error.response?.data?.message || error.message}`);
     }
   };
 

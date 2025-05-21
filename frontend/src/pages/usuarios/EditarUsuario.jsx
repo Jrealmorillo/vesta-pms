@@ -74,9 +74,8 @@ const EditarUsuario = () => {
       });
       toast.success("Usuario actualizado correctamente");
       navigate("/usuarios/buscar");
-      // eslint-disable-next-line no-unused-vars
     } catch (error) {
-      toast.error("Error al actualizar el usuario");
+      toast.error(`Error al actualizar el usuario: ${error.response?.data?.message || error.message}`);
     }
   };
 

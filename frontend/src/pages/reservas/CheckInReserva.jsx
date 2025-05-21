@@ -1,9 +1,9 @@
+/* eslint-disable no-unused-vars */
 
 // Página para realizar el check-in de una reserva concreta.
 // Permite asignar habitación, registrar o seleccionar huésped, validar datos y confirmar el check-in.
 // Gestiona el estado visual de la habitación y el estado de la reserva, mostrando líneas de reserva asociadas.
 
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -66,7 +66,7 @@ const CheckInReserva = () => {
         segundo_apellido: data.segundo_apellido_huesped,
       }));
     } catch (error) {
-      toast.error("Error al cargar la reserva");
+      toast.error(`Error al cargar la reserva: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -81,7 +81,7 @@ const CheckInReserva = () => {
       );
       setLineasReserva(data);
     } catch (error) {
-      toast.error("Error al cargar las líneas de la reserva");
+      toast.error(`Error al cargar las líneas de la reserva: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -96,7 +96,7 @@ const CheckInReserva = () => {
       );
       setHabitaciones(data);
     } catch (error) {
-      toast.error("Error al cargar habitaciones disponibles");
+      toast.error(`Error al cargar habitaciones disponibles: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -187,8 +187,7 @@ const CheckInReserva = () => {
       toast.success("Check-in realizado correctamente");
       navigate("/reservas/check-in");
     } catch (error) {
-      toast.error("No se pudo realizar el check-in");
-      console.error(error);
+      toast.error(`No se pudo realizar el check-in: ${error.response?.data?.message || error.message}`);
     }
   };
 

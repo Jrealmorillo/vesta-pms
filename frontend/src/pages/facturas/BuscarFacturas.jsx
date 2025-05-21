@@ -2,7 +2,6 @@
 // Permite filtrar por ID de factura, ID de reserva o fecha de emisión y muestra los resultados en una tabla.
 // Incluye validaciones, notificaciones y acceso a la visualización de cada factura.
 
-/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -40,7 +39,7 @@ const BuscarFacturas = () => {
         toast.info("No se encontraron facturas con esos criterios.");
       }
     } catch (error) {
-      toast.error("Error al buscar facturas");
+      toast.error(`Error al buscar facturas: ${error.response?.data?.message || error.message}`);	
     }
   };
 

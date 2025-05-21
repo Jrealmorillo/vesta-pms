@@ -2,7 +2,6 @@
 // Permite filtrar por ID, muestra los resultados en una tabla y permite navegar a la edición de cada usuario.
 // Incluye feedback visual y validaciones de entrada.
 
-/* eslint-disable no-unused-vars */
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -35,7 +34,7 @@ const BuscarUsuarios = () => {
       );
       setUsuarios([res.data]); // Convertimos en array para mostrar en la tabla
     } catch (error) {
-      toast.error("Usuario no encontrado");
+      toast.error(`Usuario no encontrado: ${error.response?.data?.message || error.message}`);
       setUsuarios([]);
     }
   };
@@ -50,7 +49,7 @@ const BuscarUsuarios = () => {
       });
       setUsuarios(res.data);
     } catch (error) {
-      toast.error("Error al obtener usuarios");
+      toast.error(`Error al obtener usuarios: ${error.response?.data?.message || error.message}`);
     }
   };
 

@@ -2,7 +2,6 @@
 // Permite buscar reservas activas por habitación, gestionar cargos, cerrar factura y realizar el check-out.
 // Incluye validaciones, notificaciones, edición y anulación de cargos, y confirmaciones interactivas.
 
-/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -58,6 +57,7 @@ const CheckOut = () => {
       );
       setDetalleFactura(detalles.data);
     } catch (error) {
+      toast.error(  `Error al buscar la reserva: ${error.response?.data?.detalle || "Error desconocido"}`);
       setReserva(null);
       setDetalleFactura([]);
       setError("No hay reservas activas en esa habitación.");
@@ -103,7 +103,7 @@ const CheckOut = () => {
       setNuevoCargo({ concepto: "", cantidad: 1, precio: 0 });
       toast.success("Cargo añadido correctamente");
     } catch (error) {
-      toast.error("Error al añadir el cargo");
+      toast.error(`Error al añadir el cargo: ${error.response?.data?.detalle || "Error desconocido"}`);	
     }
   };
 
@@ -216,7 +216,7 @@ const CheckOut = () => {
       // Limpiar la forma de pago, pero NO reiniciar reserva ni número de habitación
       setFormaPago("");
     } catch (error) {
-      toast.error("Error al cerrar la factura");
+      toast.error(`Error al cerrar la factura: ${error.response?.data?.detalle || "Error desconocido"}`);
     }
   };
 
@@ -262,7 +262,7 @@ const CheckOut = () => {
         return;
       }
     } catch (error) {
-      toast.error("Error al verificar cargos pendientes");
+      toast.error(`Error al verificar cargos pendientes: ${error.response?.data?.detalle || "Error desconocido"}`);
       return;
     }
 
@@ -323,7 +323,7 @@ const CheckOut = () => {
         window.location.reload(); // Recarga la página para actualizar el estado
       }, 1500);
     } catch (error) {
-      toast.error("Error al hacer check-out");
+      toast.error(`Error al hacer check-out: ${error.response?.data?.detalle || "Error desconocido"}`);
     }
   };
 
@@ -367,7 +367,7 @@ const CheckOut = () => {
       setEditandoDetalleId(null);
       toast.success("Cargo modificado correctamente");
     } catch (_error) {
-      toast.error("Error al modificar el cargo");
+      toast.error(`Error al modificar el cargo: ${_error.response?.data?.detalle || "Error desconocido"}`);
     }
   };
 
@@ -406,7 +406,7 @@ const CheckOut = () => {
       setDetalleFactura(detallesActualizados.data);
       toast.success("Cargo anulado correctamente");
     } catch (_error) {
-      toast.error("Error al anular el cargo");
+      toast.error(`Error al anular el cargo: ${_error.response?.data?.detalle || "Error desconocido"}`);
     }
   };
 

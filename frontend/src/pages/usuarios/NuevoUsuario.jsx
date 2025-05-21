@@ -2,7 +2,6 @@
 // Permite introducir nombre, usuario, contraseña, email, rol y estado de actividad, mostrando feedback y validaciones.
 // Realiza la petición a la API para crear el usuario y limpia el formulario tras el registro.
 
-/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -51,7 +50,7 @@ const NuevoUsuario = () => {
         id_rol: 2,
       });
     } catch (error) {
-      toast.error("Error al registrar usuario");
+      toast.error(`Error al registrar usuario: ${error.response?.data?.message || error.message}`);
     }
   };
 

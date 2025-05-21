@@ -24,7 +24,7 @@ const ListadoHabitaciones = () => {
       });
       setHabitaciones(res.data.habitaciones); // Actualiza el estado con la lista de habitaciones
     } catch (error) {
-      toast.error("Error al obtener habitaciones");
+      toast.error(`Error al obtener habitaciones: ${error.response?.data?.detalle || error.message}`);
     }
   };
 

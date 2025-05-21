@@ -2,7 +2,6 @@
 // Permite introducir la contraseña actual, la nueva y su confirmación, validando coincidencia y mostrando feedback.
 // Realiza la petición a la API para actualizar la contraseña del usuario autenticado.
 
-/* eslint-disable no-unused-vars */
 import { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
@@ -53,7 +52,7 @@ const CambiarPassword = () => {
       toast.success("Contraseña actualizada correctamente");
       setForm({ actual: "", nueva: "", confirmar: "" });
     } catch (error) {
-      toast.error("Error al cambiar la contraseña");
+      toast.error(`Error al cambiar la contraseña: ${error.response?.data?.message || error.message}`);
     }
   };
 

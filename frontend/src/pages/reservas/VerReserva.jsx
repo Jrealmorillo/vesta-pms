@@ -2,7 +2,6 @@
 // Permite ver datos generales, líneas asociadas, estado, anular o recuperar la reserva y acceder al historial.
 // Incluye feedback visual y navegación a edición o historial de la reserva.
 
-/* eslint-disable no-unused-vars */
 import { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
@@ -30,7 +29,7 @@ const VerReserva = () => {
         );
         setReserva(response.data);
       } catch (error) {
-        toast.error("Error al obtener la reserva");
+        toast.error(`Error al obtener la reserva: ${error.response?.data?.message || error.message}`);
       }
     };
 
@@ -68,7 +67,7 @@ const VerReserva = () => {
       );
       setReserva(response.data);
     } catch (error) {
-      toast.error("Error al recuperar la reserva");
+      toast.error(`Error al recuperar la reserva: ${error.response?.data?.message || error.message}`);
     }
   };
 
@@ -102,7 +101,7 @@ const VerReserva = () => {
       );
       setReserva(response.data);
     } catch (error) {
-      toast.error("No se pudo anular la reserva");
+      toast.error(`No se pudo anular la reserva: ${error.response?.data?.message || error.message}`);
     }
   };
 
