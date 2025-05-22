@@ -52,7 +52,7 @@ const CambiarPassword = () => {
       toast.success("Contraseña actualizada correctamente");
       setForm({ actual: "", nueva: "", confirmar: "" });
     } catch (error) {
-      toast.error(`Error al cambiar la contraseña: ${error.response?.data?.message || error.message}`);
+      toast.error(`Error al cambiar la contraseña: ${error.response?.data?.error || error.message}`);
     }
   };
 

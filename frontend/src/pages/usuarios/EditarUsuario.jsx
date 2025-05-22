@@ -75,7 +75,7 @@ const EditarUsuario = () => {
       toast.success("Usuario actualizado correctamente");
       navigate("/usuarios/buscar");
     } catch (error) {
-      toast.error(`Error al actualizar el usuario: ${error.response?.data?.message || error.message}`);
+      toast.error(`Error al actualizar el usuario: ${error.response?.data?.error || error.message}`);
     }
   };
 

@@ -34,7 +34,7 @@ const EditarReserva = () => {
         );
         setLineas(datosLineas);
       } catch (error) {
-        toast.error(`Error al cargar la reserva: ${error.response?.data?.message || error.message}`);
+        toast.error(`Error al cargar la reserva: ${error.response?.data?.error || error.message}`);
       }
     };
 
@@ -132,7 +132,7 @@ const EditarReserva = () => {
 
       toast.success("Reserva modificada correctamente");
     } catch (error) {
-      toast.error(`Error al modificar la reserva: ${error.response?.data?.message || error.message}`);
+      toast.error(`Error al modificar la reserva: ${error.response?.data?.error || error.message}`);
     }
   };
 

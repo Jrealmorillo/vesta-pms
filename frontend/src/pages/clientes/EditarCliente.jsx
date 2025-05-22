@@ -67,9 +67,7 @@ const EditarCliente = () => {
       toast.success("Cliente actualizado correctamente");
       navigate("/clientes/buscar");
     } catch (error) {
-      const msg =
-        error.response?.data?.detalle || "Error al actualizar cliente";
-      toast.error(msg);
+      toast.error(`Error al actualizar cliente: ${error.response?.data?.error || error.message}`);
     }
   };
 

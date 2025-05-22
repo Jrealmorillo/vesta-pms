@@ -11,7 +11,7 @@ exports.registrarCliente = async (req, res) => {
     res.status(201).json({ mensaje: "Cliente registrado exitosamente", cliente });
   } catch (error) {
     // Devuelve un error detallado si la operación falla
-    res.status(400).json({ error: "Error al registrar cliente", detalle: error.message });
+    res.status(400).json({ error: "Error al registrar cliente: " + error.message });
   }
 };
 

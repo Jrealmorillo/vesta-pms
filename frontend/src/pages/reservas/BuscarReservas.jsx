@@ -47,7 +47,14 @@ const BuscarReservas = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}${endpoint}`,
         { headers: { Authorization: `Bearer ${token}` } }
-      );  
+      );
+
+      // Si no se encuentran reservas, muestra un mensaje
+      if (response.data.length === 0) {
+        toast.warning("No se encontraron reservas con ese criterio.");
+        setResultados([]);
+        return;
+      }
       // Ordena los resultados por primer apellido del huésped
       const reservasOrdenadasPorApellido = response.data.sort((a, b) => {
         const apellidoA = a.primer_apellido_huesped.toLowerCase();
@@ -57,14 +64,16 @@ const BuscarReservas = () => {
       setResultados(reservasOrdenadasPorApellido);
     } catch (error) {
       // Muestra error amigable si la búsqueda falla
-      const msg = error.response?.data?.error || "Error al buscar reservas";
-      toast.error(msg);
+      toast.error(
+        `Error al buscar reservas: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   };
 
   return (
-    <div className="container py-5 mt-4"
-    style={{ maxWidth: "1000px" }}>
+    <div className="container py-5 mt-4" style={{ maxWidth: "1000px" }}>
       <h2 className="mb-4">Buscar Reservas</h2>
 
       {/* Filtros de búsqueda: tipo y término */}
@@ -120,7 +129,8 @@ const BuscarReservas = () => {
                 <tr key={res.id_reserva}>
                   <td>{res.id_reserva}</td>
                   <td>
-                    {res.primer_apellido_huesped} {res.segundo_apellido_huesped} , {res.nombre_huesped} 
+                    {res.primer_apellido_huesped} {res.segundo_apellido_huesped}{" "}
+                    , {res.nombre_huesped}
                   </td>
                   <td>{res.fecha_entrada}</td>
                   <td>{res.fecha_salida}</td>
@@ -160,6 +170,6 @@ const BuscarReservas = () => {
       )}
     </div>
   );
-}
+};
 
 export default BuscarReservas;

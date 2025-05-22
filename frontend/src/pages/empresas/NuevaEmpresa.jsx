@@ -60,9 +60,7 @@ const NuevaEmpresa = () => {
         observaciones: "",
       });
     } catch (error) {
-      const mensaje =
-        error.response?.data?.detalle || "Error al registrar empresa";
-      toast.error(mensaje);
+      toast.error(`Error al registrar empresa: ${error.response?.data?.error || error.message}`);
       console.error("Error:", error);
     }
   };

@@ -58,9 +58,7 @@ const EditarHabitacion = () => {
       toast.success("Habitación actualizada correctamente");
       navigate("/habitaciones");
     } catch (error) {
-      const msg =
-        error.response?.data?.detalle || "Error al actualizar habitación";
-      toast.error(msg);
+      toast.error(`Error al actualizar habitación: ${error.response?.data?.error || error.message}`);
     }
   };
 

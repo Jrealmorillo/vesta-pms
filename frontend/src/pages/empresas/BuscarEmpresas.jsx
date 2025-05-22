@@ -41,8 +41,7 @@ const BuscarEmpresas = () => {
       });
       setEmpresas(empresasOrdenadas);
     } catch (error) {
-      const msg = error.response?.data?.detalle || "Empresa no encontrada";
-      toast.error(msg);
+      toast.error(`Empresa no encontrada: ${error.response?.data?.error || error.message}`);
       setEmpresas([]);
     }
   };

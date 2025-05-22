@@ -41,8 +41,7 @@ const BuscarClientes = () => {
       });
       setClientes(clientesOrdenados);
     } catch (error) {
-      const msg = error.response?.data?.detalle || "Cliente no encontrado";
-      toast.error(msg);
+      toast.error(`Error al buscar clientes: ${error.response?.data?.error || error.message}`);
       setClientes([]);
     }
   };

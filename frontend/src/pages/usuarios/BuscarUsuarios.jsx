@@ -34,7 +34,7 @@ const BuscarUsuarios = () => {
       );
       setUsuarios([res.data]); // Convertimos en array para mostrar en la tabla
     } catch (error) {
-      toast.error(`Usuario no encontrado: ${error.response?.data?.message || error.message}`);
+      toast.error(`Usuario no encontrado: ${error.response?.data?.error || error.message}`);
       setUsuarios([]);
     }
   };
@@ -49,7 +49,7 @@ const BuscarUsuarios = () => {
       });
       setUsuarios(res.data);
     } catch (error) {
-      toast.error(`Error al obtener usuarios: ${error.response?.data?.message || error.message}`);
+      toast.error(`Error al obtener usuarios: ${error.response?.data?.error || error.message}`);
     }
   };
 

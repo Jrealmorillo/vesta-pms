@@ -66,7 +66,7 @@ const CheckInReserva = () => {
         segundo_apellido: data.segundo_apellido_huesped,
       }));
     } catch (error) {
-      toast.error(`Error al cargar la reserva: ${error.response?.data?.message || error.message}`);
+      toast.error(`Error al cargar la reserva: ${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -81,7 +81,7 @@ const CheckInReserva = () => {
       );
       setLineasReserva(data);
     } catch (error) {
-      toast.error(`Error al cargar las líneas de la reserva: ${error.response?.data?.message || error.message}`);
+      toast.error(`Error al cargar las líneas de la reserva: ${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -94,9 +94,9 @@ const CheckInReserva = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      setHabitaciones(data);
+      setHabitaciones(data.habitaciones);
     } catch (error) {
-      toast.error(`Error al cargar habitaciones disponibles: ${error.response?.data?.message || error.message}`);
+      toast.error(`Error al cargar habitaciones disponibles: ${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -187,7 +187,7 @@ const CheckInReserva = () => {
       toast.success("Check-in realizado correctamente");
       navigate("/reservas/check-in");
     } catch (error) {
-      toast.error(`No se pudo realizar el check-in: ${error.response?.data?.message || error.message}`);
+      toast.error(`No se pudo realizar el check-in: ${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -239,8 +239,8 @@ const CheckInReserva = () => {
         toast.info("Se han encontrado varios clientes. Selecciona uno.");
         setClientesEncontrados(data);
       }
-    } catch (_error) {
-      toast.error("Error al buscar cliente");
+    } catch (error) {
+      toast.error(`Error al buscar cliente: ${error.response?.data?.error || error.message}`);
       setClientesEncontrados([]);
     }
   };

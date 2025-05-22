@@ -70,9 +70,7 @@ const NuevoCliente = () => {
         observaciones: "",
       });
     } catch (error) {
-      const mensaje =
-        error.response?.data?.detalle || "Error al registrar cliente";
-      toast.error(mensaje);
+      toast.error(`Error al registrar cliente: ${error.response?.data?.error || error.message}`);
       console.error("Error:", error);
     }
   };

@@ -50,7 +50,7 @@ const NuevoUsuario = () => {
         id_rol: 2,
       });
     } catch (error) {
-      toast.error(`Error al registrar usuario: ${error.response?.data?.message || error.message}`);
+      toast.error(`Error al registrar usuario: ${error.response?.data?.error || error.message}`);
     }
   };
 

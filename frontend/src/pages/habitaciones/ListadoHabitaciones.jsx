@@ -24,7 +24,7 @@ const ListadoHabitaciones = () => {
       });
       setHabitaciones(res.data.habitaciones); // Actualiza el estado con la lista de habitaciones
     } catch (error) {
-      toast.error(`Error al obtener habitaciones: ${error.response?.data?.detalle || error.message}`);
+      toast.error(`Error al obtener habitaciones: ${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -67,8 +67,7 @@ const ListadoHabitaciones = () => {
       toast.success("Habitación eliminada correctamente");
       obtenerHabitaciones(); // Actualiza la lista
     } catch (error) {
-      const msg = error.response?.data?.detalle || "Error al eliminar habitación";
-      toast.error(msg);
+      toast.error(`Error al eliminar habitación: ${error.response?.data?.error || error.message}`);
     }
   };
 

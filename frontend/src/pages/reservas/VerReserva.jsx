@@ -29,7 +29,7 @@ const VerReserva = () => {
         );
         setReserva(response.data);
       } catch (error) {
-        toast.error(`Error al obtener la reserva: ${error.response?.data?.message || error.message}`);
+        toast.error(`Error al obtener la reserva: ${error.response?.data?.error || error.message}`);
       }
     };
 
@@ -67,7 +67,7 @@ const VerReserva = () => {
       );
       setReserva(response.data);
     } catch (error) {
-      toast.error(`Error al recuperar la reserva: ${error.response?.data?.message || error.message}`);
+      toast.error(`Error al recuperar la reserva: ${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -101,7 +101,7 @@ const VerReserva = () => {
       );
       setReserva(response.data);
     } catch (error) {
-      toast.error(`No se pudo anular la reserva: ${error.response?.data?.message || error.message}`);
+      toast.error(`No se pudo anular la reserva: ${error.response?.data?.error || error.message}`);
     }
   };
 

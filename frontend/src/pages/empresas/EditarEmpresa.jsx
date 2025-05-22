@@ -67,9 +67,7 @@ const EditarEmpresa = () => {
       toast.success("Empresa actualizada correctamente");
       navigate("/empresas/buscar");
     } catch (error) {
-      const msg =
-        error.response?.data?.detalle || "Error al actualizar empresa";
-      toast.error(msg);
+      toast.error(`Error al actualizar empresa: ${error.response?.data?.error || error.message}`);
     }
   };
 

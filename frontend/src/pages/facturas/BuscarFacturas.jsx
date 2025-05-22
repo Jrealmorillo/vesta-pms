@@ -39,7 +39,7 @@ const BuscarFacturas = () => {
         toast.info("No se encontraron facturas con esos criterios.");
       }
     } catch (error) {
-      toast.error(`Error al buscar facturas: ${error.response?.data?.message || error.message}`);	
+      toast.error(`Error al buscar facturas: ${error.response?.data?.error || error.message}`);	
     }
   };
 
