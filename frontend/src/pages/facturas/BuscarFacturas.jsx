@@ -2,7 +2,7 @@
 // Permite filtrar por ID de factura, ID de reserva o fecha de emisión y muestra los resultados en una tabla.
 // Incluye validaciones, notificaciones y acceso a la visualización de cada factura.
 
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";

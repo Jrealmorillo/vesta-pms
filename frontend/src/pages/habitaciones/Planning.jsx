@@ -3,7 +3,7 @@
 // Incluye leyenda de colores para interpretar el estado de cada celda.
 
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Planning.css";
 
@@ -49,7 +49,7 @@ const Planning = () => {
   // Carga las reservas cada vez que cambia la fecha de inicio
   useEffect(() => {
     cargarReservas();
-  }, []);
+  }, [fechaInicio]);
 
   // Obtiene habitaciones desde la API
   const cargarHabitaciones = async () => {
@@ -80,6 +80,17 @@ const Planning = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      // Log temporal para depuración: mostrar fechas de todas las reservas recibidas
+      if (Array.isArray(res.data)) {
+        console.log("Reservas recibidas:", res.data.map(r => ({
+          id: r.id_reserva,
+          entrada: r.fecha_entrada,
+          salida: r.fecha_salida,
+          habitacion: r.numero_habitacion
+        })));
+      } else {
+        console.log("Reservas recibidas (no array):", res.data);
+      }
       setReservas(res.data);
     } catch (error) {
       console.error("Error al cargar reservas para el planning");

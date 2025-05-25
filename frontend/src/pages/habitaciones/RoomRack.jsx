@@ -3,7 +3,7 @@
 // Permite cambiar el estado de limpieza y bloqueo de cada habitación, mostrando colores y estilos según el estado.
 // El estado se sincroniza con localStorage para persistencia temporal.
 
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import "./RoomRack.css";

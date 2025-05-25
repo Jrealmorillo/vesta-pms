@@ -3,7 +3,7 @@
 // Permite identificar fácilmente quién y cuándo se realizaron modificaciones relevantes.
 
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";

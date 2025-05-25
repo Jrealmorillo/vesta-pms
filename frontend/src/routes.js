@@ -52,10 +52,16 @@ const routes = [
   {
     label: "Informes",
     submenu: [
-      { label: "Reservas por fecha", path: "/informes/reservas" },
-      { label: "Ocupación por día", path: "/informes/ocupacion" },
+      { label: "Cargos pendientes por habitación", path: "/informes/cargos-pendientes" },
+      { label: "Clientes alojados actualmente", path: "/informes/clientes-alojados" },
+      { label: "Consumo por forma de pago", path: "/informes/consumo-forma-pago" },
+      { label: "Estado actual de habitaciones", path: "/informes/estado-habitaciones" },
       { label: "Facturación diaria", path: "/informes/facturacion-diaria" },
       { label: "Facturación entre fechas", path: "/informes/facturacion/rango" },
+      { label: "Listado de llegadas por fecha", path: "/informes/llegadas" },
+      { label: "Listado de salidas por fecha", path: "/informes/salidas" },
+      { label: "Ocupación por día", path: "/informes/ocupacion" },
+      { label: "Resumen de actividad diaria", path: "/informes/resumen-dia" },
     ],
   },
 ];

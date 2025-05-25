@@ -50,8 +50,8 @@ router.get("/:id/historial", reservaController.obtenerHistorialReserva);
 // Obtener una reserva de check-in por número de habitación
 router.get("/habitacion/:numero/check-in", reservaController.obtenerReservaActivaPorHabitacion);
 
-// Obtener todas las reservas para el planning
-router.get("/planning", reservaController.obtenerReservasParaPlanning);
+// Obtener todas las reservas asignadas entre fechas
+router.get("/asignadas", reservaController.obtenerReservasAsignadasEntreFechas);
 
 // Comprobar si una reserva tiene líneas no facturadas
 router.get("/:id_reserva/tiene-lineas-no-facturadas", reservaController.tieneLineasNoFacturadas);

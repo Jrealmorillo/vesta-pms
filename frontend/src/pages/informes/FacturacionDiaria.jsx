@@ -29,7 +29,7 @@ const FacturacionDiaria = () => {
       }
     } catch (error) {
       toast.error(
-        `Error al obtener el informe de facturación: ${error.response?.data?.message || error.message}`
+        `Error al obtener el informe de facturación: ${error.response?.data?.error || error.message}`
       );
     }
   };

@@ -17,6 +17,27 @@ router.get("/facturacion", informeController.obtenerFacturacionPorFecha);
 // Obtener el informe de facturación entre fechas
 router.get("/facturacion/rango", informeController.obtenerFacturacionEntreFechas);
 
+// Obtener el informe de cargos pendientes por habitación
+router.get("/cargos-pendientes", informeController.obtenerCargosPendientesPorHabitacion);
+
+// Estado actual de habitaciones
+router.get("/estado-habitaciones", informeController.obtenerEstadoActualHabitaciones);
+
+// Clientes alojados actualmente
+router.get("/clientes-alojados", informeController.obtenerClientesAlojadosActualmente);
+
+// Listado de llegadas por fecha
+router.get("/llegadas", informeController.obtenerLlegadasPorFecha);
+
+// Listado de salidas por fecha
+router.get("/salidas", informeController.obtenerSalidasPorFecha);
+
+// Resumen de actividad diaria
+router.get("/resumen-dia", informeController.obtenerResumenActividadDiaria);
+
+// Consumo por forma de pago
+router.get("/consumo-forma-pago", informeController.obtenerConsumoPorFormaPago);
+
 
 // Exporta el router para su uso en la aplicación principal
 module.exports = router;

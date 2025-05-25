@@ -4,7 +4,7 @@
 // Permite asignar habitación, registrar o seleccionar huésped, validar datos y confirmar el check-in.
 // Gestiona el estado visual de la habitación y el estado de la reserva, mostrando líneas de reserva asociadas.
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";

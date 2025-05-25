@@ -34,10 +34,16 @@ import VerHistorialReserva from "./pages/reservas/VerHistorialReserva";
 import BuscarFacturas from "./pages/facturas/BuscarFacturas";
 import CheckOut from "./pages/facturas/CheckOut";
 import VerFactura from "./pages/facturas/VerFactura";
-import InformeReservas from "./pages/informes/InformeReservas";
 import InformeOcupacion from "./pages/informes/InformeOcupacion";
 import FacturacionDiaria from "./pages/informes/FacturacionDiaria";
 import FacturacionEntreFechas from "./pages/informes/FacturacionEntreFechas";
+import InformeCargosPendientes from "./pages/informes/InformeCargosPendientes";
+import InformeEstadoHabitaciones from "./pages/informes/InformeEstadoHabitaciones";
+import InformeClientesAlojados from "./pages/informes/InformeClientesAlojados";
+import InformeLlegadas from "./pages/informes/InformeLlegadas";
+import InformeSalidas from "./pages/informes/InformeSalidas";
+import InformeResumenDia from "./pages/informes/InformeResumenDia";
+import InformeConsumoFormaPago from "./pages/informes/InformeConsumoFormaPago";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
@@ -141,13 +147,19 @@ const App = () => {
           <Route path="/facturas/check-out" element={<CheckOut />} />
           <Route path="/facturas/:id" element={<VerFactura />} />
           {/* Informes */}
-          <Route path="/informes/reservas" element={<InformeReservas />} />
           <Route path="/informes/ocupacion" element={<InformeOcupacion />} />
           <Route
             path="/informes/facturacion-diaria"
             element={<FacturacionDiaria />}
           />
           <Route path="/informes/facturacion/rango" element={<FacturacionEntreFechas />} />
+<Route path="/informes/cargos-pendientes" element={<InformeCargosPendientes />} />
+<Route path="/informes/estado-habitaciones" element={<InformeEstadoHabitaciones />} />
+<Route path="/informes/clientes-alojados" element={<InformeClientesAlojados />} />
+<Route path="/informes/llegadas" element={<InformeLlegadas />} />
+<Route path="/informes/salidas" element={<InformeSalidas />} />
+<Route path="/informes/resumen-dia" element={<InformeResumenDia />} />
+<Route path="/informes/consumo-forma-pago" element={<InformeConsumoFormaPago />} />
 
         </Route>
       </Routes>

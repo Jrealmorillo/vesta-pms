@@ -2,7 +2,7 @@
 // Lista las reservas con entrada hoy y permite realizar el check-in si la reserva está confirmada.
 // Incluye feedback visual y navegación al proceso de check-in.
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";

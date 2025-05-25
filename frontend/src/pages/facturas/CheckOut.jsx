@@ -2,7 +2,7 @@
 // Permite buscar reservas activas por habitación, gestionar cargos, cerrar factura y realizar el check-out.
 // Incluye validaciones, notificaciones, edición y anulación de cargos, y confirmaciones interactivas.
 
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -193,27 +193,27 @@ const CheckOut = () => {
 
       // Volver a consultar la reserva actualizada
       const reservaActualizada = await axios.get(
-        `${
-          import.meta.env.VITE_API_URL
-        }/reservas/habitacion/${numeroHabitacion}/check-in`,
+        `${import.meta.env.VITE_API_URL}/reservas/habitacion/${numeroHabitacion}/check-in`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       setReserva(reservaActualizada.data);
 
-      // Actualizar lista de detalles (los que aún no estén facturados)
-      const detallesActualizados = await axios.get(
-        `${import.meta.env.VITE_API_URL}/detalles-factura/pendientes/${
-          reservaActualizada.data.id_reserva
-        }`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setDetalleFactura(detallesActualizados.data);
+      // Si la factura está cerrada, limpiar los cargos pendientes
+      if (reservaActualizada.data.estado_factura === "Pagada") {
+        setDetalleFactura([]);
+      } else {
+        // Actualizar lista de detalles (los que aún no estén facturados)
+        const detallesActualizados = await axios.get(
+          `${import.meta.env.VITE_API_URL}/detalles-factura/pendientes/${reservaActualizada.data.id_reserva}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setDetalleFactura(detallesActualizados.data);
+      }
 
-      // Limpiar la forma de pago, pero NO reiniciar reserva ni número de habitación
       setFormaPago("");
     } catch (error) {
       toast.error(`Error al cerrar la factura: ${error.response?.data?.error || error.message}`);
@@ -237,21 +237,17 @@ const CheckOut = () => {
         confirmButtonColor: "#d33",
         cancelButtonColor: "#3085d6",
       });
-
       if (!salidaAnticipada.isConfirmed) return;
     }
 
-    // Verificar si aún hay líneas de reserva activas sin trasladar
+    // Verificar si hay líneas de reserva activas sin trasladar
     try {
       const respuesta = await axios.get(
-        `${import.meta.env.VITE_API_URL}/reservas/${
-          reserva.id_reserva
-        }/tiene-lineas-no-facturadas`,
+        `${import.meta.env.VITE_API_URL}/reservas/${reserva.id_reserva}/tiene-lineas-no-facturadas`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       if (respuesta.data?.pendientes) {
         await Swal.fire({
           icon: "warning",
@@ -266,7 +262,7 @@ const CheckOut = () => {
       return;
     }
 
-    // Verificar si hay cargos pendientes en la cuenta
+    // Verificar si hay cargos pendientes de facturar
     if (detalleFactura.length > 0) {
       await Swal.fire({
         icon: "error",

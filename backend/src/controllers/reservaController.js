@@ -219,8 +219,8 @@ exports.obtenerReservaActivaPorHabitacion = async (req, res) => {
   }
 };
 
-// Obtener todas las reservas para el planning 
-exports.obtenerReservasParaPlanning = async (req, res) => {
+// Obtener habitaciones asignadas entre dos fechas  
+exports.obtenerReservasAsignadasEntreFechas = async (req, res) => {
   try {
     // Valida que se hayan proporcionado las fechas requeridas
     const { desde, hasta } = req.query;
@@ -228,10 +228,10 @@ exports.obtenerReservasParaPlanning = async (req, res) => {
       return res.status(400).json({ error: "Debe especificar 'desde' y 'hasta'" });
     }
     // Obtiene las reservas dentro del rango de fechas
-    const reservas = await GestorReservas.obtenerReservasParaPlanning(desde, hasta);
+    const reservas = await GestorReservas.obtenerReservasAsignadasEntreFechas(desde, hasta);
     res.json(reservas);
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener las reservas para el planning" });
+    res.status(500).json({ error: "Error al obtener las reservas asignadas" });
   }
 };
 
@@ -245,6 +245,7 @@ exports.tieneLineasNoFacturadas = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 

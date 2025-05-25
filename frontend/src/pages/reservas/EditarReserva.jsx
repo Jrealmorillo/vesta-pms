@@ -3,7 +3,7 @@
 // Permite modificar datos del huésped, fechas, habitación, observaciones, cliente/empresa y líneas de reserva.
 // Incluye gestión de líneas (añadir, editar, eliminar) y guardado de cambios en la API.
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";

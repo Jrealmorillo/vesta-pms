@@ -28,7 +28,7 @@ const InformeOcupacion = () => {
         toast.info("No hay datos de ocupación en ese periodo.");
       }
     } catch (error) {
-      toast.error(`Error al obtener informe de ocupación: ${error.response?.data?.message || error.message}`);
+      toast.error(`Error al obtener informe de ocupación: ${error.response?.data?.error || error.message}`);
     }
   };
 

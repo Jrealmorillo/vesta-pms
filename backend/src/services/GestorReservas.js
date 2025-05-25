@@ -387,10 +387,11 @@ class GestorReservas {
 
 
 
-  // Obtener todas las reservas para el planning
-  async obtenerReservasParaPlanning(desde, hasta) {
+  // Obtener todas las reservas asignadas entre dos fechas
+  async obtenerReservasAsignadasEntreFechas(desde, hasta) {
     try {
-      return await Reserva.findAll({
+       
+      const reservas = await Reserva.findAll({
         where: {
           estado: {
             [Op.in]: ["Confirmada", "Check-in"]
@@ -398,63 +399,69 @@ class GestorReservas {
           numero_habitacion: {
             [Op.ne]: null
           },
-          [Op.or]: [
-            {
-              fecha_entrada: {
-                [Op.between]: [desde, hasta]
-              }
-            },
-            {
-              fecha_salida: {
-                [Op.between]: [desde, hasta]
-              }
-            },
-            {
-              fecha_entrada: { [Op.lte]: desde },
-              fecha_salida: { [Op.gte]: hasta }
-            }
-          ]
+          fecha_entrada: { [Op.lt]: hasta },
+          fecha_salida: { [Op.gt]: desde }
         },
         include: [
           { model: Cliente, as: "cliente" },
           { model: Empresa, as: "empresa" }
         ],
-        order: [["numero_habitacion", "ASC"]]
+        order: [["numero_habitacion", "ASC"]],
       });
+      return reservas;
     } catch (error) {
-      throw new Error("Error al consultar reservas para el planning");
+      throw new Error("Error al consultar reservas asignadas entre fechas");
     }
   }
 
-// Verificar si quedan líneas activas de reserva sin volcar a detalle de factura
-async tieneLineasNoFacturadas(id_reserva) {
-  try {
-    // Buscar líneas activas de tipo "Alojamiento"
-    const lineas = await LineaReserva.findAll({
-      where: {
-        id_reserva,
-        activa: true,
-        tipo_habitacion: { [Op.ne]: null }
+  // Verificar si quedan líneas activas de reserva sin volcar a detalle de factura
+  async tieneLineasNoFacturadas(id_reserva) {
+    try {
+      // Buscar líneas activas de tipo "Alojamiento"
+      const lineas = await LineaReserva.findAll({
+        where: {
+          id_reserva,
+          activa: true,
+          tipo_habitacion: { [Op.ne]: null }
+        }
+      });
+
+      // Buscar detalles de factura pendientes (no facturados, activos) cuyo concepto sea alojamiento
+      const detalles = await GestorDetalleFactura.obtenerDetallesPendientesPorReserva(id_reserva);
+      // Solo detalles de alojamiento
+      const detallesAloj = detalles.filter((d) => d.concepto.toLowerCase().includes("alojamiento"));
+
+      // Para cada línea activa, buscar si existe un detalle pendiente que coincida en fecha, tipo_habitacion y regimen
+      let pendientes = false;
+      for (const linea of lineas) {
+        const existe = detallesAloj.some((detalle) => {
+          // Extraer tipo y régimen del concepto del detalle
+          // Ejemplo concepto: "Alojamiento - Doble (Media Pensión)"
+          const match = detalle.concepto.match(/Alojamiento\s*-\s*(.+)\s*\((.+)\)/i);
+          let tipo = null;
+          let regimen = null;
+          if (match) {
+            tipo = match[1]?.trim();
+            regimen = match[2]?.trim();
+          }
+          return (
+            detalle.fecha === linea.fecha &&
+            tipo === linea.tipo_habitacion &&
+            regimen === linea.regimen &&
+            detalle.cantidad === linea.cantidad_habitaciones &&
+            parseFloat(detalle.precio_unitario) === parseFloat(linea.precio)
+          );
+        });
+        if (!existe) {
+          pendientes = true;
+          break;
+        }
       }
-    });
-
-    // Buscar conceptos ya volcados como "Alojamiento" en DetalleFactura
-    const detalles = await GestorDetalleFactura.obtenerDetallesPendientesPorReserva(id_reserva);
-
-    const conceptosExistentes = detalles
-      .filter((d) =>
-        d.concepto.toLowerCase().includes("alojamiento")
-      )
-      .map((d) => d.fecha); // puedes usar otro criterio si es necesario
-
-    // Si hay más líneas que detalles, hay pendientes
-    const pendientes = lineas.length > conceptosExistentes.length;
-
-    return { pendientes };
-  } catch (error) {
-    throw new Error("Error al verificar líneas no facturadas: " + error.message);
+      return { pendientes };
+    } catch (error) {
+      throw new Error("Error al verificar líneas no facturadas: " + error.message);
+    }
   }
-}
 
 
 }
