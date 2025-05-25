@@ -33,7 +33,6 @@ const BuscarFacturas = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log(filtros); // Muestra los filtros en la consola para depuración
       setResultados(data);
       if (data.length === 0) {
         toast.info("No se encontraron facturas con esos criterios.");

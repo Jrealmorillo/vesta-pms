@@ -15,6 +15,7 @@ const RoomRack = () => {
   const [habitaciones, setHabitaciones] = useState([]);
   const [estados, setEstados] = useState([]);
   const [cargado, setCargado] = useState(false);
+  const [habitacionesAsignadas, setHabitacionesAsignadas] = useState([]);
 
   // Sincroniza el estado visual con localStorage cada vez que cambia
   useEffect(() => {
@@ -73,6 +74,32 @@ const RoomRack = () => {
     cargarHabitaciones();
   }, [token]);
 
+  useEffect(() => {
+    const cargarAsignadas = async () => {
+      const hoy = new Date().toISOString().split("T")[0];
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/reservas/asignadas`,
+          {
+            params: {
+              desde: hoy,
+              hasta: hoy,
+            },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const asignadas = res.data.map((r) => r.numero_habitacion);
+        setHabitacionesAsignadas(asignadas);
+      } catch (error) {
+        console.error("Error al obtener habitaciones asignadas:", error);
+      }
+    };
+
+    cargarAsignadas();
+  }, []);
+
   // Cambia el estado de limpieza u ocupación de una habitación
   const cambiarEstado = (numero, tipo, nuevoValor) => {
     setEstados((prev) =>
@@ -85,7 +112,13 @@ const RoomRack = () => {
   // Renderiza la tarjeta visual de cada habitación
   const renderHabitacion = (estado) => {
     // Determina clases CSS según estado de ocupación y limpieza
-    const claseFondo = `fondo-${estado.ocupacion}`;
+    const esAsignada =
+      estado.ocupacion === "libre" &&
+      habitacionesAsignadas.includes(estado.numero);
+
+    const claseFondo = esAsignada
+      ? "fondo-asignada"
+      : `fondo-${estado.ocupacion}`;
     const claseTexto = `texto-${estado.limpieza}`;
 
     return (

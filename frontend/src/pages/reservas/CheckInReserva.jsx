@@ -8,6 +8,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useCallback } from "react";
 
 const CheckInReserva = () => {
   const { id } = useParams();
@@ -48,6 +49,7 @@ const CheckInReserva = () => {
   const [clientesEncontrados, setClientesEncontrados] = useState([]);
   const [lineasReserva, setLineasReserva] = useState([]);
   const [estadoSeleccionado, setEstadoSeleccionado] = useState(null);
+  const [habitacionesOcupadas, setHabitacionesOcupadas] = useState([]);
 
   // Carga los datos de la reserva seleccionada
   const cargarReserva = async () => {
@@ -59,6 +61,7 @@ const CheckInReserva = () => {
         }
       );
       setReserva(data);
+      setHabitacionSeleccionada(data.numero_habitacion || "");
       setHuesped((...prev) => ({
         ...prev,
         nombre: data.nombre_huesped,
@@ -66,7 +69,11 @@ const CheckInReserva = () => {
         segundo_apellido: data.segundo_apellido_huesped,
       }));
     } catch (error) {
-      toast.error(`Error al cargar la reserva: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `Error al cargar la reserva: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   };
 
@@ -81,7 +88,11 @@ const CheckInReserva = () => {
       );
       setLineasReserva(data);
     } catch (error) {
-      toast.error(`Error al cargar las líneas de la reserva: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `Error al cargar las líneas de la reserva: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   };
 
@@ -96,7 +107,11 @@ const CheckInReserva = () => {
       );
       setHabitaciones(data.habitaciones);
     } catch (error) {
-      toast.error(`Error al cargar habitaciones disponibles: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `Error al cargar habitaciones disponibles: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   };
 
@@ -109,6 +124,14 @@ const CheckInReserva = () => {
   const confirmarCheckIn = async () => {
     if (!habitacionSeleccionada) {
       toast.error("Debes seleccionar una habitación");
+      return;
+    }
+    // Obtiene el estado visual de la habitación seleccionada
+    const estados = JSON.parse(localStorage.getItem("estadoHabitaciones")) || [];
+    const estado = estados.find((e) => e.numero === habitacionSeleccionada);
+
+    if (estado.limpieza === "sucia") {
+      toast.error("No puedes hacer check-in en una habitación sucia.");
       return;
     }
     // Validar campos obligatorios del huésped
@@ -125,7 +148,6 @@ const CheckInReserva = () => {
 
     const faltantes = camposObligatorios.filter((campo) => !huesped[campo]);
     if (faltantes.length > 0) {
-      console.log(faltantes);
       toast.error("Faltan campos obligatorios del huésped");
       return;
     }
@@ -156,9 +178,6 @@ const CheckInReserva = () => {
       );
 
       // Cambiar el estado visual de la habitación en localStorage
-      const estados =
-        JSON.parse(localStorage.getItem("estadoHabitaciones")) || [];
-
       const index = estados.findIndex(
         (e) => e.numero === habitacionSeleccionada
       );
@@ -187,7 +206,11 @@ const CheckInReserva = () => {
       toast.success("Check-in realizado correctamente");
       navigate("/reservas/check-in");
     } catch (error) {
-      toast.error(`No se pudo realizar el check-in: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `No se pudo realizar el check-in: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   };
 
@@ -199,6 +222,9 @@ const CheckInReserva = () => {
       JSON.parse(localStorage.getItem("estadoHabitaciones")) || [];
     const estado = estados.find((e) => e.numero === numero);
 
+    if (estado.limpieza === "sucia") {
+      toast.warning("La habitación seleccionada está sucia.");
+    }
     if (estado) {
       setEstadoSeleccionado(estado);
     } else {
@@ -206,12 +232,46 @@ const CheckInReserva = () => {
     }
   };
 
+  const obtenerHabitacionesAsignadas = useCallback(async () => {
+    if (!reserva?.fecha_entrada || !reserva?.fecha_salida) return;
+
+    try {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/reservas/asignadas`,
+        {
+          params: {
+            desde: reserva.fecha_entrada,
+            hasta: reserva.fecha_salida,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // Excluir la propia reserva actual
+      const ocupadas = data
+        .filter((r) => r.id_reserva !== reserva.id_reserva)
+        .map((r) => r.numero_habitacion);
+
+      setHabitacionesOcupadas(ocupadas);
+    } catch (error) {
+      toast.error("Error al obtener habitaciones ya asignadas");
+    }
+  }, [reserva.fecha_entrada, reserva.fecha_salida, reserva.id_reserva, token]);
+
   // Carga datos iniciales al montar el componente
   useEffect(() => {
     cargarReserva();
     cargarLineasReserva();
     cargarHabitacionesDisponibles();
   }, []);
+
+  // Carga las habitaciones asignadas
+  useEffect(() => {
+    if (reserva?.fecha_entrada && reserva?.fecha_salida) {
+      obtenerHabitacionesAsignadas();
+    }
+  }, [reserva, obtenerHabitacionesAsignadas]);
 
   // Busca cliente por número de documento y permite seleccionarlo
   const buscarClientePorDocumento = async () => {
@@ -240,7 +300,11 @@ const CheckInReserva = () => {
         setClientesEncontrados(data);
       }
     } catch (error) {
-      toast.error(`Error al buscar cliente: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `Error al buscar cliente: ${
+          error.response?.data?.error || error.message
+        }`
+      );
       setClientesEncontrados([]);
     }
   };
@@ -362,21 +426,36 @@ const CheckInReserva = () => {
 
               const ocupacion = estado?.ocupacion || "Desconocida";
               const limpieza = estado?.limpieza || "Desconocida";
+              const asignada = habitacionesOcupadas.includes(
+                hab.numero_habitacion
+              );
+              // Iconos visuale según estado: 🟢 libre y limpia, 🔴 ocupada o sucia, 🟡 otro
 
-              // Icono visual según estado: 🟢 libre y limpia, 🔴 ocupada o sucia, 🟡 otro
-              let icono = "⚪";
-              if (ocupacion === "libre" && limpieza === "limpia") icono = "🟢";
-              else if (ocupacion === "ocupada" || limpieza === "sucia")
+              let icono = "⚪"; // por defecto
+
+              if (ocupacion === "bloqueada") {
+                icono = "⚫";
+              } else if (asignada && ocupacion !== "ocupada") {
+                icono = "🟡";
+              } else if (ocupacion === "ocupada" || limpieza === "sucia") {
                 icono = "🔴";
-              else icono = "🟡";
+              } else if (ocupacion === "libre" && limpieza === "limpia") {
+                icono = "🟢";
+              }
 
               return (
                 <option
                   key={hab.numero_habitacion}
                   value={hab.numero_habitacion}
+                  disabled={
+                    ocupacion === "ocupada" ||
+                    ocupacion === "bloqueada" ||
+                    asignada
+                  }
                 >
                   {icono} {hab.numero_habitacion} - {hab.tipo} ({ocupacion} /{" "}
                   {limpieza})
+                  {asignada && ocupacion !== "ocupada" ? " — asignada" : ""}
                 </option>
               );
             })}

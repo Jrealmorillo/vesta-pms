@@ -75,7 +75,7 @@ const Planning = () => {
       const res = await axios.get(
         `${
           import.meta.env.VITE_API_URL
-        }/reservas/planning?desde=${desde}&hasta=${hasta}`,
+        }/reservas/asignadas?desde=${desde}&hasta=${hasta}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

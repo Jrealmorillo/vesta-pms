@@ -1,8 +1,8 @@
 [
   {
-    "nombre": "Juan Pérez",
-    "nombre_usuario": "jperez",
-    "email": "juan.perez@example.com",
+    "nombre": "Jose Real",
+    "nombre_usuario": "jreal",
+    "email": "jose.real@example.com",
     "contraseña": "Password123!",
     "id_rol": 1,
     "activo": true

@@ -49,7 +49,7 @@ async function cargarReservasHoy() {
         
       }
 
-      console.log(`Reserva de ${reserva.nombre_huesped} insertada con ${noches} líneas.`);
+      console.log(`Reserva de ${reserva.nombre_huesped} ${reserva.primer_apellido_huesped} insertada con ${noches} líneas.`);
     }
 
     console.log("\nCarga completada:");

@@ -23,12 +23,12 @@
   }
   
   .fondo-ocupada {
-    background-color: blue;
+    background-color: #0d6efd;
     color: white;
   }
   
   .fondo-asignada {
-    background-color: yellow;
+    background-color: #ffc107;
     color: black;
   }
   
