@@ -32,11 +32,11 @@ const BuscarReservas = () => {
       case "apellido":
         endpoint = `/reservas/apellido/${termino}`;
         break;
-      case "empresa":
-        endpoint = `/reservas/empresa/${termino}`;
-        break;
       case "fecha":
         endpoint = `/reservas/entrada/${termino}`;
+        break;
+      case "id":
+        endpoint = `/reservas/id/${termino}`;
         break;
       default:
         return;
@@ -53,6 +53,16 @@ const BuscarReservas = () => {
       if (response.data.length === 0) {
         toast.warning("No se encontraron reservas con ese criterio.");
         setResultados([]);
+        return;
+      }
+      // Si la búsqueda es por id, la API devuelve un solo objeto o error
+      if (tipoBusqueda === "id") {
+        if (!response.data || response.data.id_reserva === undefined) {
+          toast.warning("No se encontró ninguna reserva con ese número.");
+          setResultados([]);
+          return;
+        }
+        setResultados([response.data]);
         return;
       }
       // Ordena los resultados por primer apellido del huésped
@@ -85,15 +95,19 @@ const BuscarReservas = () => {
             onChange={(e) => setTipoBusqueda(e.target.value)}
           >
             <option value="apellido">Por Apellido</option>
-            <option value="empresa">Por Empresa</option>
             <option value="fecha">Por Fecha de Entrada</option>
+            <option value="id">Por Nº Reserva</option>
           </select>
         </div>
         <div className="col-md-6">
           <input
             type={tipoBusqueda === "fecha" ? "date" : "text"}
             className="form-control"
-            placeholder="Introduce el término..."
+            placeholder={
+              tipoBusqueda === "id"
+                ? "Introduce el número de reserva..."
+                : "Introduce el apellido..."
+            }
             value={termino}
             onChange={(e) => setTermino(e.target.value)}
             onKeyDown={(e) => {

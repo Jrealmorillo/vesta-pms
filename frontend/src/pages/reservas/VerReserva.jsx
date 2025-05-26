@@ -207,7 +207,7 @@ const VerReserva = () => {
 
       {/* Botón para anular reserva confirmada */}
       {reserva.estado === "Confirmada" && (
-        <div className="mb-3">
+        <div className="my-3">
           <button
             className="btn btn-outline-danger btn-lg"
             onClick={anularReserva}

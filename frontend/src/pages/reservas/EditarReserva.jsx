@@ -32,6 +32,7 @@ const EditarReserva = () => {
           `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
+        console.log("datosLineas es: ", datosLineas);
         setLineas(datosLineas);
       } catch (error) {
         toast.error(`Error al cargar la reserva: ${error.response?.data?.error || error.message}`);
@@ -96,8 +97,7 @@ const EditarReserva = () => {
         setLineas(lineas.filter((l) => l.id_linea_reserva !== idLinea));
         toast.success("Línea eliminada correctamente");
       } catch (error) {
-        console.error(error);
-        toast.error("Error al eliminar la línea");
+        toast.error(`Error al eliminar la línea: ${error.response?.data?.error || error.message}`);
       }
     }
   };
@@ -106,22 +106,76 @@ const EditarReserva = () => {
   const guardarCambios = async () => {
     try {
       const { estado, ...reservaSinEstado } = reserva;
+      // Validar que todas las líneas están dentro del rango de fechas
+      const entrada = new Date(reserva.fecha_entrada);
+      const salida = new Date(reserva.fecha_salida);
+      const lineasFueraDeRango = lineas.filter((linea) => {
+        const fechaLinea = new Date(linea.fecha);
+        return fechaLinea < entrada || fechaLinea >= salida;
+      });
+      if (lineasFueraDeRango.length > 0) {
+        toast.error("Hay líneas de reserva cuyas fechas no coinciden con el rango de la estancia. Corrige las fechas de las líneas antes de guardar.");
+        return;
+      }
+
+      // Validar que todas las fechas del rango están cubiertas por líneas
+      const diasEstancia = [];
+      for (let d = new Date(entrada); d < salida; d.setDate(d.getDate() + 1)) {
+        diasEstancia.push(new Date(d).toISOString().slice(0, 10));
+      }
+      const fechasLineas = lineas.map(l => l.fecha);
+      const fechasFaltantes = diasEstancia.filter(dia => !fechasLineas.includes(dia));
+      if (fechasFaltantes.length > 0) {
+        toast.error("Faltan líneas de reserva para las siguientes fechas: " + fechasFaltantes.join(", "));
+        return;
+      }
+
       await axios.put(
         `${import.meta.env.VITE_API_URL}/reservas/${id}`,
         reservaSinEstado,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      for (const linea of lineas) {
-        if (linea.id_linea_reserva) {
-          await axios.put(
-            `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas/${
-              linea.id_linea_reserva
-            }`,
-            linea,
+      // Recargar las líneas actuales desde el backend (las que siguen existiendo tras el cambio de fechas)
+      const { data: lineasActualesBackend } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      // 1. Eliminar en backend las líneas que ya no están en el frontend
+      for (const lineaBackend of lineasActualesBackend) {
+        const existeEnFrontend = lineas.find(
+          l => l.id_linea_reserva === lineaBackend.id_linea_reserva
+        );
+        if (!existeEnFrontend) {
+          await axios.delete(
+            `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas/${lineaBackend.id_linea_reserva}`,
             { headers: { Authorization: `Bearer ${token}` } }
           );
+        }
+      }
+
+      // 2. Actualizar o crear las líneas que están en el frontend
+      for (const linea of lineas) {
+        if (linea.id_linea_reserva) {
+          const existeEnBackend = lineasActualesBackend.find(l => l.id_linea_reserva === linea.id_linea_reserva);
+          if (existeEnBackend) {
+            // Actualizar línea existente
+            await axios.put(
+              `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas/${linea.id_linea_reserva}`,
+              linea,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+          } else {
+            // Si la línea no existe en backend, la creamos (POST)
+            await axios.post(
+              `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas`,
+              linea,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+          }
         } else {
+          // Crear línea nueva
           await axios.post(
             `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas`,
             linea,
@@ -131,6 +185,19 @@ const EditarReserva = () => {
       }
 
       toast.success("Reserva modificada correctamente");
+      // recargar datos para reflejar el estado real
+      const { data: datosLineasFinal } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setLineas(datosLineasFinal);
+
+      // Recargar la reserva para actualizar el importe total
+      const { data: datosReservaFinal } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/reservas/id/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setReserva(datosReservaFinal);
     } catch (error) {
       toast.error(`Error al modificar la reserva: ${error.response?.data?.error || error.message}`);
     }
@@ -224,6 +291,17 @@ const EditarReserva = () => {
           />
         </div>
 
+        <div className="col-md-4">
+          <label className="form-label">Importe total (€)</label>
+          <input
+            type="text"
+            className="form-control bg-light"
+            value={reserva.precio_total || 0}
+            readOnly
+            tabIndex={-1}
+          />
+        </div>
+
         <div className="col-md-12">
           <label className="form-label">Observaciones</label>
           <textarea
@@ -276,127 +354,141 @@ const EditarReserva = () => {
             </tr>
           </thead>
           <tbody>
-            {lineas.map((linea, index) => (
-              <tr key={index}>
-                <td>
-                  <input
-                    type="date"
-                    className="form-control"
-                    value={linea.fecha || ""}
-                    onChange={(e) =>
-                      manejarCambioLinea(index, "fecha", e.target.value)
-                    }
-                  />
-                </td>
-                <td>
-                  <select
-                    name="tipo_habitacion"
-                    className="form-select"
-                    value={linea.tipo_habitacion || ""}
-                    onChange={(e) =>
-                      manejarCambioLinea(
-                        index,
-                        "tipo_habitacion",
-                        e.target.value
-                      )
-                    }
-                  >
-                    <option value="" disabled>
-                      -- Selecciona tipo
-                    </option>
-                    <option value="Individual">Individual</option>
-                    <option value="Doble">Doble</option>
-                    <option value="Triple">Triple</option>
-                    <option value="Suite">Suite</option>
-                  </select>
-                </td>
-                <td>
-                  <select
-                    className="form-select"
-                    value={linea.regimen}
-                    onChange={(e) =>
-                      manejarCambioLinea(index, "regimen", e.target.value)
-                    }
-                  >
-                    <option value="" disabled>
-                      -- Selecciona régimen
-                    </option>
-                    <option value="Solo Alojamiento">Solo Alojamiento</option>
-                    <option value="Alojamiento y Desayuno">
-                      Alojamiento y Desayuno
-                    </option>
-                    <option value="Media Pensión">Media Pensión</option>
-                    <option value="Pensión Completa">Pensión Completa</option>
-                  </select>
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={linea.cantidad_habitaciones}
-                    onChange={(e) =>
-                      manejarCambioLinea(
-                        index,
-                        "cantidad_habitaciones",
-                        e.target.value
-                      )
-                    }
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={linea.cantidad_adultos}
-                    onChange={(e) =>
-                      manejarCambioLinea(
-                        index,
-                        "cantidad_adultos",
-                        e.target.value
-                      )
-                    }
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={linea.cantidad_ninos}
-                    onChange={(e) =>
-                      manejarCambioLinea(
-                        index,
-                        "cantidad_ninos",
-                        e.target.value
-                      )
-                    }
-                  />
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={linea.precio}
-                    onChange={(e) =>
-                      manejarCambioLinea(index, "precio", e.target.value)
-                    }
-                  />
-                </td>
-                <td style={{ width: "150px" }}>
+            {lineas.length === 0 ? (
+              <tr>
+                <td colSpan="8" className="text-center">
+                  No hay líneas de reserva asociadas.<br />
                   <button
-                    className="btn btn-sm btn-danger w-100 mb-2"
-                    onClick={() => eliminarLinea(linea)}
-                  >
-                    Eliminar línea
-                  </button>
-                  <button
-                    className="btn btn-sm btn-primary w-100 mb-2"
+                    className="btn btn-sm btn-primary mt-2"
                     onClick={añadirLinea}
                   >
                     Añadir línea
                   </button>
                 </td>
               </tr>
-            ))}
+            ) : (
+              lineas.map((linea, index) => (
+                <tr key={index}>
+                  <td>
+                    <input
+                      type="date"
+                      className="form-control"
+                      value={linea.fecha || ""}
+                      onChange={(e) =>
+                        manejarCambioLinea(index, "fecha", e.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <select
+                      name="tipo_habitacion"
+                      className="form-select"
+                      value={linea.tipo_habitacion || ""}
+                      onChange={(e) =>
+                        manejarCambioLinea(
+                          index,
+                          "tipo_habitacion",
+                          e.target.value
+                        )
+                      }
+                    >
+                      <option value="" disabled>
+                        -- Selecciona tipo
+                      </option>
+                      <option value="Individual">Individual</option>
+                      <option value="Doble">Doble</option>
+                      <option value="Triple">Triple</option>
+                      <option value="Suite">Suite</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select
+                      className="form-select"
+                      value={linea.regimen}
+                      onChange={(e) =>
+                        manejarCambioLinea(index, "regimen", e.target.value)
+                      }
+                    >
+                      <option value="" disabled>
+                        -- Selecciona régimen
+                      </option>
+                      <option value="Solo Alojamiento">Solo Alojamiento</option>
+                      <option value="Alojamiento y Desayuno">
+                        Alojamiento y Desayuno
+                      </option>
+                      <option value="Media Pensión">Media Pensión</option>
+                      <option value="Pensión Completa">Pensión Completa</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={linea.cantidad_habitaciones}
+                      onChange={(e) =>
+                        manejarCambioLinea(
+                          index,
+                          "cantidad_habitaciones",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={linea.cantidad_adultos}
+                      onChange={(e) =>
+                        manejarCambioLinea(
+                          index,
+                          "cantidad_adultos",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={linea.cantidad_ninos}
+                      onChange={(e) =>
+                        manejarCambioLinea(
+                          index,
+                          "cantidad_ninos",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={linea.precio}
+                      onChange={(e) =>
+                        manejarCambioLinea(index, "precio", e.target.value)
+                      }
+                    />
+                  </td>
+                  <td style={{ width: "150px" }}>
+                    <button
+                      className="btn btn-sm btn-danger w-100 mb-2"
+                      onClick={() => eliminarLinea(linea)}
+                    >
+                      Eliminar línea
+                    </button>
+                    <button
+                      className="btn btn-sm btn-primary w-100 mb-2"
+                      onClick={() => añadirLinea()}
+                    >
+                      Añadir línea
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

@@ -10,15 +10,18 @@ class GestorLineasReserva {
       // Crea una nueva línea de reserva con los datos recibidos
       const nuevaLinea = await LineaReserva.create(datos);
 
-      // Actualiza el precio total de la reserva sumando el importe de la nueva línea
-      const reserva = await Reserva.findByPk(datos.id_reserva);
-      if (reserva) {
-        const incremento =
-          parseFloat(nuevaLinea.precio) * nuevaLinea.cantidad_habitaciones; // Importe de la nueva línea
-        const totalAnterior = parseFloat(reserva.precio_total);
-        reserva.precio_total = (totalAnterior + incremento).toFixed(2); // Nuevo total
-        await reserva.save();
-      }
+      // Recalcula el precio total de la reserva sumando todas las líneas activas
+      const id_reserva = datos.id_reserva;
+      const lineasActivas = await LineaReserva.findAll({
+        where: { id_reserva, activa: true },
+      });
+      const nuevoTotal = lineasActivas.reduce((suma, l) => {
+        return suma + (parseFloat(l.precio) * l.cantidad_habitaciones);
+      }, 0);
+      await Reserva.update(
+        { precio_total: nuevoTotal.toFixed(2) },
+        { where: { id_reserva } }
+      );
 
       // Registra la acción en el historial de la reserva
       await GestorHistorialReservas.registrarAccionHistorial({
@@ -48,11 +51,9 @@ class GestorLineasReserva {
       const lineasActivas = await LineaReserva.findAll({
         where: { id_reserva, activa: true },
       });
-
       const nuevoTotal = lineasActivas.reduce((suma, l) => {
         return suma + (parseFloat(l.precio) * l.cantidad_habitaciones);
       }, 0);
-
       await Reserva.update(
         { precio_total: nuevoTotal.toFixed(2) },
         { where: { id_reserva } }
@@ -99,20 +100,21 @@ class GestorLineasReserva {
       const linea = await LineaReserva.findByPk(id);
       if (!linea) throw new Error("Línea de reserva no encontrada");
 
-      // Actualiza el total de la reserva restando el importe de la línea anulada
-      const reserva = await Reserva.findByPk(linea.id_reserva);
-      if (reserva) {
-        const decremento =
-          parseFloat(linea.precio) * linea.cantidad_habitaciones;
-        const totalAnterior = parseFloat(reserva.precio_total);
-        const nuevoTotal = Math.max(0, totalAnterior - decremento).toFixed(2);
-
-        reserva.precio_total = nuevoTotal;
-        await reserva.save();
-      }
-
       // Elimina la línea de la base de datos
       await linea.destroy();
+
+      // Recalcula el total de la reserva sumando todas las líneas activas
+      const id_reserva = linea.id_reserva;
+      const lineasActivas = await LineaReserva.findAll({
+        where: { id_reserva, activa: true },
+      });
+      const nuevoTotal = lineasActivas.reduce((suma, l) => {
+        return suma + (parseFloat(l.precio) * l.cantidad_habitaciones);
+      }, 0);
+      await Reserva.update(
+        { precio_total: nuevoTotal.toFixed(2) },
+        { where: { id_reserva } }
+      );
 
       // Registra la eliminación en el historial
       await GestorHistorialReservas.registrarAccionHistorial({
@@ -135,9 +137,7 @@ class GestorLineasReserva {
       const lineas = await LineaReserva.findAll({
         where: { id_reserva },
       });
-      if (lineas.length === 0) {
-        throw new Error("No se encontraron líneas para la reserva especificada"); // Validación de existencia
-      }
+      // Si no hay líneas devolvemos el array vacío
       return lineas;
     } catch (error) {
       throw new Error("Error al obtener líneas de reserva: " + error.message);
