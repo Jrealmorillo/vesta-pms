@@ -165,12 +165,10 @@ const CalendarioOcupacion = () => {
                 <i className="bi bi-calendar3 fs-2 text-primary me-3"></i>
                 <div>
                   <h2 className="mb-1">Calendario de Ocupación</h2>
-                  <p className="text-muted mb-0">Visualiza el porcentaje de ocupación por fechas</p>
                 </div>
               </div>
             </div>
           </div>
-
           {/* Controles de fechas */}
           <div className="card shadow-sm mb-4">
             <div className="card-body">
@@ -194,7 +192,8 @@ const CalendarioOcupacion = () => {
                   </label>
                   <input
                     type="date"
-                    className="form-control rounded"                    value={fechaFin}
+                    className="form-control rounded"
+                    value={fechaFin}
                     onChange={manejarCambioFechaFin}
                   />
                 </div>
@@ -205,13 +204,12 @@ const CalendarioOcupacion = () => {
                     disabled={loading}
                   >
                     <i className="bi bi-search me-2"></i>
-                    {loading ? 'Buscando...' : 'Buscar'}
+                    {loading ? "Buscando..." : "Buscar"}
                   </button>
                 </div>
               </div>
             </div>
           </div>
-
           {/* Leyenda */}
           <div className="card shadow-sm mb-4">
             <div className="card-body">
@@ -220,215 +218,231 @@ const CalendarioOcupacion = () => {
                 Leyenda de Ocupación
               </h6>
               <div className="d-flex justify-content-center gap-3 flex-wrap">
-                <span className="badge bg-light text-dark fs-6">0-39%: Baja</span>
-                <span className="badge bg-secondary text-white fs-6">40-69%: Media</span>
-                <span className="badge bg-primary text-white fs-6">70-89%: Alta</span>
-                <span className="badge bg-warning text-dark fs-6">90-100%: Muy alta</span>
-                <span className="badge bg-danger text-white fs-6">+100%: Overbooking</span>
+                <span className="badge bg-light text-dark fs-6">
+                  0-39%: Baja
+                </span>
+                <span className="badge bg-secondary text-white fs-6">
+                  40-69%: Media
+                </span>
+                <span className="badge bg-primary text-white fs-6">
+                  70-89%: Alta
+                </span>
+                <span className="badge bg-warning text-dark fs-6">
+                  90-100%: Muy alta
+                </span>
+                <span className="badge bg-danger text-white fs-6">
+                  +100%: Overbooking
+                </span>
               </div>
             </div>
-          </div>          {/* Loading */}
+          </div>{" "}
+          {/* Loading */}
           {loading && (
             <div className="card shadow-sm">
               <div className="card-body text-center py-5">
                 <div className="spinner-border text-primary" role="status">
                   <span className="visually-hidden">Cargando...</span>
                 </div>
-                <h4 className="text-muted mt-3">Cargando datos de ocupación...</h4>
+                <h4 className="text-muted mt-3">
+                  Cargando datos de ocupación...
+                </h4>
                 <p className="text-muted">Por favor espera un momento</p>
               </div>
             </div>
           )}
-
           {/* Calendario */}
           {!loading && semanas && semanas.length > 0 && (
             <div className="card shadow-sm">
               <div className="card-body">
                 <div className="table-responsive">
-              <table className="table table-bordered">
-                <thead>
-                  <tr className="table-light">
-                    <th className="text-center">Dom</th>
-                    <th className="text-center">Lun</th>
-                    <th className="text-center">Mar</th>
-                    <th className="text-center">Mié</th>
-                    <th className="text-center">Jue</th>
-                    <th className="text-center">Vie</th>
-                    <th className="text-center">Sáb</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {semanas.map((semana, indexSemana) => (
-                    <tr key={indexSemana}>
-                      {semana.map((dia, indexDia) => (
-                        <td
-                          key={indexDia}
-                          className="p-1"
-                          style={{
-                            height: "100px",
-                            width: "14.28%",
-                          }}
-                        >
-                          {dia ? (
-                            <div
-                              className={`h-100 p-2 rounded ${obtenerColorOcupacion(
-                                dia.datos.porcentaje_ocupacion
-                              )}`}
-                              style={{ cursor: "pointer" }}
-                              title={`${dia.fecha.getDate()}/${
-                                dia.fecha.getMonth() + 1
-                              } - ${
-                                dia.datos.porcentaje_ocupacion
-                              }% ocupación\nHuéspedes: ${
-                                dia.datos.huespedes || 0
-                              }\nAdultos: ${dia.datos.adultos || 0}, Niños: ${
-                                dia.datos.ninos || 0
-                              }`}
+                  <table className="table table-bordered">
+                    <thead>
+                      <tr className="table-light">
+                        <th className="text-center">Dom</th>
+                        <th className="text-center">Lun</th>
+                        <th className="text-center">Mar</th>
+                        <th className="text-center">Mié</th>
+                        <th className="text-center">Jue</th>
+                        <th className="text-center">Vie</th>
+                        <th className="text-center">Sáb</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {semanas.map((semana, indexSemana) => (
+                        <tr key={indexSemana}>
+                          {semana.map((dia, indexDia) => (
+                            <td
+                              key={indexDia}
+                              className="p-1"
+                              style={{
+                                height: "100px",
+                                width: "14.28%",
+                              }}
                             >
-                              <div className="fw-bold">
-                                {dia.fecha.getDate()}/{dia.fecha.getMonth() + 1}
-                              </div>
-                              <div className="small">
-                                {dia.datos.habitaciones_ocupadas}/
-                                {dia.datos.total_habitaciones}
-                              </div>
-                              <div className="small">
-                                {dia.datos.porcentaje_ocupacion}%
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="h-100"></div>
-                          )}
-                        </td>
+                              {dia ? (
+                                <div
+                                  className={`h-100 p-2 rounded ${obtenerColorOcupacion(
+                                    dia.datos.porcentaje_ocupacion
+                                  )}`}
+                                  style={{ cursor: "pointer" }}
+                                  title={`${dia.fecha.getDate()}/${
+                                    dia.fecha.getMonth() + 1
+                                  } - ${
+                                    dia.datos.porcentaje_ocupacion
+                                  }% ocupación\nHuéspedes: ${
+                                    dia.datos.huespedes || 0
+                                  }\nAdultos: ${
+                                    dia.datos.adultos || 0
+                                  }, Niños: ${dia.datos.ninos || 0}`}
+                                >
+                                  <div className="fw-bold">
+                                    {dia.fecha.getDate()}/
+                                    {dia.fecha.getMonth() + 1}
+                                  </div>
+                                  <div className="small">
+                                    {dia.datos.habitaciones_ocupadas}/
+                                    {dia.datos.total_habitaciones}
+                                  </div>
+                                  <div className="small">
+                                    {dia.datos.porcentaje_ocupacion}%
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="h-100"></div>
+                              )}
+                            </td>
+                          ))}
+                        </tr>
                       ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}{" "}
+          {/* Estadísticas del período */}
+          {!loading && fechaInicio && fechaFin && (
+            <div className="row mt-4">
+              <div className="col-md-3">
+                <div className="card text-center">
+                  <div className="card-body">
+                    <h5 className="card-title text-primary">Ocupación Media</h5>
+                    <h3 className="card-text">
+                      {Object.values(datosOcupacion).length > 0
+                        ? (
+                            Object.values(datosOcupacion).reduce(
+                              (sum, d) => sum + (d.porcentaje_ocupacion || 0),
+                              0
+                            ) / Object.values(datosOcupacion).length
+                          ).toFixed(1)
+                        : 0}
+                      %
+                    </h3>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div className="card text-center">
+                  <div className="card-body">
+                    <h5 className="card-title text-success">Días con +70%</h5>
+                    <h3 className="card-text">
+                      {
+                        Object.values(datosOcupacion).filter(
+                          (d) => (d.porcentaje_ocupacion || 0) >= 70
+                        ).length
+                      }
+                    </h3>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div className="card text-center">
+                  <div className="card-body">
+                    <h5 className="card-title text-warning">
+                      Ocupación Máxima
+                    </h5>
+                    <h3 className="card-text">
+                      {Object.values(datosOcupacion).length > 0
+                        ? Math.max(
+                            ...Object.values(datosOcupacion).map(
+                              (d) => d.porcentaje_ocupacion || 0
+                            )
+                          ).toFixed(1)
+                        : 0}
+                      %
+                    </h3>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-3">
+                <div className="card text-center">
+                  <div className="card-body">
+                    <h5 className="card-title text-info">Ocupación Mínima</h5>
+                    <h3 className="card-text">
+                      {Object.values(datosOcupacion).length > 0
+                        ? Math.min(
+                            ...Object.values(datosOcupacion).map(
+                              (d) => d.porcentaje_ocupacion || 0
+                            )
+                          ).toFixed(1)
+                        : 0}
+                      %
+                    </h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}{" "}
+          {/* Tabla detallada */}
+          {!loading && Object.keys(datosOcupacion).length > 0 && (
+            <div className="mt-4">
+              <h5>Detalle por Día</h5>
+              <div className="table-responsive">
+                <table className="table table-striped table-hover">
+                  <thead className="table-light">
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Habitaciones Ocupadas</th>
+                      <th>Total Habitaciones</th>
+                      <th>% Ocupación</th>
+                      <th>Huéspedes</th>
+                      <th>Adultos</th>
+                      <th>Niños</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {Object.entries(datosOcupacion).map(([fecha, datos]) => (
+                      <tr key={fecha}>
+                        <td>
+                          {new Date(fecha).toLocaleDateString("es-ES", {
+                            weekday: "short",
+                            day: "2-digit",
+                            month: "2-digit",
+                          })}
+                        </td>
+                        <td>{datos.habitaciones_ocupadas || 0}</td>
+                        <td>{datos.habitaciones_disponibles || 0}</td>
+                        <td>
+                          <span
+                            className={`badge ${obtenerColorOcupacion(
+                              datos.porcentaje_ocupacion || 0
+                            )}`}
+                          >
+                            {datos.porcentaje_ocupacion || 0}%
+                          </span>
+                        </td>
+                        <td>{datos.huespedes || 0}</td>
+                        <td>{datos.adultos || 0}</td>
+                        <td>{datos.ninos || 0}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
+          )}
         </div>
-      )}{" "}
-      {/* Estadísticas del período */}
-      {!loading && fechaInicio && fechaFin && (
-        <div className="row mt-4">
-          <div className="col-md-3">
-            <div className="card text-center">
-              <div className="card-body">
-                <h5 className="card-title text-primary">Ocupación Media</h5>
-                <h3 className="card-text">
-                  {Object.values(datosOcupacion).length > 0
-                    ? (
-                        Object.values(datosOcupacion).reduce(
-                          (sum, d) => sum + (d.porcentaje_ocupacion || 0),
-                          0
-                        ) / Object.values(datosOcupacion).length
-                      ).toFixed(1)
-                    : 0}
-                  %
-                </h3>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card text-center">
-              <div className="card-body">
-                <h5 className="card-title text-success">Días con +70%</h5>
-                <h3 className="card-text">
-                  {
-                    Object.values(datosOcupacion).filter(
-                      (d) => (d.porcentaje_ocupacion || 0) >= 70
-                    ).length
-                  }
-                </h3>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card text-center">
-              <div className="card-body">
-                <h5 className="card-title text-warning">Ocupación Máxima</h5>
-                <h3 className="card-text">
-                  {Object.values(datosOcupacion).length > 0
-                    ? Math.max(
-                        ...Object.values(datosOcupacion).map(
-                          (d) => d.porcentaje_ocupacion || 0
-                        )
-                      ).toFixed(1)
-                    : 0}
-                  %
-                </h3>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="card text-center">
-              <div className="card-body">
-                <h5 className="card-title text-info">Ocupación Mínima</h5>
-                <h3 className="card-text">
-                  {Object.values(datosOcupacion).length > 0
-                    ? Math.min(
-                        ...Object.values(datosOcupacion).map(
-                          (d) => d.porcentaje_ocupacion || 0
-                        )
-                      ).toFixed(1)
-                    : 0}
-                  %
-                </h3>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}{" "}
-      {/* Tabla detallada */}
-      {!loading && Object.keys(datosOcupacion).length > 0 && (
-        <div className="mt-4">
-          <h5>Detalle por Día</h5>
-          <div className="table-responsive">
-            <table className="table table-striped table-hover">
-              <thead className="table-light">
-                <tr>
-                  <th>Fecha</th>
-                  <th>Habitaciones Ocupadas</th>
-                  <th>Total Habitaciones</th>
-                  <th>% Ocupación</th>
-                  <th>Huéspedes</th>
-                  <th>Adultos</th>
-                  <th>Niños</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Object.entries(datosOcupacion).map(([fecha, datos]) => (
-                  <tr key={fecha}>
-                    <td>
-                      {new Date(fecha).toLocaleDateString("es-ES", {
-                        weekday: "short",
-                        day: "2-digit",
-                        month: "2-digit",
-                      })}
-                    </td>
-                    <td>{datos.habitaciones_ocupadas || 0}</td>
-                    <td>{datos.habitaciones_disponibles || 0}</td>
-                    <td>
-                      <span
-                        className={`badge ${obtenerColorOcupacion(
-                          datos.porcentaje_ocupacion || 0
-                        )}`}
-                      >
-                        {datos.porcentaje_ocupacion || 0}%
-                      </span>
-                    </td>
-                    <td>{datos.huespedes || 0}</td>
-                    <td>{datos.adultos || 0}</td>
-                    <td>{datos.ninos || 0}</td>
-                  </tr>
-                ))}              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-    </div>
-  </div>
+      </div>
     </div>
   );
 };

@@ -52,7 +52,7 @@ const routes = [
   {
     label: "Informes",
     submenu: [
-      { label: "Cargos pendientes por habitación", path: "/informes/cargos-pendientes" },
+      { label: "Cargos por habitación", path: "/informes/cargos" },
       { label: "Clientes alojados actualmente", path: "/informes/clientes-alojados" },
       { label: "Consumo por forma de pago", path: "/informes/consumo-forma-pago" },
       { label: "Estado actual de habitaciones", path: "/informes/estado-habitaciones" },

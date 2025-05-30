@@ -64,7 +64,6 @@ const NuevaHabitacion = () => {
                 <i className="bi bi-door-closed-fill fs-2 text-primary me-3"></i>
                 <div>
                   <h2 className="mb-1">Nueva Habitación</h2>
-                  <p className="text-muted mb-0">Registra una nueva habitación en el hotel</p>
                 </div>
               </div>
             </div>

@@ -79,7 +79,6 @@ const ListadoHabitaciones = () => {
                 <i className="bi bi-door-open fs-2 text-primary me-3"></i>
                 <div>
                   <h2 className="mb-1">Listado de Habitaciones</h2>
-                  <p className="text-muted mb-0">Gestiona todas las habitaciones del hotel</p>
                 </div>
               </div>
             </div>

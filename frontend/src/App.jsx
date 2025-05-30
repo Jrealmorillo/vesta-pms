@@ -38,7 +38,7 @@ import VerFactura from "./pages/facturas/VerFactura";
 import InformeOcupacion from "./pages/informes/InformeOcupacion";
 import FacturacionDiaria from "./pages/informes/FacturacionDiaria";
 import FacturacionEntreFechas from "./pages/informes/FacturacionEntreFechas";
-import InformeCargosPendientes from "./pages/informes/InformeCargosPendientes";
+import InformeCargos from "./pages/informes/InformeCargos";
 import InformeEstadoHabitaciones from "./pages/informes/InformeEstadoHabitaciones";
 import InformeClientesAlojados from "./pages/informes/InformeClientesAlojados";
 import InformeLlegadas from "./pages/informes/InformeLlegadas";
@@ -155,7 +155,7 @@ const App = () => {
             element={<FacturacionDiaria />}
           />
           <Route path="/informes/facturacion/rango" element={<FacturacionEntreFechas />} />
-<Route path="/informes/cargos-pendientes" element={<InformeCargosPendientes />} />
+<Route path="/informes/cargos" element={<InformeCargos />} />
 <Route path="/informes/estado-habitaciones" element={<InformeEstadoHabitaciones />} />
 <Route path="/informes/clientes-alojados" element={<InformeClientesAlojados />} />
 <Route path="/informes/llegadas" element={<InformeLlegadas />} />

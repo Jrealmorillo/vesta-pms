@@ -60,7 +60,6 @@ const BuscarEmpresas = () => {
                 <i className="bi bi-building text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Gestión de Empresas</h4>
-                  <small className="text-muted">Buscar y administrar empresas del sistema</small>
                 </div>
               </div>
             </div>

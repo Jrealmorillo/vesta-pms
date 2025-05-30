@@ -57,7 +57,7 @@ const CheckOut = () => {
       );
       setDetalleFactura(detalles.data);
     } catch (error) {
-      toast.error(  `Error al buscar la reserva: ${error.response?.data?.error || error.message}`);
+      toast.error(`${error.response?.data?.error || error.message}`);
       setReserva(null);
       setDetalleFactura([]);
       setError("No hay reservas activas en esa habitación.");
@@ -103,7 +103,7 @@ const CheckOut = () => {
       setNuevoCargo({ concepto: "", cantidad: 1, precio: 0 });
       toast.success("Cargo añadido correctamente");
     } catch (error) {
-      toast.error(`Error al añadir el cargo: ${error.response?.data?.error || error.message}`);
+      toast.error(`${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -193,7 +193,9 @@ const CheckOut = () => {
 
       // Volver a consultar la reserva actualizada
       const reservaActualizada = await axios.get(
-        `${import.meta.env.VITE_API_URL}/reservas/habitacion/${numeroHabitacion}/check-in`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/reservas/habitacion/${numeroHabitacion}/check-in`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -206,7 +208,9 @@ const CheckOut = () => {
       } else {
         // Actualizar lista de detalles (los que aún no estén facturados)
         const detallesActualizados = await axios.get(
-          `${import.meta.env.VITE_API_URL}/detalles-factura/pendientes/${reservaActualizada.data.id_reserva}`,
+          `${import.meta.env.VITE_API_URL}/detalles-factura/pendientes/${
+            reservaActualizada.data.id_reserva
+          }`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -216,7 +220,7 @@ const CheckOut = () => {
 
       setFormaPago("");
     } catch (error) {
-      toast.error(`Error al cerrar la factura: ${error.response?.data?.error || error.message}`);
+      toast.error(`${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -243,7 +247,9 @@ const CheckOut = () => {
     // Verificar si hay líneas de reserva activas sin trasladar
     try {
       const respuesta = await axios.get(
-        `${import.meta.env.VITE_API_URL}/reservas/${reserva.id_reserva}/tiene-lineas-no-facturadas`,
+        `${import.meta.env.VITE_API_URL}/reservas/${
+          reserva.id_reserva
+        }/tiene-lineas-no-facturadas`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -258,7 +264,11 @@ const CheckOut = () => {
         return;
       }
     } catch (error) {
-      toast.error(`Error al verificar cargos pendientes: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `Error al verificar cargos pendientes: ${
+          error.response?.data?.error || error.message
+        }`
+      );
       return;
     }
 
@@ -319,7 +329,7 @@ const CheckOut = () => {
         window.location.reload(); // Recarga la página para actualizar el estado
       }, 1500);
     } catch (error) {
-      toast.error(`Error al hacer check-out: ${error.response?.data?.error || error.message}`);
+      toast.error(`${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -363,7 +373,7 @@ const CheckOut = () => {
       setEditandoDetalleId(null);
       toast.success("Cargo modificado correctamente");
     } catch (error) {
-      toast.error(`Error al modificar el cargo: ${error.response?.data?.error || error.message}`);
+      toast.error(`${error.response?.data?.error || error.message}`);
     }
   };
 
@@ -402,334 +412,445 @@ const CheckOut = () => {
       setDetalleFactura(detallesActualizados.data);
       toast.success("Cargo anulado correctamente");
     } catch (error) {
-      toast.error(`Error al anular el cargo: ${error.response?.data?.error || error.message}`);
+      toast.error(`${error.response?.data?.error || error.message}`);
     }
   };
-
   return (
-    <div className="container py-5 mt-4" style={{ maxWidth: "800px" }}>
-      <h2>Check-out</h2>
-
-      <div className="input-group- mx-auto col-md-2 mb-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Habitación"
-          value={numeroHabitacion}
-          onChange={(e) => setNumeroHabitacion(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              buscarReservaActiva();
-            }
-          }}
-        />
-        </div>
-        <div className="input-group-append">
-          <button className="btn btn-primary" onClick={buscarReservaActiva}>
-            Buscar
-          </button>
-      </div>
-
-      {error && <div className="alert alert-danger">{error}</div>}
-
-      {reserva && (
-        <div className="mt-4">
-          <div className="card mb-3">
-            <div className="card-header bg-light fw-bold">
-              Datos de la reserva
+    <div className="container-fluid py-5 mt-4">
+      <div className="row justify-content-center">
+        <div className="col-lg-10">
+          <div className="card shadow-sm border-0">
+            <div className="card-header bg-light">
+              <h2 className="mb-0">
+                <i className="bi bi-box-arrow-right text-primary me-2"></i>
+                Check-out
+              </h2>
             </div>
             <div className="card-body">
-              <p className="mb-1">
-                <strong>Huésped:</strong> {reserva.nombre_huesped}
-              </p>
-              <p className="mb-1">
-                <strong>Número reserva:</strong> {reserva.id_reserva}
-              </p>
-              <p className="mb-1">
-                <strong>Fecha entrada:</strong> {reserva.fecha_entrada}
-              </p>
-              <p className="mb-1">
-                <strong>Fecha salida:</strong> {reserva.fecha_salida}
-              </p>
-              <p className="mb-1">
-                <strong>Habitación:</strong> {reserva.numero_habitacion}
-              </p>
-              <p>
-                <strong>Estado:</strong>{" "}
-                <span className="badge bg-primary">{reserva.estado}</span>
-              </p>
-              <p>
-                <strong>Factura:</strong>{" "}
-                {reserva.estado_factura == "Pagada" ? (
-                  <span className="badge bg-success">Cerrada</span>
-                ) : (
-                  <span className="badge bg-danger">Pendiente</span>
-                )}
-              </p>
-            </div>
-          </div>
-
-          <div className="card mb-3">
-            <div className="card-header bg-light fw-bold">
-              Cabecera de factura
-            </div>
-            <div className="card-body">
-              {reserva.id_cliente ? (
-                <>
-                  <p className="mb-1">
-                    <strong>Nombre:</strong> {reserva.nombre_huesped}{" "}
-                    {reserva.primer_apellido_huesped}{" "}
-                    {reserva.segundo_apellido_huesped}
-                  </p>
-                  <p className="mb-1">
-                    <strong>CIF / Documento:</strong>{" "}
-                    {reserva.cliente.numero_documento}
-                  </p>
-                  <p className="mb-1">
-                    <strong>Dirección:</strong> {reserva.cliente.direccion}
-                  </p>
-                  <p className="mb-1">
-                    <strong>Ciudad:</strong> {reserva.cliente.ciudad}
-                  </p>
-                  <p className="mb-1">
-                    <strong>Código Postal:</strong>{" "}
-                    {reserva.cliente.codigo_postal}
-                  </p>
-                  <p className="mb-1">
-                    <strong>País:</strong> {reserva.cliente.pais}
-                  </p>
-                </>
-              ) : (
-                <p className="text-muted">No hay cliente asociado</p>
-              )}
-            </div>
-          </div>
-
-          {detalleFactura.length > 0 && (
-            <div className="card mb-3">
-              <div className="card-header bg-light fw-bold">
-                Cargos registrados
-              </div>
-              <ul className="list-group list-group-flush">
-                {detalleFactura.map((detalle) => (
-                  <li
-                    key={detalle.id_detalle}
-                    className="list-group-item d-flex justify-content-between align-items-center"
+              <div className="row g-3 mb-4">
+                <div className="col-md-6">
+                  <label
+                    htmlFor="numeroHabitacion"
+                    className="form-label text-muted fw-medium"
                   >
-                    {editandoDetalleId === detalle.id_detalle ? (
-                      <div className="w-100">
-                        <div className="row">
-                          <div className="col-md-4">
-                            <input
-                              type="text"
-                              className="form-control"
-                              value={detalleEditado.concepto}
-                              onChange={(e) =>
-                                setDetalleEditado({
-                                  ...detalleEditado,
-                                  concepto: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                          <div className="col-md-2">
-                            <input
-                              type="number"
-                              min="1"
-                              className="form-control"
-                              value={detalleEditado.cantidad}
-                              onChange={(e) =>
-                                setDetalleEditado({
-                                  ...detalleEditado,
-                                  cantidad: parseInt(e.target.value, 10),
-                                })
-                              }
-                            />
-                          </div>
-                          <div className="col-md-3">
-                            <input
-                              type="number"
-                              min="0"
-                              step="0.01"
-                              className="form-control"
-                              value={detalleEditado.precio_unitario}
-                              onChange={(e) =>
-                                setDetalleEditado({
-                                  ...detalleEditado,
-                                  precio_unitario: parseFloat(e.target.value),
-                                })
-                              }
-                            />
-                          </div>
-                          <div className="col-md-3 text-end">
-                            <button
-                              className="btn btn-success btn-sm me-2"
-                              onClick={() => guardarEdicion(detalle.id_detalle)}
-                            >
-                              Guardar
-                            </button>
-                            <button
-                              className="btn btn-secondary btn-sm"
-                              onClick={() => setEditandoDetalleId(null)}
-                            >
-                              Cancelar
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <span>
-                          {detalle.concepto} — {detalle.cantidad} x{" "}
-                          {detalle.precio_unitario} € ={" "}
-                          <strong>{detalle.total} €</strong>
-                        </span>
-                        <div>
-                          <button
-                            className="btn btn-outline-primary btn-sm me-2"
-                            onClick={() => iniciarEdicion(detalle)}
-                          >
-                            <i className="bi bi-pencil-fill"></i> Editar
-                          </button>
-                          <button
-                            className="btn btn-outline-danger btn-sm"
-                            onClick={() => anularDetalle(detalle.id_detalle)}
-                          >
-                            <i className="bi bi-trash3-fill"></i> Eliminar
-                          </button>
-                        </div>
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ul>
-              <div className="card-body border-top d-flex justify-content-between align-items-center">
-                <div className="w-50">
-                  <label className="form-label fw-bold">Forma de pago</label>
-                  <select
-                    className="form-select"
-                    value={formaPago}
-                    onChange={(e) => setFormaPago(e.target.value)}
-                  >
-                    <option value="" disabled>
-                      --Selecciona forma de pago
-                    </option>
-                    <option value="Efectivo">Efectivo</option>
-                    <option value="Visa">Visa</option>
-                    <option value="Amex">Amex</option>
-                    <option value="Transferencia">Transferencia</option>
-                    <option value="Crédito">Crédito</option>
-                  </select>
-                </div>
-
-                <div className="text-end">
-                  <h5 className="fw-bold mt-3">
-                    Total:{" "}
-                    {detalleFactura
-                      .reduce((suma, d) => suma + parseFloat(d.total || 0), 0)
-                      .toFixed(2)}{" "}
-                    €
-                  </h5>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="card mb-3">
-            <div className="card-header bg-light fw-bold">
-              Añadir nuevo cargo
-            </div>
-            <div className="card-body">
-              <div className="row">
-                <div className="col-md-5 mb-2">
-                  <label htmlFor="concepto">Concepto</label>
-                  <select
-                    className="form-select"
-                    value={nuevoCargo.concepto}
-                    onChange={(e) =>
-                      setNuevoCargo({
-                        ...nuevoCargo,
-                        concepto: e.target.value,
-                      })
-                    }
-                    name="concepto"
-                    id="concepto"
-                  >
-                    <option value="" disabled>
-                      --Selecciona concepto
-                    </option>
-                    <option value="Alojamiento">Alojamiento</option>
-                    <option value="Desayuno">Desayuno</option>
-                    <option value="Almuerzo">Almuerzo</option>
-                    <option value="Cena">Cena</option>
-                    <option value="Minibar">Minibar</option>
-                    <option value="Room service">Room service</option>
-                    <option value="Parking">Parking</option>
-                    <option value="Otros">Otros</option>
-                  </select>
-                </div>
-                <div className="col-md-2 mb-2">
-                  <label htmlFor="cantidad">Cantidad</label>
+                    Número de habitación
+                  </label>
                   <input
-                    type="number"
-                    className="form-control"
-                    name="cantidad"
-                    id="cantidad"
-                    placeholder="Cantidad"
-                    min="1"
-                    value={nuevoCargo.cantidad}
-                    onChange={(e) =>
-                      setNuevoCargo({
-                        ...nuevoCargo,
-                        cantidad: parseInt(e.target.value, 10),
-                      })
-                    }
+                    type="text"
+                    id="numeroHabitacion"
+                    className="form-control rounded"
+                    placeholder="Introduce número de habitación"
+                    value={numeroHabitacion}
+                    onChange={(e) => setNumeroHabitacion(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        buscarReservaActiva();
+                      }
+                    }}
                   />
                 </div>
-                <div className="col-md-3 mb-2">
-                  <label htmlFor="precio">Precio/unidad</label>
-
-                  <input
-                    type="number"
-                    className="form-control"
-                    placeholder="Precio €"
-                    id="precio"
-                    min="0"
-                    step="0.01"
-                    value={nuevoCargo.precio}
-                    onChange={(e) =>
-                      setNuevoCargo({
-                        ...nuevoCargo,
-                        precio: parseFloat(e.target.value),
-                      })
-                    }
-                  />
-                </div>
-                <div
-                  className="col-md-2 mb-2 d-grid"
-                  style={{ marginTop: "32px" }}
-                >
+                <div className="col-md-6 d-grid align-items-end">
                   <button
-                    className="btn btn-sm btn-primary"
-                    onClick={guardarNuevoCargo}
+                    className="btn btn-primary rounded"
+                    onClick={buscarReservaActiva}
                   >
-                    Añadir
+                    <i className="bi bi-search me-1"></i>
+                    Buscar reserva
                   </button>
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="mx-auto">
-            <button className="btn btn-warning mx-2" onClick={adelantarCargos}>
-              Adelantar cargos
-            </button>
-            <button className="btn btn-info mx-2 " onClick={cerrarFactura}>
-              Cerrar factura
-            </button>
-            <button className="btn btn-success mx-2 " onClick={hacerCheckOut}>
-              Realizar check-out
-            </button>
+        </div>
+      </div>
+      {error && (
+        <div className="row justify-content-center mt-4">
+          <div className="col-lg-10">
+            <div className="alert alert-danger border-0 shadow-sm">
+              <i className="bi bi-exclamation-triangle me-2"></i>
+              {error}
+            </div>
+          </div>
+        </div>
+      )}{" "}
+      {reserva && (
+        <div className="row justify-content-center mt-4">
+          <div className="col-lg-10">
+            <div className="card shadow-sm border-0 mb-4">
+              <div className="card-header bg-light">
+                <h4 className="mb-0">
+                  <i className="bi bi-person-check text-primary me-2"></i>
+                  Datos de la reserva
+                </h4>
+              </div>
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-md-6">
+                    <p className="mb-2">
+                      <span className="text-muted fw-medium">Nombre:</span>{" "}
+                      {reserva.nombre_huesped} {reserva.primer_apellido_huesped} {reserva.segundo_apellido_huesped}
+                    </p>
+                    <p className="mb-2">
+                      <span className="text-muted fw-medium">
+                        Número reserva:
+                      </span>{" "}
+                      {reserva.id_reserva}
+                    </p>
+                    <p className="mb-2">
+                      <span className="text-muted fw-medium">Habitación:</span>{" "}
+                      {reserva.numero_habitacion}
+                    </p>
+                  </div>
+                  <div className="col-md-6">
+                    <p className="mb-2">
+                      <span className="text-muted fw-medium">
+                        Fecha entrada:
+                      </span>{" "}
+                      {reserva.fecha_entrada}
+                    </p>
+                    <p className="mb-2">
+                      <span className="text-muted fw-medium">
+                        Fecha salida:
+                      </span>{" "}
+                      {reserva.fecha_salida}
+                    </p>
+                    <p className="mb-2">
+                      <span className="text-muted fw-medium">Estado:</span>{" "}
+                      <span className="badge bg-primary">{reserva.estado}</span>
+                    </p>
+                    <p className="mb-0">
+                      <span className="text-muted fw-medium">Factura:</span>{" "}
+                      {reserva.estado_factura == "Pagada" ? (
+                        <span className="badge bg-success">Pagada #{reserva.facturas[0].id_factura}</span>
+                      ) : (
+                        <span className="badge bg-danger">Pendiente {reserva.factura}</span>
+                      )}
+                    </p> 
+                  </div>
+                </div>
+              </div>
+            </div>{" "}
+            <div className="card shadow-sm border-0 mb-4">
+              <div className="card-header bg-light">
+                <h4 className="mb-0">
+                  <i className="bi bi-receipt-cutoff text-primary me-2"></i>
+                  Cabecera de factura
+                </h4>
+              </div>
+              <div className="card-body">
+                {reserva.id_cliente ? (
+                  <div className="row">
+                    <div className="col-md-6">
+                      <p className="mb-2">
+                        <span className="text-muted fw-medium">Huésped:</span>{" "}
+                        {reserva.cliente.nombre}{" "}
+                        {reserva.cliente.primer_apellido}{" "}
+                        {reserva.cliente.segundo_apellido}
+                      </p>
+                      <p className="mb-2">
+                        <span className="text-muted fw-medium">
+                          CIF / Documento:
+                        </span>{" "}
+                        {reserva.cliente.numero_documento}
+                      </p>
+                      <p className="mb-0">
+                        <span className="text-muted fw-medium">Dirección:</span>{" "}
+                        {reserva.cliente.direccion}
+                      </p>
+                    </div>
+                    <div className="col-md-6">
+                      <p className="mb-2">
+                        <span className="text-muted fw-medium">Ciudad:</span>{" "}
+                        {reserva.cliente.ciudad}
+                      </p>
+                      <p className="mb-2">
+                        <span className="text-muted fw-medium">
+                          Código Postal:
+                        </span>{" "}
+                        {reserva.cliente.codigo_postal}
+                      </p>
+                      <p className="mb-0">
+                        <span className="text-muted fw-medium">País:</span>{" "}
+                        {reserva.cliente.pais}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-3">
+                    <i
+                      className="bi bi-person-x text-muted"
+                      style={{ fontSize: "2rem" }}
+                    ></i>
+                    <p className="text-muted mt-2 mb-0">
+                      No hay cliente asociado
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>{" "}
+            {detalleFactura.length > 0 && (
+              <div className="card shadow-sm border-0 mb-4">
+                <div className="card-header bg-light">
+                  <h4 className="mb-0">
+                    <i className="bi bi-list-ul text-primary me-2"></i>
+                    Cargos registrados
+                  </h4>
+                </div>
+                <ul className="list-group list-group-flush">
+                  {detalleFactura.map((detalle) => (
+                    <li
+                      key={detalle.id_detalle}
+                      className="list-group-item d-flex justify-content-between align-items-center"
+                    >
+                      {editandoDetalleId === detalle.id_detalle ? (
+                        <div className="w-100">
+                          <div className="row g-2">
+                            <div className="col-md-4">
+                              <input
+                                type="text"
+                                className="form-control rounded"
+                                value={detalleEditado.concepto}
+                                onChange={(e) =>
+                                  setDetalleEditado({
+                                    ...detalleEditado,
+                                    concepto: e.target.value,
+                                  })
+                                }
+                              />
+                            </div>
+                            <div className="col-md-2">
+                              <input
+                                type="number"
+                                min="1"
+                                className="form-control rounded"
+                                value={detalleEditado.cantidad}
+                                onChange={(e) =>
+                                  setDetalleEditado({
+                                    ...detalleEditado,
+                                    cantidad: parseInt(e.target.value, 10),
+                                  })
+                                }
+                              />
+                            </div>
+                            <div className="col-md-3">
+                              <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                className="form-control rounded"
+                                value={detalleEditado.precio_unitario}
+                                onChange={(e) =>
+                                  setDetalleEditado({
+                                    ...detalleEditado,
+                                    precio_unitario: parseFloat(e.target.value),
+                                  })
+                                }
+                              />
+                            </div>
+                            <div className="col-md-3 text-end">
+                              <button
+                                className="btn btn-success btn-sm rounded me-2"
+                                onClick={() =>
+                                  guardarEdicion(detalle.id_detalle)
+                                }
+                              >
+                                <i className="bi bi-check me-1"></i>
+                                Guardar
+                              </button>
+                              <button
+                                className="btn btn-secondary btn-sm rounded"
+                                onClick={() => setEditandoDetalleId(null)}
+                              >
+                                <i className="bi bi-x me-1"></i>
+                                Cancelar
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <span>
+                            {detalle.concepto} — {detalle.cantidad} x{" "}
+                            {detalle.precio_unitario} € ={" "}
+                            <strong>{detalle.total} €</strong>
+                          </span>
+                          <div>
+                            <button
+                              className="btn btn-outline-primary btn-sm rounded me-2"
+                              onClick={() => iniciarEdicion(detalle)}
+                            >
+                              <i className="bi bi-pencil me-1"></i>
+                              Editar
+                            </button>
+                            <button
+                              className="btn btn-outline-danger btn-sm rounded"
+                              onClick={() => anularDetalle(detalle.id_detalle)}
+                            >
+                              <i className="bi bi-trash me-1"></i>
+                              Eliminar
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+                <div className="card-body border-top">
+                  <div className="row align-items-end">
+                    <div className="col-md-6">
+                      <label className="form-label text-muted fw-medium">
+                        Forma de pago
+                      </label>
+                      <select
+                        className="form-select rounded"
+                        value={formaPago}
+                        onChange={(e) => setFormaPago(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          --Selecciona forma de pago
+                        </option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Visa">Visa</option>
+                        <option value="Amex">Amex</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Crédito">Crédito</option>
+                      </select>
+                    </div>
+                    <div className="col-md-6 text-end">
+                      <h5 className="fw-bold text-primary mb-0">
+                        Total:{" "}
+                        {detalleFactura
+                          .reduce(
+                            (suma, d) => suma + parseFloat(d.total || 0),
+                            0
+                          )
+                          .toFixed(2)}{" "}
+                        €
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}{" "}
+            <div className="card shadow-sm border-0 mb-4">
+              <div className="card-header bg-light">
+                <h4 className="mb-0">
+                  <i className="bi bi-plus-circle text-primary me-2"></i>
+                  Añadir nuevo cargo
+                </h4>
+              </div>
+              <div className="card-body">
+                <div className="row g-3">
+                  <div className="col-md-5">
+                    <label
+                      htmlFor="concepto"
+                      className="form-label text-muted fw-medium"
+                    >
+                      Concepto
+                    </label>
+                    <select
+                      className="form-select rounded"
+                      value={nuevoCargo.concepto}
+                      onChange={(e) =>
+                        setNuevoCargo({
+                          ...nuevoCargo,
+                          concepto: e.target.value,
+                        })
+                      }
+                      name="concepto"
+                      id="concepto"
+                    >
+                      <option value="" disabled>
+                        --Selecciona concepto
+                      </option>
+                      <option value="Alojamiento">Alojamiento</option>
+                      <option value="Desayuno">Desayuno</option>
+                      <option value="Almuerzo">Almuerzo</option>
+                      <option value="Cena">Cena</option>
+                      <option value="Minibar">Minibar</option>
+                      <option value="Room service">Room service</option>
+                      <option value="Parking">Parking</option>
+                      <option value="Otros">Otros</option>
+                    </select>
+                  </div>
+                  <div className="col-md-2">
+                    <label
+                      htmlFor="cantidad"
+                      className="form-label text-muted fw-medium"
+                    >
+                      Cantidad
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control rounded"
+                      name="cantidad"
+                      id="cantidad"
+                      placeholder="Cantidad"
+                      min="1"
+                      value={nuevoCargo.cantidad}
+                      onChange={(e) =>
+                        setNuevoCargo({
+                          ...nuevoCargo,
+                          cantidad: parseInt(e.target.value, 10),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label
+                      htmlFor="precio"
+                      className="form-label text-muted fw-medium"
+                    >
+                      Precio/unidad
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control rounded"
+                      placeholder="Precio €"
+                      id="precio"
+                      min="0"
+                      step="0.01"
+                      value={nuevoCargo.precio}
+                      onChange={(e) =>
+                        setNuevoCargo({
+                          ...nuevoCargo,
+                          precio: parseFloat(e.target.value),
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="col-md-2 d-grid align-items-end">
+                    <button
+                      className="btn btn-primary rounded"
+                      onClick={guardarNuevoCargo}
+                    >
+                      <i className="bi bi-plus me-1"></i>
+                      Añadir
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>{" "}
+            <div className="d-flex justify-content-center gap-3 mt-4">
+              <button
+                className="btn btn-warning rounded"
+                onClick={adelantarCargos}
+              >
+                <i className="bi bi-arrow-right-circle me-1"></i>
+                Adelantar cargos
+              </button>
+              <button className="btn btn-info rounded" onClick={cerrarFactura}>
+                <i className="bi bi-receipt me-1"></i>
+                Cerrar factura
+              </button>
+              <button
+                className="btn btn-success rounded"
+                onClick={hacerCheckOut}
+              >
+                <i className="bi bi-box-arrow-right me-1"></i>
+                Realizar check-out
+              </button>
+            </div>
           </div>
         </div>
       )}

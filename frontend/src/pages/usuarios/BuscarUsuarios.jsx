@@ -63,7 +63,6 @@ const BuscarUsuarios = () => {
                 <i className="bi bi-people text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Gestión de Usuarios</h4>
-                  <small className="text-muted">Buscar y administrar usuarios del sistema</small>
                 </div>
               </div>
             </div>

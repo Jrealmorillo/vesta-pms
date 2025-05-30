@@ -217,7 +217,7 @@ const EditarEmpresa = () => {
                 </div>
 
                 <div className="row">
-                  <div className="col-md-6 mb-3">
+                  <div className="col-md-4 mb-3">
                     <div className="form-check">
                       <input
                         type="checkbox"
@@ -230,7 +230,6 @@ const EditarEmpresa = () => {
                         }
                       />
                       <label className="form-check-label fw-medium" htmlFor="creditoCheck">
-                        <i className="bi bi-credit-card me-1 text-success"></i>
                         Empresa con crédito
                       </label>
                     </div>

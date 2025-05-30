@@ -124,10 +124,8 @@ const NuevaReserva = () => {
     if (salida <= entrada) {
       toast.error("La fecha de salida debe ser posterior a la de entrada");
       return;
-    }
-
-    try {
-      await axios.post(
+    }    try {
+      const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/reservas/registro`,
         {
           ...reserva,
@@ -139,7 +137,7 @@ const NuevaReserva = () => {
         }
       );
 
-      toast.success(`Reserva ${reserva.id_reserva} registrada correctamente`);
+     
       setReserva({
         nombre_huesped: "",
         primer_apellido_huesped: "",
@@ -151,6 +149,7 @@ const NuevaReserva = () => {
         numero_habitacion: "",
         observaciones: "",
       });
+      toast.success(`Reserva ${response.data.reserva.id_reserva} registrada correctamente`);
       setLineas([]);
     } catch (error) {
       toast.error(error.response?.data?.error || "Error al registrar la reserva");
@@ -174,7 +173,7 @@ const NuevaReserva = () => {
           <div className="card shadow-sm">
             <div className="card-header bg-light">
               <div className="d-flex justify-content-center align-items-center">
-                <i className="bi bi-plus-circle-fill me-3" style={{ fontSize: '1.5rem' }}></i>
+                <i className="bi bi-plus-circle-fill text-primary me-3" style={{ fontSize: '1.5rem' }}></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Nueva Reserva</h4>
                 </div>
@@ -190,7 +189,7 @@ const NuevaReserva = () => {
           <div className="card shadow-sm mb-4">
             <div className="card-header bg-light">
               <h5 className="mb-0 fw-semibold">
-                <i className="bi bi-person-fill me-2"></i>
+                <i className="bi bi-person-fill text-primary me-2"></i>
                 Datos de la Reserva
               </h5>
             </div>

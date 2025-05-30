@@ -89,7 +89,6 @@ const EditarUsuario = () => {
                 <i className="bi bi-person-gear text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Editar Usuario</h4>
-                  <small className="text-muted">Modificar datos del usuario #{id}</small>
                 </div>
               </div>
             </div>

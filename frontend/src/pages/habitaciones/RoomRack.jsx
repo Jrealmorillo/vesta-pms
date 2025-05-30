@@ -258,9 +258,6 @@ const RoomRack = () => {
                 <i className="bi bi-grid-3x3-gap fs-2 text-primary me-3"></i>
                 <div>
                   <h2 className="mb-1">Room Rack</h2>
-                  <p className="text-muted mb-0">
-                    Estado visual de habitaciones en tiempo real
-                  </p>
                 </div>
               </div>
             </div>
@@ -280,24 +277,24 @@ const RoomRack = () => {
                 <i className="bi bi-palette text-primary me-2"></i>
                 Leyenda de Estados
               </h6>
-              <div className="d-flex flex-wrap gap-4">
-                <div className="d-flex align-items-center">
+              <div className="d-flex justify-content-center flex-wrap gap-4">
+                <div className="d-flex align-items-center mx-2">
                   <div className="cuadro-color fondo-libre me-2"></div>
                   <span className="fw-medium">Libre</span>
                 </div>
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-center mx-2">
                   <div className="cuadro-color fondo-ocupada me-2"></div>
                   <span className="fw-medium">Ocupada</span>
                 </div>
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-center mx-2">
                   <div className="cuadro-color fondo-asignada me-2"></div>
                   <span className="fw-medium">Asignada</span>
                 </div>
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-center mx-2">
                   <div className="cuadro-color fondo-bloqueada me-2"></div>
                   <span className="fw-medium">Bloqueada</span>
                 </div>
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-center mx-2">
                   <div
                     className="cuadro-color"
                     style={{ backgroundColor: "transparent" }}
@@ -306,7 +303,7 @@ const RoomRack = () => {
                   </div>
                   <span className="ms-2 fw-medium">Limpia (texto verde)</span>
                 </div>
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-center mx-2">
                   <div
                     className="cuadro-color"
                     style={{ backgroundColor: "transparent" }}

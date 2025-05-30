@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { Reserva, Cliente, Empresa, LineaReserva, Factura, Habitacion } = require("../models");
+const { Reserva, Cliente, Empresa, LineaReserva, Factura, Habitacion, DetalleFactura } = require("../models");
 const GestorLineasReserva = require("./GestorLineasReserva");
 const GestorHistorialReservas = require("./GestorHistorialReservas");
 const GestorDetalleFactura = require("./GestorDetalleFactura");
@@ -424,10 +424,14 @@ class GestorReservas {
           activa: true,
           tipo_habitacion: { [Op.ne]: null }
         }
+      });      // Buscar TODOS los detalles de factura activos de la reserva (tanto pendientes como ya facturados) cuyo concepto sea alojamiento
+      const detalles = await DetalleFactura.findAll({
+        where: {
+          id_reserva,
+          activa: true,
+          concepto: { [Op.like]: '%alojamiento%' }
+        }
       });
-
-      // Buscar detalles de factura pendientes (no facturados, activos) cuyo concepto sea alojamiento
-      const detalles = await GestorDetalleFactura.obtenerDetallesPendientesPorReserva(id_reserva);
       // Solo detalles de alojamiento
       const detallesAloj = detalles.filter((d) => d.concepto.toLowerCase().includes("alojamiento"));
 

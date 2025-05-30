@@ -169,9 +169,6 @@ const Planning = () => {
                 <i className="bi bi-calendar2-range fs-2 text-primary me-3"></i>
                 <div>
                   <h2 className="mb-1">Planning de Habitaciones</h2>
-                  <p className="text-muted mb-0">
-                    Visualización de ocupación y estado por 15 días
-                  </p>
                 </div>
               </div>
             </div>
@@ -204,20 +201,20 @@ const Planning = () => {
                 <i className="bi bi-palette text-primary me-2"></i>
                 Leyenda de Estados
               </h6>
-              <div className="d-flex flex-wrap gap-4">
-                <div className="d-flex align-items-center">
+              <div className="d-flex justify-content-center accordionflex-wrap gap-4">
+                <div className="d-flex align-items-center mx-2">
                   <div className="cuadro-color bg-success-subtle me-2"></div>
                   <span className="fw-medium">Libre</span>
                 </div>
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-center mx-2">
                   <div className="cuadro-color bg-primary me-2"></div>
                   <span className="fw-medium">Ocupada</span>
                 </div>
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-center mx-2">
                   <div className="cuadro-color bg-warning me-2"></div>
                   <span className="fw-medium">Asignada</span>
                 </div>
-                <div className="d-flex align-items-center">
+                <div className="d-flex align-items-center mx-2">
                   <div className="cuadro-color bg-dark me-2"></div>
                   <span className="fw-medium">Bloqueada</span>
                 </div>

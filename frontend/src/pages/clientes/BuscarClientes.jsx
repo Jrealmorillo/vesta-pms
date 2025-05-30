@@ -60,7 +60,6 @@ const BuscarClientes = () => {
                 <i className="bi bi-person-rolodex text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Gestión de Clientes</h4>
-                  <small className="text-muted">Buscar y administrar clientes del sistema</small>
                 </div>
               </div>
             </div>

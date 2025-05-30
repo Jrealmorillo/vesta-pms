@@ -61,7 +61,7 @@ const VerHistorialReserva = () => {
 
   if (isLoading) {
     return (
-      <div className="container py-4 text-center">
+      <div className="container py-5 mt-4 text-center">
         <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Cargando...</span>
         </div>
@@ -71,7 +71,7 @@ const VerHistorialReserva = () => {
   }
 
   return (
-    <div className="container py-5" style={{ maxWidth: "1000px" }}>
+    <div className="container py-5 mt-4" style={{ maxWidth: "1000px" }}>
       {/* Header con información principal */}
       <div className="row mb-4">
         <div className="col-12">

@@ -17,8 +17,8 @@ router.get("/facturacion", informeController.obtenerFacturacionPorFecha);
 // Obtener el informe de facturación entre fechas
 router.get("/facturacion/rango", informeController.obtenerFacturacionEntreFechas);
 
-// Obtener el informe de cargos pendientes por habitación
-router.get("/cargos-pendientes", informeController.obtenerCargosPendientesPorHabitacion);
+// Obtener el informe de cargos por habitación
+router.get("/cargos", informeController.obtenerCargosPendientesPorHabitacion);
 
 // Estado actual de habitaciones
 router.get("/estado-habitaciones", informeController.obtenerEstadoActualHabitaciones);

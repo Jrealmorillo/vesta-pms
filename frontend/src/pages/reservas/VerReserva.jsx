@@ -116,7 +116,7 @@ const VerReserva = () => {
   }
 
   return (
-    <div className="container py-5" style={{ maxWidth: "900px" }}>
+    <div className="container py-5 mt-4" style={{ maxWidth: "900px" }}>
       {/* Header con información principal */}
       <div className="row mb-4">
         <div className="col-12">

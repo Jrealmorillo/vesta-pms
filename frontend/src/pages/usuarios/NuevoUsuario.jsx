@@ -64,7 +64,6 @@ const NuevoUsuario = () => {
                 <i className="bi bi-person-plus text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Registrar Nuevo Usuario</h4>
-                  <small className="text-muted">Crear una nueva cuenta de usuario en el sistema</small>
                 </div>
               </div>
             </div>
@@ -161,7 +160,6 @@ const NuevoUsuario = () => {
                         id="activoCheck"
                       />
                       <label className="form-check-label fw-medium" htmlFor="activoCheck">
-                        <i className="bi bi-check-circle me-1 text-success"></i>
                         Usuario activo
                       </label>
                     </div>

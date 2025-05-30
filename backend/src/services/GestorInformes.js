@@ -121,6 +121,7 @@ class GestorInformes {
 }
 
 
+// Obtener cargos por habitación para una fecha específica
 async obtenerCargosPendientesPorHabitacion(fecha) {
   try {
     const lineas = await LineaReserva.findAll({
@@ -137,19 +138,17 @@ async obtenerCargosPendientesPorHabitacion(fecha) {
           },
         },
       ],
-    });
-
-    return lineas.map((linea) => ({
+    });    return lineas.map((linea) => ({
       fecha: linea.fecha,
       id_reserva: linea.id_reserva,
-      numero_habitacion: linea.numero_habitacion ?? "No asignada",
+      numero_habitacion: linea.reserva?.numero_habitacion ?? "No asignada",
       concepto: `Alojamiento - ${linea.tipo_habitacion} (${linea.regimen})`,
       cantidad: linea.cantidad_habitaciones,
       precio_unitario: linea.precio,
       total: parseFloat(linea.precio) * linea.cantidad_habitaciones,
     }));
   } catch (error) {
-    throw new Error("Error al obtener cargos pendientes por habitación: " + error.message);
+    throw new Error("Error al obtener cargos por habitación: " + error.message);
   }
 }
 

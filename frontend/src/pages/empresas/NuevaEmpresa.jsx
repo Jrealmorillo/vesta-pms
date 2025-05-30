@@ -74,7 +74,6 @@ const NuevaEmpresa = () => {
                 <i className="bi bi-building-add text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Registrar Nueva Empresa</h4>
-                  <small className="text-muted">Crear un nuevo registro de empresa en el sistema</small>
                 </div>
               </div>
             </div>

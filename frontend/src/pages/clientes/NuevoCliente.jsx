@@ -86,7 +86,6 @@ const NuevoCliente = () => {
                 <i className="bi bi-person-plus text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Registrar Nuevo Cliente</h4>
-                  <small className="text-muted">Crear un nuevo registro de cliente en el sistema</small>
                 </div>
               </div>
             </div>
