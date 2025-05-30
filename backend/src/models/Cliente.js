@@ -81,9 +81,6 @@ const Cliente = sequelize.define("Cliente", {
   email: {
     type: DataTypes.STRING(255),
     allowNull: true,
-    validate: {
-      isEmail: true // Valida el formato del email si se proporciona
-    }
   },
   // Observaciones adicionales (opcional)
   observaciones: {

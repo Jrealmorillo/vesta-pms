@@ -53,9 +53,6 @@ const Empresa = sequelize.define(
     email: {
       type: DataTypes.STRING(255),
       allowNull: true,
-      validate: {
-        isEmail: true,
-      },
     },
     // Indica si la empresa tiene crédito (por defecto, no)
     credito: {
