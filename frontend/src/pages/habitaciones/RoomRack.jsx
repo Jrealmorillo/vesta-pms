@@ -86,20 +86,20 @@ const RoomRack = () => {
   useEffect(() => {
     const cargarAsignadas = async () => {
       const hoy = new Date().toISOString().split("T")[0];
+      const mañana = new Date();
+      mañana.setDate(mañana.getDate() + 1);
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_API_URL}/reservas/asignadas`,
           {
             params: {
               desde: hoy,
-              hasta: hoy,
+              hasta: mañana.toISOString().split("T")[0],
             },
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }        );        const asignadas = res.data.map((r) => r.numero_habitacion);
-        console.log("Respuesta completa del endpoint:", res.data);
-        console.log("Habitaciones asignadas extraídas:", asignadas);
         setHabitacionesAsignadas(asignadas);
       } catch (error) {
         console.error("Error al obtener habitaciones asignadas:", error);
