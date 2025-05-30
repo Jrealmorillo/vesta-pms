@@ -7,7 +7,7 @@ const router = express.Router();
 const usuarioController = require("../controllers/usuarioController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
-// 1 = Adminisrador, 2 = usuario
+// 1 = Administrador, 2 = usuario
 const verifyRole = require("../middlewares/roleMiddleware");
 
 
