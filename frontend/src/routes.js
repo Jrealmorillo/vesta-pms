@@ -24,14 +24,14 @@ const routes = [
       { label: "Nueva empresa", path: "/empresas/nueva" },
       { label: "Buscar empresas", path: "/empresas/buscar" },
     ],
-  },
-  {
+  },  {
     label: "Habitaciones",
     submenu: [
       { label: "Nueva habitación", path: "/habitaciones/nueva", adminOnly: true },
       { label: "Mostrar habitaciones", path: "/habitaciones", exact: true, adminOnly: true  },
       { label: "Planning", path: "/habitaciones/planning" },
       { label: "RoomRack", path: "/habitaciones/roomrack" },
+      { label: "Calendario de Ocupación", path: "/habitaciones/calendario-ocupacion" },
     ],
   },
   {

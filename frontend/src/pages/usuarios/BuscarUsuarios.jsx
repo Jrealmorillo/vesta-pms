@@ -34,7 +34,7 @@ const BuscarUsuarios = () => {
       );
       setUsuarios([res.data]); // Convertimos en array para mostrar en la tabla
     } catch (error) {
-      toast.error(`Usuario no encontrado: ${error.response?.data?.error || error.message}`);
+      toast.error(`${error.response?.data?.error || error.message}`);
       setUsuarios([]);
     }
   };
@@ -49,78 +49,138 @@ const BuscarUsuarios = () => {
       });
       setUsuarios(res.data);
     } catch (error) {
-      toast.error(`Error al obtener usuarios: ${error.response?.data?.error || error.message}`);
+      toast.error(`${error.response?.data?.error || error.message}`);
     }
   };
-
   return (
-    <div className="buscar-usuarios-container p-5">
-      <h2 className="mb-4 py-5">Buscar usuarios</h2>
-
-      {/* Formulario de búsqueda por ID y botón para mostrar todos */}
-      <div className="buscar-usuarios-form">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Buscar por ID"
-          value={idBuscado}
-          onChange={(e) => setIdBuscado(e.target.value)}
-          onKeyDown={(e) => {
-            if(e.key === "Enter") {
-              e.preventDefault();
-              buscarPorId();
-            }
-          }}
-        />
-        <button className="btn btn-primary" onClick={buscarPorId}>
-          Buscar
-        </button>
-        <button className="btn btn-secondary" onClick={obtenerTodos}>
-          Mostrar todos
-        </button>
+    <div className="container-fluid py-5 mt-4">
+      {/* Header */}
+      <div className="row justify-content-center mb-4">
+        <div className="col-lg-10">
+          <div className="card shadow-sm">
+            <div className="card-header bg-light">
+              <div className="d-flex align-items-center">
+                <i className="bi bi-people text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <div>
+                  <h4 className="mb-0 fw-semibold">Gestión de Usuarios</h4>
+                  <small className="text-muted">Buscar y administrar usuarios del sistema</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Tabla de resultados o mensaje si no hay usuarios */}
-      {usuarios.length > 0 ? (
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped">
-            <thead className="table-light">
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Usuario</th>
-                <th>Rol</th>
-                <th>Activo</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {usuarios.map((u) => (
-                <tr key={u.id_usuario}>
-                  <td>{u.id_usuario}</td>
-                  <td>{u.nombre}</td>
-                  <td>{u.nombre_usuario}</td>
-                  <td>{u.rol.id_rol == 1 ? "Administrador" : "Empleado"}</td>
-                  <td>{u.activo ? "Sí" : "No"}</td>
-                  <td>
-                    {/* Botón para navegar a la edición del usuario */}
-                    <button
-                      className="btn btn-sm btn-outline-primary"
-                      onClick={() =>
-                        navigate(`/usuarios/editar/${u.id_usuario}`)
-                      }
-                    >
-                      Editar
+      <div className="row justify-content-center">
+        <div className="col-lg-10">
+          {/* Card: Búsqueda */}
+          <div className="card shadow-sm mb-4">
+            <div className="card-header bg-light">
+              <h5 className="mb-0 fw-semibold">
+                <i className="bi bi-search me-2 text-primary"></i>
+                Búsqueda de Usuarios
+              </h5>
+            </div>
+            <div className="card-body">
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <label className="form-label text-muted fw-medium">
+                    Buscar por ID
+                  </label>
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control rounded-start"
+                      placeholder="Introduce el ID del usuario"
+                      value={idBuscado}
+                      onChange={(e) => setIdBuscado(e.target.value)}
+                      onKeyDown={(e) => {
+                        if(e.key === "Enter") {
+                          e.preventDefault();
+                          buscarPorId();
+                        }
+                      }}
+                    />
+                    <button className="btn btn-primary rounded-end" onClick={buscarPorId}>
+                      <i className="bi bi-search me-1"></i>
+                      Buscar
                     </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                </div>
+                <div className="col-md-6 d-flex align-items-end">
+                  <button className="btn btn-outline-secondary w-100" onClick={obtenerTodos}>
+                    <i className="bi bi-list-ul me-2"></i>
+                    Mostrar todos los usuarios
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>          {/* Card: Resultados */}
+          {usuarios.length > 0 ? (
+            <div className="card shadow-sm">
+              <div className="card-header bg-light">
+                <h5 className="mb-0 fw-semibold">
+                  <i className="bi bi-table me-2 text-primary"></i>
+                  Resultados de la búsqueda
+                  <span className="badge bg-primary ms-2">{usuarios.length}</span>
+                </h5>
+              </div>
+              <div className="card-body p-0">
+                <div className="table-responsive">
+                  <table className="table table-hover mb-0">
+                    <thead className="table-light">
+                      <tr>
+                        <th className="fw-semibold">ID</th>
+                        <th className="fw-semibold">Nombre</th>
+                        <th className="fw-semibold">Usuario</th>
+                        <th className="fw-semibold">Rol</th>
+                        <th className="fw-semibold">Estado</th>
+                        <th className="fw-semibold text-center">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {usuarios.map((u) => (
+                        <tr key={u.id_usuario}>
+                          <td className="fw-medium">{u.id_usuario}</td>
+                          <td>{u.nombre}</td>
+                          <td className="text-muted">{u.nombre_usuario}</td>
+                          <td>
+                            <span className={`badge ${u.rol.id_rol == 1 ? 'bg-danger-subtle text-danger' : 'bg-info-subtle text-info'}`}>
+                              {u.rol.id_rol == 1 ? "Administrador" : "Empleado"}
+                            </span>
+                          </td>
+                          <td>
+                            <span className={`badge ${u.activo ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary'}`}>
+                              {u.activo ? "Activo" : "Inactivo"}
+                            </span>
+                          </td>
+                          <td className="text-center">
+                            <button
+                              className="btn btn-sm btn-outline-primary rounded"
+                              onClick={() => navigate(`/usuarios/editar/${u.id_usuario}`)}
+                            >
+                              <i className="bi bi-pencil me-1"></i>
+                              Editar
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="card shadow-sm">
+              <div className="card-body text-center py-5">
+                <i className="bi bi-inbox text-muted" style={{ fontSize: "3rem" }}></i>
+                <h6 className="mt-3 text-muted">No hay usuarios para mostrar</h6>
+                <p className="text-muted mb-0">Realiza una búsqueda o consulta todos los usuarios</p>
+              </div>
+            </div>
+          )}
         </div>
-      ) : (
-        <p className="mensaje-vacio">No hay usuarios para mostrar.</p>
-      )}
+      </div>
     </div>
   );
 }

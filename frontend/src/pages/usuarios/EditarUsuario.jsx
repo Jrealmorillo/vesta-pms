@@ -72,102 +72,144 @@ const EditarUsuario = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      toast.success("Usuario actualizado correctamente");
+      toast.success(`Usuario ${datos.nombre_usuario} actualizado correctamente`);
       navigate("/usuarios/buscar");
     } catch (error) {
       toast.error(`Error al actualizar el usuario: ${error.response?.data?.error || error.message}`);
     }
   };
-
   return (
-    <div className="container py-4">
-      <h2 className="text-center mb-4">Editar usuario</h2>
-      <form
-        onSubmit={manejarSubmit}
-        className="mx-auto"
-        style={{ maxWidth: "600px", textAlign: "left" }}
-      >
-        {/* Campos principales del usuario */}
-        <div className="mb-3">
-          <label className="form-label">Nombre completo</label>
-          <input
-            type="text"
-            name="nombre"
-            className="form-control"
-            value={datos.nombre}
-            onChange={manejarCambio}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Nombre de usuario</label>
-          <input
-            type="text"
-            name="nombre_usuario"
-            className="form-control"
-            value={datos.nombre_usuario}
-            onChange={manejarCambio}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Correo electrónico</label>
-          <input
-            type="email"
-            name="mail"
-            className="form-control"
-            value={datos.mail}
-            onChange={manejarCambio}
-            required
-          />
-        </div>
-
-        <div className="mb-3">
-          <label className="form-label">Rol</label>
-          <select
-            name="id_rol"
-            className="form-select"
-            value={datos.id_rol}
-            onChange={manejarCambio}
-          >
-            <option value={1}>Administrador</option>
-            <option value={2}>Empleado</option>
-          </select>
-        </div>
-
-        {/* Checkbox para marcar usuario como activo o inactivo */}
-        <div className="form-check mb-4">
-          <input
-            type="checkbox"
-            className="form-check-input"
-            name="activo"
-            checked={datos.activo}
-            onChange={manejarCambio}
-            id="activoCheck"
-          />
-          <label className="form-check-label" htmlFor="activoCheck">
-            Usuario activo
-          </label>
-        </div>
-        <div className="row button-row">
-          <div className="col-4">
-            <button type="submit" className="btn btn-success">
-              Guardar cambios
-            </button>
-          </div>
-          <div className="col-4">
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={() => navigate("/usuarios/buscar")}
-            >
-              Cancelar
-            </button>
+    <div className="container-fluid py-5 mt-4">
+      {/* Header */}
+      <div className="row justify-content-center mb-4">
+        <div className="col-lg-8">
+          <div className="card shadow-sm">
+            <div className="card-header bg-light">
+              <div className="d-flex align-items-center">
+                <i className="bi bi-person-gear text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <div>
+                  <h4 className="mb-0 fw-semibold">Editar Usuario</h4>
+                  <small className="text-muted">Modificar datos del usuario #{id}</small>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </form>
+      </div>
+
+      <div className="row justify-content-center">
+        <div className="col-lg-8">
+          <div className="card shadow-sm">
+            <div className="card-header bg-light">
+              <h5 className="mb-0 fw-semibold">
+                <i className="bi bi-person-fill me-2 text-primary"></i>
+                Datos del Usuario
+              </h5>
+            </div>
+            <div className="card-body">
+              <form onSubmit={manejarSubmit}>
+                <div className="row">
+                  {/* Campo para el nombre completo */}
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">Nombre completo *</label>
+                    <input
+                      type="text"
+                      name="nombre"
+                      className="form-control rounded"
+                      placeholder="Nombre completo del usuario"
+                      value={datos.nombre}
+                      onChange={manejarCambio}
+                      required
+                    />
+                  </div>
+
+                  {/* Campo para el nombre de usuario */}
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">Nombre de usuario *</label>
+                    <input
+                      type="text"
+                      name="nombre_usuario"
+                      className="form-control rounded"
+                      placeholder="Nombre de usuario para login"
+                      value={datos.nombre_usuario}
+                      onChange={manejarCambio}
+                      required
+                    />
+                  </div>
+
+                  {/* Campo para el correo electrónico */}
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">Correo electrónico *</label>
+                    <input
+                      type="email"
+                      name="mail"
+                      className="form-control rounded"
+                      placeholder="correo@ejemplo.com"
+                      value={datos.mail}
+                      onChange={manejarCambio}
+                      required
+                    />
+                  </div>
+
+                  {/* Selector de rol */}
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">Rol del usuario *</label>
+                    <select
+                      name="id_rol"
+                      className="form-select rounded"
+                      value={datos.id_rol}
+                      onChange={manejarCambio}                    >
+                      <option value={1}>Administrador</option>
+                      <option value={2}>Empleado</option>
+                    </select>
+                  </div>
+
+                  {/* Estado activo */}
+                  <div className="col-12 mb-4">
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="activo"
+                        checked={datos.activo}
+                        onChange={manejarCambio}
+                        id="activoCheck"
+                      />
+                      <label className="form-check-label fw-medium" htmlFor="activoCheck">
+                        <i className="bi bi-check-circle me-1 text-success"></i>
+                        Usuario activo
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Botones de acción */}
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <button type="submit" className="btn btn-success btn-lg w-100 rounded">
+                      <i className="bi bi-check-circle me-2"></i>
+                      Guardar Cambios
+                    </button>
+                  </div>
+                  <div className="col-md-6">
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary btn-lg w-100 rounded"
+                      onClick={() => {
+                        navigate("/usuarios/buscar");
+                        toast.info(`Edición de usuario ${datos.nombre_usuario} cancelada`);
+                      }}
+                    >
+                      <i className="bi bi-x-circle me-2"></i>
+                      Cancelar
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

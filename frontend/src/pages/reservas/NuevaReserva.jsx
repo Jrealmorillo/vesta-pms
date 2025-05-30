@@ -139,7 +139,7 @@ const NuevaReserva = () => {
         }
       );
 
-      toast.success("Reserva registrada correctamente");
+      toast.success(`Reserva ${reserva.id_reserva} registrada correctamente`);
       setReserva({
         nombre_huesped: "",
         primer_apellido_huesped: "",
@@ -153,9 +153,7 @@ const NuevaReserva = () => {
       });
       setLineas([]);
     } catch (error) {
-      const msg =
-        error.response?.data?.error || "Error al registrar la reserva";
-      toast.error(msg);
+      toast.error(error.response?.data?.error || "Error al registrar la reserva");
     }
   };
 
@@ -169,275 +167,331 @@ const NuevaReserva = () => {
         .toISOString()
         .split("T")[0]
     : "";
-
   return (
-    <div className="container pt-4">
-      <h2 className="text-center my-4">Registrar nueva reserva</h2>
-
-      <form
-        onSubmit={manejarSubmit}
-        className="mx-auto"
-        style={{ maxWidth: "850px" }}
-      >
-        {/* Card: Datos de la reserva */}
-        <div className="card shadow-sm mb-4">
-          <div className="card-header bg-info text-white">
-            <strong>Datos de reserva</strong>
-          </div>
-          <div className="card-body">
-            {/* Campos para los datos del cliente y empresa */}
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label className="form-label">Cliente</label>
-                <input
-                  type="number"
-                  name="id_cliente"
-                  className="form-control"
-                  placeholder="Cliente"
-                  value={reserva.id_cliente || ""}
-                  onChange={manejarCambioReserva}
-                />
+    <div className="container-fluid py-5 mt-4" style={{ maxWidth: "1200px" }}>
+      <div className="row justify-content-center mb-4">
+        <div className="col-lg-10">
+          <div className="card shadow-sm">
+            <div className="card-header bg-light">
+              <div className="d-flex justify-content-center align-items-center">
+                <i className="bi bi-plus-circle-fill me-3" style={{ fontSize: '1.5rem' }}></i>
+                <div>
+                  <h4 className="mb-0 fw-semibold">Nueva Reserva</h4>
+                </div>
               </div>
-              <div className="col-md-6">
-                <label className="form-label">Empresa</label>
-                <input
-                  type="number"
-                  name="id_empresa"
-                  className="form-control"
-                  placeholder="Empresa"
-                  value={reserva.id_empresa || ""}
-                  onChange={manejarCambioReserva}
-                />
-              </div>
-            </div>
-            {/* Campos para los datos del huésped */}
-            <div className="row mb-3">
-              <div className="col-md-4">
-                <label className="form-label">Nombre del huésped</label>
-                <input
-                  name="nombre_huesped"
-                  className="form-control"
-                  placeholder="Nombre"
-                  value={reserva.nombre_huesped}
-                  onChange={manejarCambioReserva}
-                  required
-                />
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Primer apellido</label>
-                <input
-                  name="primer_apellido_huesped"
-                  className="form-control"
-                  placeholder="1º Apellido"
-                  value={reserva.primer_apellido_huesped}
-                  onChange={manejarCambioReserva}
-                  required
-                />
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Segundo apellido</label>
-                <input
-                  name="segundo_apellido_huesped"
-                  className="form-control"
-                  placeholder="2º Apellido"
-                  value={reserva.segundo_apellido_huesped}
-                  onChange={manejarCambioReserva}
-                />
-              </div>
-            </div>
-            {/* Campos para las fechas y observaciones */}
-            <div className="row mb-3">
-              <div className="col-md-4">
-                <label className="form-label">Fecha de entrada</label>
-                <input
-                  type="date"
-                  name="fecha_entrada"
-                  className="form-control"
-                  min={hoy}
-                  value={reserva.fecha_entrada}
-                  onChange={manejarCambioReserva}
-                  required
-                />
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Fecha de salida</label>
-                <input
-                  type="date"
-                  name="fecha_salida"
-                  className="form-control"
-                  min={reserva.fecha_entrada || hoy}
-                  value={reserva.fecha_salida}
-                  onChange={manejarCambioReserva}
-                  required
-                />
-              </div>
-              <div className="col-md-4">
-                <label className="form-label">Número de habitación</label>
-                <input
-                  name="numero_habitacion"
-                  className="form-control"
-                  placeholder="Ej: 204"
-                  value={reserva.numero_habitacion}
-                  onChange={manejarCambioReserva}
-                />
-              </div>
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Observaciones</label>
-              <textarea
-                name="observaciones"
-                className="form-control"
-                placeholder="Observaciones adicionales..."
-                rows="2"
-                value={reserva.observaciones}
-                onChange={manejarCambioReserva}
-              ></textarea>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Card: Líneas de reserva */}
-        <div className="card shadow-sm">
-          <div className="card-header bg-secondary text-white">
-            <strong>Líneas de reserva</strong>
+      <form onSubmit={manejarSubmit} className="row justify-content-center">
+        <div className="col-lg-10">
+          {/* Card: Datos de la reserva */}
+          <div className="card shadow-sm mb-4">
+            <div className="card-header bg-light">
+              <h5 className="mb-0 fw-semibold">
+                <i className="bi bi-person-fill me-2"></i>
+                Datos de la Reserva
+              </h5>
+            </div>
+            <div className="card-body">
+              {/* Campos para los datos del cliente y empresa */}
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <label className="form-label text-muted fw-medium">Cliente (ID)</label>
+                  <input
+                    type="number"
+                    name="id_cliente"
+                    className="form-control rounded"
+                    placeholder="ID del cliente"
+                    value={reserva.id_cliente || ""}
+                    onChange={manejarCambioReserva}
+                  />
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label text-muted fw-medium">Empresa (ID)</label>
+                  <input
+                    type="number"
+                    name="id_empresa"
+                    className="form-control rounded"
+                    placeholder="ID de la empresa"
+                    value={reserva.id_empresa || ""}
+                    onChange={manejarCambioReserva}
+                  />
+                </div>
+              </div>
+              
+              {/* Campos para los datos del huésped */}
+              <div className="row mb-3">
+                <div className="col-md-4">
+                  <label className="form-label text-muted fw-medium">Nombre del huésped *</label>
+                  <input
+                    name="nombre_huesped"
+                    className="form-control rounded"
+                    placeholder="Nombre"
+                    value={reserva.nombre_huesped}
+                    onChange={manejarCambioReserva}
+                    required
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label text-muted fw-medium">Primer apellido *</label>
+                  <input
+                    name="primer_apellido_huesped"
+                    className="form-control rounded"
+                    placeholder="Primer apellido"
+                    value={reserva.primer_apellido_huesped}
+                    onChange={manejarCambioReserva}
+                    required
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label text-muted fw-medium">Segundo apellido</label>
+                  <input
+                    name="segundo_apellido_huesped"
+                    className="form-control rounded"
+                    placeholder="Segundo apellido"
+                    value={reserva.segundo_apellido_huesped}
+                    onChange={manejarCambioReserva}
+                  />
+                </div>
+              </div>
+              
+              {/* Campos para las fechas y observaciones */}
+              <div className="row mb-3">
+                <div className="col-md-4">
+                  <label className="form-label text-muted fw-medium">Fecha de entrada *</label>
+                  <input
+                    type="date"
+                    name="fecha_entrada"
+                    className="form-control rounded"
+                    min={hoy}
+                    value={reserva.fecha_entrada}
+                    onChange={manejarCambioReserva}
+                    required
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label text-muted fw-medium">Fecha de salida *</label>
+                  <input
+                    type="date"
+                    name="fecha_salida"
+                    className="form-control rounded"
+                    min={reserva.fecha_entrada || hoy}
+                    value={reserva.fecha_salida}
+                    onChange={manejarCambioReserva}
+                    required
+                  />
+                </div>
+                <div className="col-md-4">
+                  <label className="form-label text-muted fw-medium">Número de habitación</label>
+                  <input
+                    name="numero_habitacion"
+                    className="form-control rounded"
+                    placeholder="Ej: 204"
+                    value={reserva.numero_habitacion}
+                    onChange={manejarCambioReserva}
+                  />
+                </div>
+              </div>
+              
+              <div className="mb-0">
+                <label className="form-label text-muted fw-medium">Observaciones</label>
+                <textarea
+                  name="observaciones"
+                  className="form-control rounded"
+                  placeholder="Observaciones adicionales..."
+                  rows="3"
+                  value={reserva.observaciones}
+                  onChange={manejarCambioReserva}
+                ></textarea>
+              </div>
+            </div>
           </div>
-          <div className="card-body">
-            {/* Formulario para añadir línea de reserva */}
-            <div className="row mb-3">
-              <div className="col-md-3">
-                <label className="form-label">Fecha</label>
-                <input
-                  type="date"
-                  name="fecha"
-                  className="form-control"
-                  value={nuevaLinea.fecha}
-                  min={fechaEntradaMin}
-                  max={fechaSalidaMax}
-                  onChange={manejarCambioLinea}
-                />
-              </div>
-              <div className="col-md-3">
-                <label className="form-label">Tipo habitación</label>
-                <select
-                  name="tipo_habitacion"
-                  className="form-select"
-                  value={nuevaLinea.tipo_habitacion}
-                  onChange={manejarCambioLinea}
-                >
-                  <option value="" disabled>Selecciona tipo</option>
-                  <option value="Individual">Individual</option>
-                  <option value="Doble">Doble</option>
-                  <option value="Triple">Triple</option>
-                  <option value="Suite">Suite</option>
-                </select>
-              </div>
-              <div className="col-md-2">
-                <label className="form-label">Cantidad</label>
-                <input
-                  type="number"
-                  name="cantidad_habitaciones"
-                  className="form-control"
-                  min="1"
-                  value={nuevaLinea.cantidad_habitaciones}
-                  onChange={manejarCambioLinea}
-                />
-              </div>
-              <div className="col-md-3">
-                <label className="form-label">Régimen</label>
-                <select
-                  name="regimen"
-                  className="form-select"
-                  value={nuevaLinea.regimen}
-                  onChange={manejarCambioLinea}
-                >
-                  <option value="" disabled>Selecciona régimen</option>
-                  <option value="Solo Alojamiento">Solo Alojamiento</option>
-                  <option value="Alojamiento y Desayuno">
-                    Alojamiento y Desayuno
-                  </option>
-                  <option value="Media Pension">Media Pensión</option>
-                  <option value="Pension completa">Pensión Completa</option>
-                </select>
-              </div>
-            </div>
-            <div className="row mb-3">
-              <div className="col-md-2">
-                <label className="form-label">Adultos</label>
-                <input
-                  name="cantidad_adultos"
-                  type="number"
-                  min="0"
-                  max="3"
-                  className="form-control"
-                  value={nuevaLinea.cantidad_adultos}
-                  onChange={manejarCambioLinea}
-                />
-              </div>
-              <div className="col-md-2">
-                <label className="form-label">Niños</label>
-                <input
-                  name="cantidad_ninos"
-                  type="number"
-                  min="0"
-                  max="3"
-                  className="form-control"
-                  value={nuevaLinea.cantidad_ninos}
-                  onChange={manejarCambioLinea}
-                />
-              </div>
-              <div className="col-md-2">
-                <label className="form-label">€/noche</label>
-                <input
-                  name="precio"
-                  type="number"
-                  step="0.01"
-                  className="form-control"
-                  placeholder="Precio/noche"
-                  value={nuevaLinea.precio}
-                  onChange={manejarCambioLinea}
-                />
-              </div>
-              <div className="col-md-4 d-flex align-items-end">
-                <button
-                  type="button"
-                  className="btn btn-success w-100"
-                  onClick={añadirLinea}
-                >
-                  Añadir línea
-                </button>
-              </div>
-            </div>
 
-            {/* Lista de líneas añadidas */}
-            {lineas.length > 0 && (
-              <ul className="list-group">
-                {lineas.map((l, i) => (
-                  <li
-                    key={i}
-                    className="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    <span>
-                      {l.fecha} - {l.tipo_habitacion} ({l.regimen}) -{" "}
-                      {l.cantidad_habitaciones} hab. - {l.precio}€
-                    </span>
-                    <button
-                      className="btn btn-sm btn-danger"
-                      onClick={() => eliminarLinea(i)}
+          {/* Card: Líneas de reserva */}
+          <div className="card shadow-sm mb-4">
+            <div className="card-header bg-light">
+              <h5 className="mb-0 fw-semibold">
+                <i className="bi bi-list-ul me-2 text-primary"></i>
+                Líneas de Reserva
+                {lineas.length > 0 && (
+                  <span className="badge bg-primary ms-2">{lineas.length}</span>
+                )}
+              </h5>
+            </div>
+            <div className="card-body">
+              {/* Formulario para añadir línea de reserva */}
+              <div className="bg-light p-3 rounded mb-4">
+                <h6 className="text-muted mb-3">
+                  <i className="bi bi-plus-circle me-2"></i>
+                  Añadir nueva línea
+                </h6>
+                <div className="row mb-3">
+                  <div className="col-md-3">
+                    <label className="form-label text-muted fw-medium">Fecha *</label>
+                    <input
+                      type="date"
+                      name="fecha"
+                      className="form-control rounded"
+                      value={nuevaLinea.fecha}
+                      min={fechaEntradaMin}
+                      max={fechaSalidaMax}
+                      onChange={manejarCambioLinea}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="form-label text-muted fw-medium">Tipo habitación *</label>
+                    <select
+                      name="tipo_habitacion"
+                      className="form-select rounded"
+                      value={nuevaLinea.tipo_habitacion}
+                      onChange={manejarCambioLinea}
                     >
-                      Eliminar
+                      <option value="" disabled>Selecciona tipo</option>
+                      <option value="Individual">Individual</option>
+                      <option value="Doble">Doble</option>
+                      <option value="Triple">Triple</option>
+                      <option value="Suite">Suite</option>
+                    </select>
+                  </div>
+                  <div className="col-md-2">
+                    <label className="form-label text-muted fw-medium">Cantidad</label>
+                    <input
+                      type="number"
+                      name="cantidad_habitaciones"
+                      className="form-control rounded"
+                      min="1"
+                      value={nuevaLinea.cantidad_habitaciones}
+                      onChange={manejarCambioLinea}
+                    />
+                  </div>
+                  <div className="col-md-4">
+                    <label className="form-label text-muted fw-medium">Régimen</label>
+                    <select
+                      name="regimen"
+                      className="form-select rounded"
+                      value={nuevaLinea.regimen}
+                      onChange={manejarCambioLinea}
+                    >
+                      <option value="" disabled>Selecciona régimen</option>
+                      <option value="Solo Alojamiento">Solo Alojamiento</option>
+                      <option value="Alojamiento y Desayuno">Alojamiento y Desayuno</option>
+                      <option value="Media Pension">Media Pensión</option>
+                      <option value="Pension completa">Pensión Completa</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="row mb-3">
+                  <div className="col-md-2">
+                    <label className="form-label text-muted fw-medium">Adultos</label>
+                    <input
+                      name="cantidad_adultos"
+                      type="number"
+                      min="0"
+                      max="3"
+                      className="form-control rounded"
+                      value={nuevaLinea.cantidad_adultos}
+                      onChange={manejarCambioLinea}
+                    />
+                  </div>
+                  <div className="col-md-2">
+                    <label className="form-label text-muted fw-medium">Niños</label>
+                    <input
+                      name="cantidad_ninos"
+                      type="number"
+                      min="0"
+                      max="3"
+                      className="form-control rounded"
+                      value={nuevaLinea.cantidad_ninos}
+                      onChange={manejarCambioLinea}
+                    />
+                  </div>
+                  <div className="col-md-3">
+                    <label className="form-label text-muted fw-medium">Precio/noche *</label>
+                    <input
+                      name="precio"
+                      type="number"
+                      step="0.01"
+                      className="form-control rounded"
+                      placeholder="0.00"
+                      value={nuevaLinea.precio}
+                      onChange={manejarCambioLinea}
+                    />
+                  </div>
+                  <div className="col-md-5 d-flex align-items-end">
+                    <button
+                      type="button"
+                      className="btn btn-success rounded w-100"
+                      onClick={añadirLinea}
+                    >
+                      <i className="bi bi-plus-circle me-2"></i>
+                      Añadir línea
                     </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
+                  </div>
+                </div>
+              </div>
 
-        {/* Botón para registrar la reserva */}
-        <div className="d-grid mt-4">
-          <button type="submit" className="btn btn-primary btn-lg">
-            Registrar reserva
-          </button>
+              {/* Lista de líneas añadidas */}
+              {lineas.length > 0 ? (
+                <div className="table-responsive">
+                  <table className="table table-hover">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Régimen</th>
+                        <th>Habitaciones</th>
+                        <th>Ocupación</th>
+                        <th>Precio</th>
+                        <th width="80">Acción</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {lineas.map((l, i) => (
+                        <tr key={i}>
+                          <td>{new Date(l.fecha + 'T00:00:00').toLocaleDateString('es-ES')}</td>
+                          <td>{l.tipo_habitacion}</td>
+                          <td><small className="text-muted">{l.regimen}</small></td>
+                          <td className="text-center">{l.cantidad_habitaciones}</td>
+                          <td>{l.cantidad_adultos}A + {l.cantidad_ninos}N</td>
+                          <td className="fw-semibold">{parseFloat(l.precio).toFixed(2)}€</td>
+                          <td>
+                            <button
+                              type="button"
+                              className="btn btn-sm btn-outline-danger rounded"
+                              onClick={() => eliminarLinea(i)}
+                              title="Eliminar línea"
+                            >
+                              <i className="bi bi-x"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-center py-4 text-muted">
+                  <i className="bi bi-inbox" style={{ fontSize: '2rem' }}></i>
+                  <p className="mt-2 mb-0">No hay líneas de reserva añadidas</p>
+                  <small>Completa el formulario anterior para añadir líneas y poder confirmar la reserva</small>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Botón para registrar la reserva */}
+          <div className="d-grid">
+            <button 
+              type="submit" 
+              className="btn btn-primary btn-lg rounded"
+              disabled={lineas.length === 0}
+            >
+              <i className="bi bi-check-circle me-2"></i>
+              Registrar Reserva
+            </button>
+          </div>
         </div>
       </form>
     </div>

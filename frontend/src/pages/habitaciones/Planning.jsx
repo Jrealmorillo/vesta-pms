@@ -3,7 +3,7 @@
 // Incluye leyenda de colores para interpretar el estado de cada celda.
 
 /* eslint-disable no-unused-vars */
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import "./Planning.css";
 
@@ -34,25 +34,16 @@ const Planning = () => {
   const [habitaciones, setHabitaciones] = useState([]);
   const [reservas, setReservas] = useState([]);
   const [fechaInicio, setFechaInicio] = useState(new Date());
+  const [estadosHabitaciones, setEstadosHabitaciones] = useState([]);
+  const [bloqueos, setBloqueos] = useState([]); // Nuevo estado para bloqueos con fechas
 
   // Token de autenticación para las peticiones
   const token = localStorage.getItem("token");
-
   // Array de fechas a mostrar (15 días a partir de la fecha de inicio)
   const fechas = Array.from({ length: 15 }, (_, i) => addDays(fechaInicio, i));
 
-  // Carga la lista de habitaciones al montar el componente
-  useEffect(() => {
-    cargarHabitaciones();
-  }, []);
-
-  // Carga las reservas cada vez que cambia la fecha de inicio
-  useEffect(() => {
-    cargarReservas();
-  }, [fechaInicio]);
-
   // Obtiene habitaciones desde la API
-  const cargarHabitaciones = async () => {
+  const cargarHabitaciones = useCallback(async () => {
     try {
       const res = await axios.get(
         `${import.meta.env.VITE_API_URL}/habitaciones`,
@@ -64,10 +55,10 @@ const Planning = () => {
     } catch (error) {
       console.error("Error al cargar habitaciones");
     }
-  };
+  }, [token]);
 
   // Obtiene reservas para el rango de fechas mostrado
-  const cargarReservas = async () => {
+  const cargarReservas = useCallback(async () => {
     const desde = formatearFechaInput(fechaInicio);
     const hasta = formatearFechaInput(addDays(fechaInicio, 15));
 
@@ -80,21 +71,62 @@ const Planning = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      // Log temporal para depuración: mostrar fechas de todas las reservas recibidas
-      if (Array.isArray(res.data)) {
-        console.log("Reservas recibidas:", res.data.map(r => ({
-          id: r.id_reserva,
-          entrada: r.fecha_entrada,
-          salida: r.fecha_salida,
-          habitacion: r.numero_habitacion
-        })));
-      } else {
-        console.log("Reservas recibidas (no array):", res.data);
-      }
       setReservas(res.data);
     } catch (error) {
       console.error("Error al cargar reservas para el planning");
     }
+  }, [fechaInicio, token]);
+
+  // Carga los estados de habitaciones desde localStorage
+  const cargarEstadosHabitaciones = useCallback(() => {
+    const guardado = localStorage.getItem("estadoHabitaciones");
+    if (guardado) {
+      setEstadosHabitaciones(JSON.parse(guardado));
+    }
+  }, []);
+
+  // Carga los bloqueos desde localStorage
+  const cargarBloqueos = useCallback(() => {
+    const guardado = localStorage.getItem("bloqueosHabitaciones");
+    if (guardado) {
+      setBloqueos(JSON.parse(guardado));
+    }
+  }, []);
+
+  // Carga la lista de habitaciones y sus estados al montar el componente
+  useEffect(() => {
+    cargarHabitaciones();
+    cargarEstadosHabitaciones();
+    cargarBloqueos();
+  }, [cargarHabitaciones, cargarEstadosHabitaciones, cargarBloqueos]);
+
+  // Función para manejar el cambio de fecha
+  const manejarCambioFecha = (e) => {
+    const nuevaFecha = e.target.value;
+    if (nuevaFecha) {
+      setFechaInicio(new Date(nuevaFecha));
+    }
+  };
+
+  // Carga las reservas cada vez que cambia la fecha de inicio
+  useEffect(() => {
+    cargarReservas();
+  }, [cargarReservas]);
+
+  // Obtiene el estado de una habitación específica
+  const getEstadoHabitacion = (numeroHabitacion) => {
+    return estadosHabitaciones.find((e) => e.numero === numeroHabitacion);
+  };
+
+  // Verifica si una habitación está bloqueada en una fecha específica
+  const estaBloqueda = (numeroHabitacion, fecha) => {
+    const fechaObj = new Date(fecha);
+    return bloqueos.some(
+      (bloqueo) =>
+        bloqueo.numero_habitacion === numeroHabitacion &&
+        new Date(bloqueo.fecha_inicio) <= fechaObj &&
+        new Date(bloqueo.fecha_fin) >= fechaObj
+    );
   };
 
   // Busca si una habitación tiene reserva en una fecha específica
@@ -126,99 +158,165 @@ const Planning = () => {
     const año = d.getFullYear();
     return `${dia}/${mes}/${año}`;
   };
-
   return (
-    <div className="container py-5 mt-4">
-      <h3>Planning de habitaciones</h3>
-      {/* Selector de fecha de inicio para el planning */}
-      <div className="col-3 mb-3 text-start">
-        <label className="form-label">Selecciona la fecha de inicio</label>
-        <input
-          type="date"
-          className="form-control w-auto"
-          value={formatearFechaInput(fechaInicio)}
-          onChange={(e) => setFechaInicio(new Date(e.target.value))}
-        />
-      </div>
-      {/* Leyenda de colores para interpretar el estado de las habitaciones */}
-      <h5 className="text-start mt-5 mb-2">Leyenda de colores</h5>
-      <div className="d-flex flex-wrap gap-3 mb-5">
-        <div className="d-flex align-items-center">
-          <div className="cuadro-color bg-success-subtle me-2"></div>
-          <span>Libre</span>
-        </div>
-        <div className="d-flex align-items-center">
-          <div className="cuadro-color bg-primary me-2"></div>
-          <span>Ocupada</span>
-        </div>
-        <div className="d-flex align-items-center">
-          <div className="cuadro-color bg-warning me-2"></div>
-          <span>Asignada</span>
-        </div>
-        <div className="d-flex align-items-center">
-          <div className="cuadro-color bg-dark me-2"></div>
-          <span>Bloqueada</span>
-        </div>
-      </div>
+    <div className="container-fluid py-5 mt-4">
+      <div className="row justify-content-center">
+        <div className="col-lg-11">
+          {/* Header */}
+          <div className="card shadow-sm mb-4">
+            <div className="card-body bg-light">
+              <div className="d-flex align-items-center">
+                <i className="bi bi-calendar2-range fs-2 text-primary me-3"></i>
+                <div>
+                  <h2 className="mb-1">Planning de Habitaciones</h2>
+                  <p className="text-muted mb-0">
+                    Visualización de ocupación y estado por 15 días
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-      {/* Tabla principal de planificación: filas = habitaciones, columnas = días */}
-      <div className="table-responsive">
-        <table className="table table-bordered table-sm">
-          <thead>
-            <tr>
-              <th className="text-center">Habitación</th>
-              {fechas.map((f, i) => (
-                <th key={i} className="text-center">
-                  {formatearDiaMes(f)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {habitaciones.map((hab) => (
-              <tr key={hab.numero_habitacion}>
-                <td className="celda-planning">{hab.numero_habitacion}</td>
-                {fechas.map((fecha, i) => {
-                  // Busca si la habitación está reservada en la fecha
-                  const reserva = getReservaEnFecha(hab, fecha);
-                  return (
-                    <td
-                      key={i}
-                      className={`celda-planning ${
-                        reserva
-                          ? getEstadoColor(reserva.estado)
-                          : "bg-success-subtle"
-                      }`}
-                      // Tooltip con información de la reserva si existe
-                      title={
-                        reserva
-                          ? `Reserva nº: ${reserva.id_reserva}\n` +
-                            `Huésped: ${reserva.nombre_huesped || ""} ${
-                              reserva.primer_apellido_huesped || ""
-                            } ${reserva.segundo_apellido_huesped || ""}\n` +
-                            `Entrada: ${formatearFecha(
-                              reserva.fecha_entrada
-                            )}\n` +
-                            `Salida: ${formatearFecha(
-                              reserva.fecha_salida
-                            )}\n` +
-                            `Estado: ${reserva.estado}`
-                          : ""
-                      }
-                    >
-                      {/* Muestra el nombre del huésped si hay reserva */}
-                      {reserva
-                        ? `${reserva.nombre_huesped} ${
-                            reserva.primer_apellido_huesped
-                          } ${reserva.segundo_apellido_huesped || ""}`
-                        : ""}
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          {/* Selector de fecha */}
+          <div className="card shadow-sm mb-4">
+            <div className="card-body">
+              <div className="row align-items-center">
+                <div className="col-md-4">
+                  <label className="form-label text-muted fw-medium">
+                    <i className="bi bi-calendar-date me-2"></i>
+                    Fecha de inicio del planning
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control rounded"
+                    value={formatearFechaInput(fechaInicio)}
+                    onChange={manejarCambioFecha}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Leyenda de colores */}
+          <div className="card shadow-sm mb-4">
+            <div className="card-body">
+              <h6 className="mb-3">
+                <i className="bi bi-palette text-primary me-2"></i>
+                Leyenda de Estados
+              </h6>
+              <div className="d-flex flex-wrap gap-4">
+                <div className="d-flex align-items-center">
+                  <div className="cuadro-color bg-success-subtle me-2"></div>
+                  <span className="fw-medium">Libre</span>
+                </div>
+                <div className="d-flex align-items-center">
+                  <div className="cuadro-color bg-primary me-2"></div>
+                  <span className="fw-medium">Ocupada</span>
+                </div>
+                <div className="d-flex align-items-center">
+                  <div className="cuadro-color bg-warning me-2"></div>
+                  <span className="fw-medium">Asignada</span>
+                </div>
+                <div className="d-flex align-items-center">
+                  <div className="cuadro-color bg-dark me-2"></div>
+                  <span className="fw-medium">Bloqueada</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Tabla principal de planificación */}
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <div className="table-responsive">
+                <table className="table table-bordered table-sm">
+                  <thead>
+                    <tr>
+                      <th className="text-center">Habitación</th>
+                      {fechas.map((f, i) => (
+                        <th key={i} className="text-center">
+                          {formatearDiaMes(f)}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {habitaciones.map((hab) => (
+                      <tr key={hab.numero_habitacion}>
+                        <td className="celda-planning">
+                          {hab.numero_habitacion}
+                        </td>
+                        {fechas.map((fecha, i) => {
+                          // Busca si la habitación está reservada en la fecha
+                          const reserva = getReservaEnFecha(hab, fecha);
+                          // Obtiene el estado de la habitación desde localStorage
+                          const estadoHab = getEstadoHabitacion(
+                            hab.numero_habitacion
+                          );
+                          // Verifica si está bloqueada en esta fecha específica
+                          const estaBloqueada = estaBloqueda(
+                            hab.numero_habitacion,
+                            fecha
+                          );
+
+                          // Determina el estado: bloqueada tiene prioridad sobre reservas
+                          let estadoFinal = null;
+                          let colorClass = "bg-success-subtle"; // Por defecto libre
+
+                          if (estaBloqueada) {
+                            estadoFinal = "Bloqueada";
+                            colorClass = "bg-dark text-white";
+                          } else if (reserva) {
+                            estadoFinal = reserva.estado;
+                            colorClass = getEstadoColor(reserva.estado);
+                          }
+
+                          return (
+                            <td
+                              key={i}
+                              className={`celda-planning ${colorClass}`}
+                              // Tooltip con información de la reserva o estado de bloqueo
+                              title={
+                                estadoFinal === "Bloqueada"
+                                  ? `Habitación bloqueada\nFecha: ${formatearFecha(
+                                      fecha
+                                    )}`
+                                  : reserva
+                                  ? `Reserva nº: ${reserva.id_reserva}\n` +
+                                    `Huésped: ${reserva.nombre_huesped || ""} ${
+                                      reserva.primer_apellido_huesped || ""
+                                    } ${
+                                      reserva.segundo_apellido_huesped || ""
+                                    }\n` +
+                                    `Entrada: ${formatearFecha(
+                                      reserva.fecha_entrada
+                                    )}\n` +
+                                    `Salida: ${formatearFecha(
+                                      reserva.fecha_salida
+                                    )}\n` +
+                                    `Estado: ${reserva.estado}`
+                                  : ""
+                              }
+                            >
+                              {/* Muestra el nombre del huésped si hay reserva, o "BLOQUEADA" si está bloqueada */}
+                              {estadoFinal === "Bloqueada"
+                                ? "BLOQUEADA"
+                                : reserva
+                                ? `${reserva.nombre_huesped} ${
+                                    reserva.primer_apellido_huesped
+                                  } ${reserva.segundo_apellido_huesped || ""}`
+                                : ""}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

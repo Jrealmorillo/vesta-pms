@@ -29,7 +29,7 @@ const CambiarPassword = () => {
     e.preventDefault();
 
     if (form.nueva !== form.confirmar) {
-      toast.warning("La nueva contraseña no coincide");
+      toast.warning("La nueva contraseña y su confirmación no coinciden. Por favor, revisa ambos campos.");
       return;
     }
 
@@ -52,12 +52,12 @@ const CambiarPassword = () => {
       toast.success("Contraseña actualizada correctamente");
       setForm({ actual: "", nueva: "", confirmar: "" });
     } catch (error) {
-      toast.error(`Error al cambiar la contraseña: ${error.response?.data?.error || error.message}`);
+      toast.error(`${error.response?.data?.error || error.message}`);
     }
   };
 
   return (
-    <div className="container py-4" style={{ maxWidth: "500px" }}>
+    <div className="container py-5 mt-4" style={{ maxWidth: "400px" }}>
       <h2 className="text-center mb-4">Cambiar contraseña</h2>
       <form onSubmit={manejarSubmit}>
         <div className="mb-3">

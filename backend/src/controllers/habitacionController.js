@@ -11,8 +11,7 @@ exports.registrarHabitacion = async (req, res) => {
     res.status(201).json({ mensaje: "Habitacion registrada correctamente", habitacion });
   } catch (error) {
     res.status(500).json({
-      error: "Error al registrar la habitación: ",
-      detalle: error.message,
+      error: `Error al registrar la habitación ${req.body.numero_habitacion}: revise los datos introducidos`,
     });
   }
 };

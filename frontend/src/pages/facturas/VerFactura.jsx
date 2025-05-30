@@ -41,7 +41,6 @@ const VerFactura = () => {
 
   return (
     <div className="container py-5" style={{ maxWidth: "900px" }}>
-
       <h2>Factura #{factura.id_factura}</h2>
 
       {/* Cabecera de la factura */}
@@ -136,7 +135,7 @@ const VerFactura = () => {
           Total factura: {total} €
         </div>
       </div>
-            <div className="mb-3">
+      <div className="mb-3">
         <button
           className="btn btn-outline-secondary"
           onClick={() => {

@@ -81,107 +81,160 @@ const BuscarReservas = () => {
       );
     }
   };
-
   return (
-    <div className="container py-5 mt-4" style={{ maxWidth: "1000px" }}>
-      <h2 className="mb-4">Buscar Reservas</h2>
-
-      {/* Filtros de búsqueda: tipo y término */}
+    <div className="container py-5 mt-4" style={{ maxWidth: "1200px" }}>
+      {/* Header con información principal */}
       <div className="row mb-4">
-        <div className="col-md-3">
-          <select
-            className="form-select"
-            value={tipoBusqueda}
-            onChange={(e) => setTipoBusqueda(e.target.value)}
-          >
-            <option value="apellido">Por Apellido</option>
-            <option value="fecha">Por Fecha de Entrada</option>
-            <option value="id">Por Nº Reserva</option>
-          </select>
-        </div>
-        <div className="col-md-6">
-          <input
-            type={tipoBusqueda === "fecha" ? "date" : "text"}
-            className="form-control"
-            placeholder={
-              tipoBusqueda === "id"
-                ? "Introduce el número de reserva..."
-                : "Introduce el apellido..."
-            }
-            value={termino}
-            onChange={(e) => setTermino(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") buscar();
-            }}
-          />
-        </div>
-        <div className="col-md-3">
-          <button className="btn btn-primary w-100" onClick={buscar}>
-            Buscar
-          </button>
+        <div className="col-12">
+          <div className="card border-0 shadow-sm">
+            <div className="card-body p-4">
+              <h1 className="h3 mb-2 text-dark">Buscar Reservas</h1>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Tabla de resultados o mensaje si no hay resultados */}
-      {resultados.length > 0 ? (
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped">
-            <thead className="table-light">
-              <tr>
-                <th>ID</th>
-                <th>Huésped</th>
-                <th>Entrada</th>
-                <th>Salida</th>
-                <th>Estado</th>
-                <th>Precio Total</th>
-                <th>Habitación</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {resultados.map((res) => (
-                <tr key={res.id_reserva}>
-                  <td>{res.id_reserva}</td>
-                  <td>
-                    {res.primer_apellido_huesped} {res.segundo_apellido_huesped}{" "}
-                    , {res.nombre_huesped}
-                  </td>
-                  <td>{res.fecha_entrada}</td>
-                  <td>{res.fecha_salida}</td>
-                  <td>
-                    <span
-                      className={`badge ${
-                        res.estado === "Anulada"
-                          ? "bg-danger"
-                          : res.estado === "Confirmada"
-                          ? "bg-success"
-                          : res.estado === "Check-in"
-                          ? "bg-primary"
-                          : "bg-secondary"
-                      }`}
-                    >
-                      {res.estado}
-                    </span>
-                  </td>
-                  <td>{res.precio_total} €</td>
-                  <td>{res.numero_habitacion || "-"}</td>
-                  <td>
-                    {/* Botón para navegar a la página de detalle de la reserva */}
-                    <button
-                      className="btn btn-sm btn-outline-primary me-2"
-                      onClick={() => navigate(`/reservas/${res.id_reserva}`)}
-                    >
-                      Ir a reserva
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Filtros de búsqueda */}
+      <div className="row mb-4">
+        <div className="col-12">
+          <div className="card border-0 shadow-sm">
+            <div className="card-header bg-light border-0 py-3">
+              <h5 className="mb-0 fw-semibold text-dark">Criterios de búsqueda</h5>
+            </div>
+            <div className="card-body p-4">
+              <div className="row g-3">
+                <div className="col-md-3">
+                  <label className="form-label text-muted small mb-1">Buscar por:</label>
+                  <select
+                    className="form-select"
+                    value={tipoBusqueda}
+                    onChange={(e) => setTipoBusqueda(e.target.value)}
+                  >
+                    <option value="apellido">Por Apellido</option>
+                    <option value="fecha">Por Fecha de Entrada</option>
+                    <option value="id">Por Nº Reserva</option>
+                  </select>
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label text-muted small mb-1">Término de búsqueda:</label>
+                  <input
+                    type={tipoBusqueda === "fecha" ? "date" : "text"}
+                    className="form-control"
+                    placeholder={
+                      tipoBusqueda === "id"
+                        ? "Introduce el número de reserva..."
+                        : "Introduce el apellido..."
+                    }
+                    value={termino}
+                    onChange={(e) => setTermino(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") buscar();
+                    }}
+                  />
+                </div>
+                <div className="col-md-3">
+                  <label className="form-label text-muted small mb-1">&nbsp;</label>
+                  <button 
+                    className="btn btn-primary w-100 d-block" 
+                    onClick={buscar}
+                    style={{ borderRadius: '8px' }}
+                  >
+                    Buscar reservas
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      ) : (
-        <p className="text-muted">No hay resultados aún.</p>
-      )}
+      </div>      {/* Resultados de búsqueda */}
+      <div className="row">
+        <div className="col-12">
+          <div className="card border-0 shadow-sm">
+            <div className="card-header bg-light border-0 py-3">
+              <h5 className="mb-0 fw-semibold text-dark">
+                Resultados de búsqueda
+                {resultados.length > 0 && (
+                  <span className="badge bg-primary ms-2">{resultados.length}</span>
+                )}
+              </h5>
+            </div>
+            {resultados.length > 0 ? (
+              <div className="table-responsive">
+                <table className="table table-hover mb-0">
+                  <thead className="table-light">
+                    <tr>
+                      <th className="fw-semibold text-muted">ID</th>
+                      <th className="fw-semibold text-muted">Huésped</th>
+                      <th className="fw-semibold text-muted">Entrada</th>
+                      <th className="fw-semibold text-muted">Salida</th>
+                      <th className="fw-semibold text-muted">Estado</th>
+                      <th className="fw-semibold text-muted text-end">Precio Total</th>
+                      <th className="fw-semibold text-muted text-center">Habitación</th>
+                      <th className="fw-semibold text-muted text-center">Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {resultados.map((res) => (
+                      <tr key={res.id_reserva} className="align-middle">
+                        <td className="fw-medium">#{res.id_reserva}</td>
+                        <td>
+                          <div className="fw-medium">{res.primer_apellido_huesped} {res.segundo_apellido_huesped}</div>
+                          <small className="text-muted">{res.nombre_huesped}</small>
+                        </td>
+                        <td>{new Date(res.fecha_entrada).toLocaleDateString('es-ES')}</td>
+                        <td>{new Date(res.fecha_salida).toLocaleDateString('es-ES')}</td>
+                        <td>
+                          <span
+                            className={`badge px-2 py-1 ${
+                              res.estado === "Anulada"
+                                ? "bg-danger"
+                                : res.estado === "Confirmada"
+                                ? "bg-success"
+                                : res.estado === "Check-in"
+                                ? "bg-primary"
+                                : "bg-secondary"
+                            }`}
+                            style={{ borderRadius: '12px' }}
+                          >
+                            {res.estado}
+                          </span>
+                        </td>
+                        <td className="text-end fw-semibold">{res.precio_total} €</td>
+                        <td className="text-center">
+                          {res.numero_habitacion ? (
+                            <span className="badge bg-light text-dark">{res.numero_habitacion}</span>
+                          ) : (
+                            <span className="text-muted">—</span>
+                          )}
+                        </td>
+                        <td className="text-center">
+                          <button
+                            className="btn btn-outline-primary btn-sm px-3"
+                            onClick={() => navigate(`/reservas/${res.id_reserva}`)}
+                            style={{ borderRadius: '15px' }}
+                          >
+                            Ver detalle
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="card-body p-5 text-center">
+                <div className="text-muted mb-3">
+                  <svg width="64" height="64" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                  </svg>
+                </div>
+                <h6 className="text-muted mb-2">Sin resultados</h6>
+                <p className="text-muted mb-0">Introduce un criterio de búsqueda para encontrar reservas.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

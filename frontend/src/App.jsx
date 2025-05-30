@@ -26,6 +26,7 @@ import ListadoHabitaciones from "./pages/habitaciones/ListadoHabitaciones";
 import EditarHabitacion from "./pages/habitaciones/EditarHabitacion";
 import Planning from "./pages/habitaciones/Planning";
 import RoomRack from "./pages/habitaciones/RoomRack";
+import CalendarioOcupacion from "./pages/habitaciones/CalendarioOcupacion";
 import NuevaReserva from "./pages/reservas/NuevaReserva";
 import BuscarReservas from "./pages/reservas/BuscarReservas";
 import CheckIn from "./pages/reservas/CheckIn";
@@ -131,6 +132,7 @@ const App = () => {
           {/* Habitaciones: planning y roomrack (accesibles para usuarios autenticados) */}
           <Route path="/habitaciones/planning" element={<Planning />} />
           <Route path="habitaciones/roomrack" element={<RoomRack />} />
+          <Route path="/habitaciones/calendario-ocupacion" element={<CalendarioOcupacion />} />
           {/* Reservas */}
           <Route path="/reservas/nueva" element={<NuevaReserva />} />
           <Route path="/reservas/buscar" element={<BuscarReservas />} />

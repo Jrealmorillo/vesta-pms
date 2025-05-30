@@ -6,6 +6,7 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 import "./RoomRack.css";
 
 // Componente principal RoomRack
@@ -16,14 +17,17 @@ const RoomRack = () => {
   const [estados, setEstados] = useState([]);
   const [cargado, setCargado] = useState(false);
   const [habitacionesAsignadas, setHabitacionesAsignadas] = useState([]);
-
-  // Sincroniza el estado visual con localStorage cada vez que cambia
+  const [bloqueos, setBloqueos] = useState([]); // Nuevo estado para manejar bloqueos con fechas
+  const [mostrarModalBloqueo, setMostrarModalBloqueo] = useState(false);
+  const [habitacionSeleccionada, setHabitacionSeleccionada] = useState(null); // Sincroniza el estado visual con localStorage cada vez que cambia
   useEffect(() => {
     if (cargado) {
       localStorage.setItem("estadoHabitaciones", JSON.stringify(estados));
+      localStorage.setItem("bloqueosHabitaciones", JSON.stringify(bloqueos));
+      // Dispara evento personalizado para notificar a otros componentes
+      window.dispatchEvent(new CustomEvent("estadoHabitacionesChanged"));
     }
-  }, [estados, cargado]);
-
+  }, [estados, bloqueos, cargado]);
   // Carga habitaciones desde la API y sincroniza con localStorage si existe
   useEffect(() => {
     const cargarHabitaciones = async () => {
@@ -33,6 +37,12 @@ const RoomRack = () => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const guardado = localStorage.getItem("estadoHabitaciones");
+        const bloqueosGuardados = localStorage.getItem("bloqueosHabitaciones");
+
+        // Cargar bloqueos guardados
+        if (bloqueosGuardados) {
+          setBloqueos(JSON.parse(bloqueosGuardados));
+        }
 
         if (guardado) {
           const estadosGuardados = JSON.parse(guardado);
@@ -73,7 +83,6 @@ const RoomRack = () => {
 
     cargarHabitaciones();
   }, [token]);
-
   useEffect(() => {
     const cargarAsignadas = async () => {
       const hoy = new Date().toISOString().split("T")[0];
@@ -88,9 +97,9 @@ const RoomRack = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
-        );
-        const asignadas = res.data.map((r) => r.numero_habitacion);
+          }        );        const asignadas = res.data.map((r) => r.numero_habitacion);
+        console.log("Respuesta completa del endpoint:", res.data);
+        console.log("Habitaciones asignadas extraídas:", asignadas);
         setHabitacionesAsignadas(asignadas);
       } catch (error) {
         console.error("Error al obtener habitaciones asignadas:", error);
@@ -98,8 +107,7 @@ const RoomRack = () => {
     };
 
     cargarAsignadas();
-  }, []);
-
+  }, [token]);
   // Cambia el estado de limpieza u ocupación de una habitación
   const cambiarEstado = (numero, tipo, nuevoValor) => {
     setEstados((prev) =>
@@ -109,17 +117,76 @@ const RoomRack = () => {
     );
   };
 
-  // Renderiza la tarjeta visual de cada habitación
+  // Verifica si una habitación está bloqueada en una fecha específica
+  const estaBloqueda = (numeroHabitacion, fecha) => {
+    const fechaObj = new Date(fecha);
+    return bloqueos.some(
+      (bloqueo) =>
+        bloqueo.numero_habitacion === numeroHabitacion &&
+        new Date(bloqueo.fecha_inicio) <= fechaObj &&
+        new Date(bloqueo.fecha_fin) >= fechaObj
+    );
+  };
+
+  // Obtiene el estado de ocupación considerando bloqueos con fecha
+  const getEstadoOcupacion = (numeroHabitacion, fecha = new Date()) => {
+    const estado = estados.find((e) => e.numero === numeroHabitacion);
+    if (!estado) return "libre";
+
+    if (estaBloqueda(numeroHabitacion, fecha)) {
+      return "bloqueada";
+    }
+
+    return estado.ocupacion;
+  };
+
+  // Abre el modal para bloquear una habitación
+  const abrirModalBloqueo = (numeroHabitacion) => {
+    setHabitacionSeleccionada(numeroHabitacion);
+    setMostrarModalBloqueo(true);
+  };
+
+  // Bloquea una habitación en un rango de fechas
+  const bloquearHabitacion = (numeroHabitacion, fechaInicio, fechaFin) => {
+    const nuevoBloqueo = {
+      id: Date.now(), // ID temporal
+      numero_habitacion: numeroHabitacion,
+      fecha_inicio: fechaInicio,
+      fecha_fin: fechaFin,
+      motivo: "Bloqueo manual",
+    };
+
+    setBloqueos((prev) => [...prev, nuevoBloqueo]);
+    setMostrarModalBloqueo(false);
+  };
+
+  // Elimina bloqueos de una habitación
+  const eliminarBloqueo = (bloqueoId) => {
+    setBloqueos((prev) => prev.filter((b) => b.id !== bloqueoId));
+  };  // Renderiza la tarjeta visual de cada habitación
   const renderHabitacion = (estado) => {
     // Determina clases CSS según estado de ocupación y limpieza
-    const esAsignada =
-      estado.ocupacion === "libre" &&
-      habitacionesAsignadas.includes(estado.numero);
-
-    const claseFondo = esAsignada
-      ? "fondo-asignada"
-      : `fondo-${estado.ocupacion}`;
+    const hoy = new Date().toISOString().split("T")[0];
+    const estadoOcupacionHoy = getEstadoOcupacion(estado.numero, hoy);    // Determinar clase de fondo con la prioridad correcta
+    let claseFondo;
+    if (estadoOcupacionHoy === "bloqueada") {
+      // Las habitaciones bloqueadas tienen máxima prioridad (fondo negro)
+      claseFondo = "fondo-bloqueada";    } else if (estadoOcupacionHoy === "libre" && habitacionesAsignadas.includes(estado.numero)) {
+      // Las habitaciones libres pero asignadas para hoy (fondo amarillo)
+      claseFondo = "fondo-asignada";
+    } else {
+      // Estados normales: ocupada (azul) o libre (blanco)
+      claseFondo = `fondo-${estadoOcupacionHoy}`;
+    }
+    
     const claseTexto = `texto-${estado.limpieza}`;
+
+    // Obtener bloqueos activos para esta habitación
+    const bloqueosActivos = bloqueos.filter(
+      (b) =>
+        b.numero_habitacion === estado.numero &&
+        new Date(b.fecha_fin) >= new Date(hoy)
+    );
 
     return (
       <div
@@ -129,8 +196,20 @@ const RoomRack = () => {
         <div>{estado.numero}</div>
         <div style={{ fontSize: "0.75rem" }}>{estado.tipo}</div>
         <div style={{ fontSize: "0.8rem" }}>
-          {estado.ocupacion} / {estado.limpieza}
+          {estadoOcupacionHoy} / {estado.limpieza}
         </div>
+
+        {/* Mostrar bloqueos activos */}
+        {bloqueosActivos.length > 0 && (
+          <div
+            style={{ fontSize: "0.7rem", color: "red", marginTop: "0.2rem" }}
+          >
+            Bloqueada hasta:{" "}
+            {new Date(
+              Math.max(...bloqueosActivos.map((b) => new Date(b.fecha_fin)))
+            ).toLocaleDateString()}
+          </div>
+        )}
 
         {/* Selector de limpieza: permite marcar la habitación como limpia o sucia */}
         <select
@@ -144,69 +223,201 @@ const RoomRack = () => {
           <option value="sucia">Sucia</option>
         </select>
 
-        {/* Selector de bloqueo: permite marcar la habitación como bloqueada o disponible */}
-        <select
-          value={estado.ocupacion === "bloqueada" ? "bloqueada" : "normal"}
-          onChange={(e) => {
-            // Si se selecciona 'bloqueada', se marca como tal; si no, vuelve a 'libre'
-            const nuevaOcupacion =
-              e.target.value === "bloqueada" ? "bloqueada" : "libre";
-            cambiarEstado(estado.numero, "ocupacion", nuevaOcupacion);
-          }}
-          style={{ marginTop: "0.5rem" }}
-        >
-          <option value="normal">Disponible</option>
-          <option value="bloqueada">Bloqueada</option>
-        </select>
+        {/* Botones de gestión de bloqueos */}
+        <div style={{ marginTop: "0.5rem" }}>
+          <button
+            className="btn btn-sm btn-danger"
+            onClick={() => abrirModalBloqueo(estado.numero)}
+            style={{ fontSize: "0.7rem", marginRight: "0.2rem" }}
+          >
+            Bloquear
+          </button>
+          {bloqueosActivos.length > 0 && (
+            <button
+              className="btn btn-sm btn-outline-danger"
+              onClick={() => {
+                bloqueosActivos.forEach((b) => eliminarBloqueo(b.id));
+              }}
+              style={{ fontSize: "0.7rem" }}
+            >
+              Desbloquear
+            </button>
+          )}
+        </div>
       </div>
     );
   };
+  return (
+    <div className="container-fluid py-5 mt-4">
+      <div className="row justify-content-center">
+        <div className="col-lg-11">
+          {/* Header */}
+          <div className="card shadow-sm mb-4">
+            <div className="card-body bg-light">
+              <div className="d-flex align-items-center">
+                <i className="bi bi-grid-3x3-gap fs-2 text-primary me-3"></i>
+                <div>
+                  <h2 className="mb-1">Room Rack</h2>
+                  <p className="text-muted mb-0">
+                    Estado visual de habitaciones en tiempo real
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Habitaciones Grid */}
+          <div className="card shadow-sm mb-4">
+            <div className="card-body">
+              <div className="roomrack-container">
+                {estados.map((estado) => renderHabitacion(estado))}
+              </div>
+            </div>
+          </div>
+          {/* Leyenda */}
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h6 className="mb-3">
+                <i className="bi bi-palette text-primary me-2"></i>
+                Leyenda de Estados
+              </h6>
+              <div className="d-flex flex-wrap gap-4">
+                <div className="d-flex align-items-center">
+                  <div className="cuadro-color fondo-libre me-2"></div>
+                  <span className="fw-medium">Libre</span>
+                </div>
+                <div className="d-flex align-items-center">
+                  <div className="cuadro-color fondo-ocupada me-2"></div>
+                  <span className="fw-medium">Ocupada</span>
+                </div>
+                <div className="d-flex align-items-center">
+                  <div className="cuadro-color fondo-asignada me-2"></div>
+                  <span className="fw-medium">Asignada</span>
+                </div>
+                <div className="d-flex align-items-center">
+                  <div className="cuadro-color fondo-bloqueada me-2"></div>
+                  <span className="fw-medium">Bloqueada</span>
+                </div>
+                <div className="d-flex align-items-center">
+                  <div
+                    className="cuadro-color"
+                    style={{ backgroundColor: "transparent" }}
+                  >
+                    <span className="texto-limpia">A</span>
+                  </div>
+                  <span className="ms-2 fw-medium">Limpia (texto verde)</span>
+                </div>
+                <div className="d-flex align-items-center">
+                  <div
+                    className="cuadro-color"
+                    style={{ backgroundColor: "transparent" }}
+                  >
+                    <span className="texto-sucia">A</span>
+                  </div>
+                  <span className="ms-2 fw-medium">Sucia (texto rojo)</span>
+                </div>
+              </div>
+            </div>
+          </div>{" "}
+          {/* Modal para bloquear habitación */}
+          {mostrarModalBloqueo && (
+            <ModalBloqueoHabitacion
+              numeroHabitacion={habitacionSeleccionada}
+              onBloquear={bloquearHabitacion}
+              onCerrar={() => setMostrarModalBloqueo(false)}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Componente Modal para bloquear habitación
+const ModalBloqueoHabitacion = ({ numeroHabitacion, onBloquear, onCerrar }) => {
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
+  const [motivo, setMotivo] = useState("");
+  const manejarBloqueo = () => {
+    if (!fechaInicio || !fechaFin) {
+      toast.warning("Por favor, selecciona fechas de inicio y fin");
+      return;
+    }
+
+    if (new Date(fechaInicio) >= new Date(fechaFin)) {
+      toast.error(
+        "La fecha de fin de bloqueo debe ser posterior a la fecha de inicio"
+      );
+      return;
+    }
+
+    onBloquear(numeroHabitacion, fechaInicio, fechaFin, motivo);
+  };
 
   return (
-    <div className="container py-5 mt-4">
-      <h2 className="mb-3">Room Rack – Estado de Habitaciones</h2>
-      {/* Muestra todas las habitaciones como tarjetas visuales */}
-      <div className="roomrack-container">
-        {estados.map((estado) => renderHabitacion(estado))}
-      </div>
-      <hr className="my-4" />
-
-      {/* Leyenda de colores y estilos para interpretar el estado de cada habitación */}
-      <h5>Leyenda de colores</h5>
-      <div className="d-flex flex-wrap gap-3">
-        <div className="d-flex align-items-center">
-          <div className="cuadro-color fondo-libre me-2"></div>
-          <span>Libre</span>
-        </div>
-        <div className="d-flex align-items-center">
-          <div className="cuadro-color fondo-ocupada me-2"></div>
-          <span>Ocupada</span>
-        </div>
-        <div className="d-flex align-items-center">
-          <div className="cuadro-color fondo-asignada me-2"></div>
-          <span>Asignada</span>
-        </div>
-        <div className="d-flex align-items-center">
-          <div className="cuadro-color fondo-bloqueada me-2"></div>
-          <span>Bloqueada</span>
-        </div>
-        <div className="d-flex align-items-center">
-          <div
-            className="cuadro-color"
-            style={{ backgroundColor: "transparent" }}
-          >
-            <span className="texto-limpia">A</span>
+    <div
+      className="modal d-block"
+      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+    >
+      <div className="modal-dialog">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">
+              Bloquear Habitación {numeroHabitacion}
+            </h5>
+            <button
+              type="button"
+              className="btn-close"
+              onClick={onCerrar}
+            ></button>
           </div>
-          <span className="ms-2">Limpia (texto verde)</span>
-        </div>
-        <div className="d-flex align-items-center">
-          <div
-            className="cuadro-color"
-            style={{ backgroundColor: "transparent" }}
-          >
-            <span className="texto-sucia">A</span>
+          <div className="modal-body">
+            <div className="mb-3">
+              <label className="form-label">Fecha de inicio</label>
+              <input
+                type="date"
+                className="form-control"
+                value={fechaInicio}
+                onChange={(e) => setFechaInicio(e.target.value)}
+                min={new Date().toISOString().split("T")[0]}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Fecha de fin</label>
+              <input
+                type="date"
+                className="form-control"
+                value={fechaFin}
+                onChange={(e) => setFechaFin(e.target.value)}
+                min={fechaInicio || new Date().toISOString().split("T")[0]}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Motivo (opcional)</label>
+              <input
+                type="text"
+                className="form-control"
+                value={motivo}
+                onChange={(e) => setMotivo(e.target.value)}
+                placeholder="Ej: Mantenimiento, Renovación..."
+              />
+            </div>
           </div>
-          <span className="ms-2">Sucia (texto rojo)</span>
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onCerrar}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              className="btn btn-warning"
+              onClick={manejarBloqueo}
+            >
+              Bloquear Habitación
+            </button>
+          </div>
         </div>
       </div>
     </div>

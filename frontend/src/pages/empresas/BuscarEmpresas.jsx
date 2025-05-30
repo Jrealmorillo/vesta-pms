@@ -2,7 +2,6 @@
 // Permite buscar por ID, CIF o nombre y muestra los resultados en una tabla ordenada.
 // Incluye validaciones, notificaciones y acceso a la edición de empresas.
 
-/* eslint-disable no-unused-vars */
 import { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
@@ -41,7 +40,7 @@ const BuscarEmpresas = () => {
       });
       setEmpresas(empresasOrdenadas);
     } catch (error) {
-      toast.error(`Empresa no encontrada: ${error.response?.data?.error || error.message}`);
+      toast.error(`${error.response?.data?.error || error.message}`);
       setEmpresas([]);
     }
   };
@@ -50,89 +49,143 @@ const BuscarEmpresas = () => {
   const irAEditar = (id) => {
     navigate(`/empresas/editar/${id}`);
   };
-
   return (
-    <div className="container py-5 mt-1">
-      <h2 className="mb-4 text-center">Buscar empresas</h2>
-
-      {/* Formulario de búsqueda */}
-      <form 
-      onSubmit={(e) => {
-        e.preventDefault();
-        buscar();
-      }}
-      className="row g-2 mb-4 mx-auto"
-       style={{ maxWidth: "700px", textAlign: "center" }}>
-        <div className="col-md-3"
-       >
-          <select
-            className="form-select"
-            value={tipoBusqueda}
-            onChange={(e) => setTipoBusqueda(e.target.value)} // Cambia el tipo de búsqueda
-          >
-            <option value="id">Buscar por ID</option>
-            <option value="cif">Buscar por CIF</option>
-            <option value="nombre">Buscar por nombre</option>
-          </select>
+    <div className="container-fluid py-5 mt-4">
+      {/* Header */}
+      <div className="row justify-content-center mb-4">
+        <div className="col-lg-10">
+          <div className="card shadow-sm">
+            <div className="card-header bg-light">
+              <div className="d-flex align-items-center">
+                <i className="bi bi-building text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <div>
+                  <h4 className="mb-0 fw-semibold">Gestión de Empresas</h4>
+                  <small className="text-muted">Buscar y administrar empresas del sistema</small>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div className="col-md-6">
-          <input
-            type="text"
-            placeholder="Introduce el valor"
-            className="form-control"
-            value={criterio}
-            onChange={(e) => setCriterio(e.target.value)} // Actualiza el criterio
-          />
-        </div>
-
-        <div className="col-md-3 d-grid d-md-flex justify-content-md-start">
-          <button className="btn btn-primary me-2">
-            Buscar
-          </button>
-        </div>
-      </form>
-
-      {/* Tabla de resultados o mensaje si no hay empresas */}
-      {empresas.length > 0 ? (
-        <div className="table-responsive">
-          <table className="table table-bordered table-striped align-middle">
-            <thead className="table-light">
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>CIF</th>
-                <th>Direccion</th>
-                <th>Ciudad</th>
-                <th>Pais</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {empresas.map((e) => (
-                <tr key={e.id_empresa}>
-                  <td>{e.id_empresa}</td>
-                  <td>{e.nombre}</td>
-                  <td>{e.cif}</td>
-                  <td>{e.direccion || "-"}</td>
-                  <td>{e.ciudad || "-"}</td>
-                  <td>{e.pais || "-"}</td>
-                  <td>
-                    <button
-                      className="btn btn-sm btn-outline-primary"
-                      onClick={() => irAEditar(e.id_empresa)} // Botón para editar empresa
+      <div className="row justify-content-center">
+        <div className="col-lg-10">
+          {/* Card: Búsqueda */}
+          <div className="card shadow-sm mb-4">
+            <div className="card-header bg-light">
+              <h5 className="mb-0 fw-semibold">
+                <i className="bi bi-search me-2 text-primary"></i>
+                Búsqueda de Empresas
+              </h5>
+            </div>
+            <div className="card-body">
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  buscar();
+                }}
+              >
+                <div className="row g-3">
+                  <div className="col-md-3">
+                    <label className="form-label text-muted fw-medium">
+                      Tipo de búsqueda
+                    </label>
+                    <select
+                      className="form-select rounded"
+                      value={tipoBusqueda}
+                      onChange={(e) => setTipoBusqueda(e.target.value)}
                     >
-                      Editar
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      <option value="id">Buscar por ID</option>
+                      <option value="cif">Buscar por CIF</option>
+                      <option value="nombre">Buscar por nombre</option>
+                    </select>
+                  </div>
+
+                  <div className="col-md-6">
+                    <label className="form-label text-muted fw-medium">
+                      Valor de búsqueda
+                    </label>
+                    <div className="input-group">
+                      <input
+                        type="text"
+                        placeholder="Introduce el valor"
+                        className="form-control rounded-start"
+                        value={criterio}
+                        onChange={(e) => setCriterio(e.target.value)}
+                      />
+                      <button type="submit" className="btn btn-primary rounded-end">
+                        <i className="bi bi-search me-1"></i>
+                        Buscar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>          {/* Card: Resultados */}
+          {empresas.length > 0 ? (
+            <div className="card shadow-sm">
+              <div className="card-header bg-light">
+                <h5 className="mb-0 fw-semibold">
+                  <i className="bi bi-table me-2 text-primary"></i>
+                  Resultados de la búsqueda
+                  <span className="badge bg-primary ms-2">{empresas.length}</span>
+                </h5>
+              </div>
+              <div className="card-body p-0">
+                <div className="table-responsive">
+                  <table className="table table-hover mb-0">
+                    <thead className="table-light">
+                      <tr>
+                        <th className="fw-semibold">ID</th>
+                        <th className="fw-semibold">Nombre</th>
+                        <th className="fw-semibold">CIF</th>
+                        <th className="fw-semibold">Dirección</th>
+                        <th className="fw-semibold">Ciudad</th>
+                        <th className="fw-semibold">País</th>
+                        <th className="fw-semibold text-center">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {empresas.map((e) => (
+                        <tr key={e.id_empresa}>
+                          <td className="fw-medium">{e.id_empresa}</td>
+                          <td>{e.nombre}</td>
+                          <td>
+                            <span className="badge bg-info-subtle text-info">
+                              {e.cif}
+                            </span>
+                          </td>
+                          <td className="text-muted">{e.direccion || "-"}</td>
+                          <td className="text-muted">{e.ciudad || "-"}</td>
+                          <td className="text-muted">{e.pais || "-"}</td>
+                          <td className="text-center">
+                            <button
+                              className="btn btn-sm btn-outline-primary rounded"
+                              onClick={() => irAEditar(e.id_empresa)}
+                            >
+                              <i className="bi bi-pencil me-1"></i>
+                              Editar
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="card shadow-sm">
+              <div className="card-body text-center py-5">
+                <i className="bi bi-building-x text-muted" style={{ fontSize: "3rem" }}></i>
+                <h6 className="mt-3 text-muted">No hay empresas para mostrar</h6>
+                <p className="text-muted mb-0">Realiza una búsqueda para encontrar empresas</p>
+              </div>
+            </div>
+          )}
         </div>
-      ) : (
-        <p className="text-center">No hay empresas para mostrar.</p>
-      )}
+      </div>
     </div>
   );
 }

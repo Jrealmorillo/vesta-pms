@@ -64,160 +64,218 @@ const EditarEmpresa = () => {
           },
         }
       );
-      toast.success("Empresa actualizada correctamente");
+      toast.success(`Empresa ${empresa.nombre} actualizada correctamente`);
       navigate("/empresas/buscar");
     } catch (error) {
       toast.error(`Error al actualizar empresa: ${error.response?.data?.error || error.message}`);
     }
   };
-
   // Muestra un mensaje mientras se cargan los datos
-  if (!empresa) return <p className="text-center mt-5">Cargando empresa...</p>;
+  if (!empresa) return (
+    <div className="container-fluid py-5 mt-4">
+      <div className="row justify-content-center">
+        <div className="col-lg-6">
+          <div className="card shadow-sm">
+            <div className="card-body text-center py-5">
+              <div className="spinner-border text-primary" role="status">
+                <span className="visually-hidden">Cargando...</span>
+              </div>
+              <p className="mt-3 text-muted">Cargando datos de la empresa...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="container py-4 mt-4">
-      <h2 className="text-center mb-4">Editar empresa</h2>
-      {/* Formulario de edición de empresa */}
-      <form
-        onSubmit={manejarSubmit}
-        className="mx-auto"
-        style={{ maxWidth: "750px", textAlign: "left" }}
-      >
-        {/* Campos de datos de empresa */}
-        <div className="row">
-          <div className="col-md-9 mb-3">
-            <label className="form-label">Nombre</label>
-            <input
-              type="text"
-              name="nombre"
-              className="form-control"
-              value={empresa.nombre}
-              onChange={manejarCambio}
-              required
-            />
+    <div className="container-fluid py-5 mt-4">
+      {/* Header */}
+      <div className="row justify-content-center mb-4">
+        <div className="col-lg-8">
+          <div className="card shadow-sm">
+            <div className="card-header bg-light">
+              <div className="d-flex align-items-center">
+                <i className="bi bi-building-gear text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <div>
+                  <h4 className="mb-0 fw-semibold">Editar Empresa</h4>
+                  <small className="text-muted">Modificar datos de la empresa #{id}</small>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
 
-          <div className="col-md-3 mb-3">
-            <label className="form-label">CIF</label>
-            <input
-              type="text"
-              name="cif"
-              className="form-control"
-              value={empresa.cif}
-              onChange={manejarCambio}
-              required
-            />
-          </div>
-        </div>
+      <div className="row justify-content-center">
+        <div className="col-lg-8">
+          <form onSubmit={manejarSubmit}>
+            {/* Card: Datos de la empresa */}
+            <div className="card shadow-sm mb-4">
+              <div className="card-header bg-light">
+                <h5 className="mb-0 fw-semibold">
+                  <i className="bi bi-building me-2 text-primary"></i>
+                  Datos de la Empresa
+                </h5>
+              </div>
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-md-9 mb-3">
+                    <label className="form-label text-muted fw-medium">Nombre *</label>
+                    <input
+                      type="text"
+                      name="nombre"
+                      className="form-control rounded"
+                      placeholder="Nombre de la empresa"
+                      value={empresa.nombre}
+                      onChange={manejarCambio}
+                      required
+                    />
+                  </div>
 
-        <div className="mb-3">
-          <label className="form-label">Dirección</label>
-          <input
-            type="text"
-            name="direccion"
-            className="form-control"
-            value={empresa.direccion || ""}
-            onChange={manejarCambio}
-          />
-        </div>
+                  <div className="col-md-3 mb-3">
+                    <label className="form-label text-muted fw-medium">CIF *</label>
+                    <input
+                      type="text"
+                      name="cif"
+                      className="form-control rounded"
+                      placeholder="CIF"
+                      value={empresa.cif}
+                      onChange={manejarCambio}
+                      required
+                    />
+                  </div>
+                </div>
 
-        <div className="row">
-          <div className="col-md-4 mb-3">
-            <label className="form-label">Ciudad</label>
-            <input
-              type="text"
-              name="ciudad"
-              className="form-control"
-              value={empresa.ciudad || ""}
-              onChange={manejarCambio}
-            />
-          </div>
-          <div className="col-md-4 mb-3">
-            <label className="form-label">País</label>
-            <input
-              type="text"
-              name="pais"
-              className="form-control"
-              value={empresa.pais}
-              onChange={manejarCambio}
-            />
-          </div>
-          <div className="col-md-4 mb-3">
-            <label className="form-label">Código postal</label>
-            <input
-              type="text"
-              name="codigo_postal"
-              className="form-control"
-              value={empresa.codigo_postal || ""}
-              onChange={manejarCambio}
-            />
-          </div>
-        </div>
+                <div className="mb-3">
+                  <label className="form-label text-muted fw-medium">Dirección</label>
+                  <input
+                    type="text"
+                    name="direccion"
+                    className="form-control rounded"
+                    placeholder="Dirección completa"
+                    value={empresa.direccion || ""}
+                    onChange={manejarCambio}
+                  />
+                </div>                <div className="row">
+                  <div className="col-md-4 mb-3">
+                    <label className="form-label text-muted fw-medium">Ciudad</label>
+                    <input
+                      type="text"
+                      name="ciudad"
+                      className="form-control rounded"
+                      placeholder="Ciudad"
+                      value={empresa.ciudad || ""}
+                      onChange={manejarCambio}
+                    />
+                  </div>
+                  <div className="col-md-4 mb-3">
+                    <label className="form-label text-muted fw-medium">País</label>
+                    <input
+                      type="text"
+                      name="pais"
+                      className="form-control rounded"
+                      placeholder="País"
+                      value={empresa.pais}
+                      onChange={manejarCambio}
+                    />
+                  </div>
+                  <div className="col-md-4 mb-3">
+                    <label className="form-label text-muted fw-medium">Código postal</label>
+                    <input
+                      type="text"
+                      name="codigo_postal"
+                      className="form-control rounded"
+                      placeholder="CP"
+                      value={empresa.codigo_postal || ""}
+                      onChange={manejarCambio}
+                    />
+                  </div>
+                </div>                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">Teléfono</label>
+                    <input
+                      type="tel"
+                      name="telefono"
+                      className="form-control rounded"
+                      placeholder="Número de teléfono"
+                      value={empresa.telefono || ""}
+                      onChange={manejarCambio}
+                    />
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">Correo electrónico</label>
+                    <input
+                      type="email"
+                      name="email"
+                      className="form-control rounded"
+                      placeholder="correo@ejemplo.com"
+                      value={empresa.email || ""}
+                      onChange={manejarCambio}
+                    />
+                  </div>
+                </div>
 
-        <div className="row">
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Teléfono</label>
-            <input
-              type="tel"
-              name="telefono"
-              className="form-control"
-              value={empresa.telefono || ""}
-              onChange={manejarCambio}
-            />
-          </div>
-          <div className="col-md-6 mb-3">
-            <label className="form-label">Correo electrónico</label>
-            <input
-              type="email"
-              name="email"
-              className="form-control"
-              value={empresa.email || ""}
-              onChange={manejarCambio}
-            />
-          </div>
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="credito"
+                        id="creditoCheck"
+                        checked={empresa.credito}
+                        onChange={(e) =>
+                          setEmpresa({ ...empresa, credito: e.target.checked })
+                        }
+                      />
+                      <label className="form-check-label fw-medium" htmlFor="creditoCheck">
+                        <i className="bi bi-credit-card me-1 text-success"></i>
+                        Empresa con crédito
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mb-0">
+                  <label className="form-label text-muted fw-medium">Observaciones</label>
+                  <textarea
+                    name="observaciones"
+                    className="form-control rounded"
+                    rows="3"
+                    placeholder="Observaciones adicionales sobre la empresa..."
+                    value={empresa.observaciones || ""}
+                    onChange={manejarCambio}
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            {/* Botones de acción */}
+            <div className="row g-3">
+              <div className="col-md-6">
+                <button type="submit" className="btn btn-success btn-lg w-100 rounded">
+                  <i className="bi bi-check-circle me-2"></i>
+                  Guardar Cambios
+                </button>
+              </div>
+              <div className="col-md-6">
+                <button
+                  type="button"
+                  className="btn btn-outline-secondary btn-lg w-100 rounded"
+                  onClick={() => {
+                    navigate("/empresas/buscar");
+                    toast.info(`Edición de ${empresa.nombre} cancelada`);
+                  }}
+                >
+                  <i className="bi bi-x-circle me-2"></i>
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
-        <div className="col-6 form-check mb-4">
-          <input
-            type="checkbox"
-            className="form-check-input"
-            name="credito"
-            id="creditoCheck"
-            checked={empresa.credito}
-            onChange={(e) =>
-              setEmpresa({ ...empresa, credito: e.target.checked })
-            }
-          />
-          <label className="form-check-label" htmlFor="creditoCheck">
-            Empresa con crédito
-          </label>
-        </div>
-        <div className="mb-4">
-          <label className="form-label">Observaciones</label>
-          <textarea
-            name="observaciones"
-            className="form-control"
-            rows="3"
-            value={empresa.observaciones || ""}
-            onChange={manejarCambio}
-          ></textarea>
-        </div>
-        <div className="row button-row mx-auto">
-          <div className="col-3">
-            <button type="submit" className="btn btn-success">
-              Guardar cambios
-            </button>
-          </div>
-          <div className="col-3">
-            <button
-              type="button"
-              className="btn btn-danger"
-              onClick={() => navigate("/empresas/buscar")}
-            >
-              Cancelar
-            </button>
-          </div>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }

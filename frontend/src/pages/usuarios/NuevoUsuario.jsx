@@ -40,7 +40,7 @@ const NuevoUsuario = () => {
           },
         }
       );
-      toast.success("Usuario registrado correctamente");
+      toast.success(`Usuario ${datos.nombre} registrado correctamente`);
       setDatos({
         nombre: "",
         nombre_usuario: "",
@@ -53,101 +53,133 @@ const NuevoUsuario = () => {
       toast.error(`Error al registrar usuario: ${error.response?.data?.error || error.message}`);
     }
   };
-
   return (
-    <div className="container py-5">
-      <h2 className="text-center mb-4 pt-5">Registrar nuevo usuario</h2>
-
-      <form
-        onSubmit={manejarSubmit}
-        className="mx-auto"
-        style={{ maxWidth: "400px", textAlign: "left" }}
-      >
-        {/* Campo para el nombre completo */}
-        <div className="mb-3">
-          <label className="form-label">Nombre completo</label>
-          <input
-            type="text"
-            name="nombre"
-            className="form-control"
-            value={datos.nombre}
-            onChange={manejarCambio}
-            required
-          />
+    <div className="container-fluid py-5 mt-4">
+      {/* Header */}
+      <div className="row justify-content-center mb-4">
+        <div className="col-lg-8">
+          <div className="card shadow-sm">
+            <div className="card-header bg-light">
+              <div className="d-flex align-items-center">
+                <i className="bi bi-person-plus text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <div>
+                  <h4 className="mb-0 fw-semibold">Registrar Nuevo Usuario</h4>
+                  <small className="text-muted">Crear una nueva cuenta de usuario en el sistema</small>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
 
-        {/* Campo para el nombre de usuario */}
-        <div className="mb-3">
-          <label className="form-label">Nombre de usuario</label>
-          <input
-            type="text"
-            name="nombre_usuario"
-            className="form-control"
-            value={datos.nombre_usuario}
-            onChange={manejarCambio}
-            required
-          />
-        </div>
+      <div className="row justify-content-center">
+        <div className="col-lg-8">
+          <div className="card shadow-sm">
+            <div className="card-header bg-light">
+              <h5 className="mb-0 fw-semibold">
+                <i className="bi bi-person-fill me-2 text-primary"></i>
+                Datos del Usuario
+              </h5>
+            </div>
+            <div className="card-body">
+              <form onSubmit={manejarSubmit}>
+                <div className="row">
+                  {/* Campo para el nombre completo */}
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">Nombre completo *</label>
+                    <input
+                      type="text"
+                      name="nombre"
+                      className="form-control rounded"
+                      placeholder="Nombre completo del usuario"
+                      value={datos.nombre}
+                      onChange={manejarCambio}
+                      required
+                    />
+                  </div>
 
-        {/* Campo para la contraseña (con componente reutilizable) */}
-        <div className="mb-3">
-          <CampoPassword
-            label="Contraseña"
-            name="contraseña"
-            value={datos.contraseña}
-            onChange={manejarCambio}
-          />
-        </div>
+                  {/* Campo para el nombre de usuario */}
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">Nombre de usuario *</label>
+                    <input
+                      type="text"
+                      name="nombre_usuario"
+                      className="form-control rounded"
+                      placeholder="Nombre de usuario para login"
+                      value={datos.nombre_usuario}
+                      onChange={manejarCambio}
+                      required
+                    />
+                  </div>
 
-        {/* Campo para el correo electrónico */}
-        <div className="mb-3">
-          <label className="form-label">Correo electrónico</label>
-          <input
-            type="email"
-            name="email"
-            className="form-control"
-            value={datos.email}
-            onChange={manejarCambio}
-            required
-          />
-        </div>
+                  {/* Campo para la contraseña */}
+                  <div className="col-md-6 mb-3">
+                    <CampoPassword
+                      label="Contraseña *"
+                      name="contraseña"
+                      value={datos.contraseña}
+                      onChange={manejarCambio}
+                    />
+                  </div>
 
-        {/* Selector de rol */}
-        <div className="mb-3">
-          <label className="form-label">Rol</label>
-          <select
-            name="id_rol"
-            className="form-select"
-            value={datos.id_rol}
-            onChange={manejarCambio}
-          >
-            <option value={1}>Administrador</option>
-            <option value={2}>Empleado</option>
-          </select>
-        </div>
+                  {/* Campo para el correo electrónico */}
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">Correo electrónico *</label>
+                    <input
+                      type="email"
+                      name="email"
+                      className="form-control rounded"
+                      placeholder="correo@ejemplo.com"
+                      value={datos.email}
+                      onChange={manejarCambio}
+                      required
+                    />
+                  </div>
 
-        {/* Checkbox para marcar usuario como activo o inactivo */}
-        <div className="form-check mb-4">
-          <input
-            type="checkbox"
-            className="form-check-input"
-            name="activo"
-            checked={datos.activo}
-            onChange={manejarCambio}
-            id="activoCheck"
-          />
-          <label className="form-check-label" htmlFor="activoCheck">
-            Usuario activo
-          </label>
-        </div>
+                  {/* Selector de rol */}
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">Rol del usuario *</label>
+                    <select
+                      name="id_rol"
+                      className="form-select rounded"
+                      value={datos.id_rol}
+                      onChange={manejarCambio}                    >
+                      <option value={1}>Administrador</option>
+                      <option value={2}>Empleado</option>
+                    </select>
+                  </div>
 
-        {/* Botón para registrar el usuario */}
-        <div className="d-grid">
-          <button type="submit" className="btn btn-primary">
-            Registrar usuario
-          </button>
+                  {/* Estado activo */}
+                  <div className="col-md-6 mb-3 d-flex align-items-end">
+                    <div className="form-check">
+                      <input
+                        type="checkbox"
+                        className="form-check-input"
+                        name="activo"
+                        checked={datos.activo}
+                        onChange={manejarCambio}
+                        id="activoCheck"
+                      />
+                      <label className="form-check-label fw-medium" htmlFor="activoCheck">
+                        <i className="bi bi-check-circle me-1 text-success"></i>
+                        Usuario activo
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Botón para registrar el usuario */}
+                <div className="d-grid mt-4">
+                  <button type="submit" className="btn btn-primary btn-lg rounded">
+                    <i className="bi bi-person-plus me-2"></i>
+                    Registrar Usuario
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

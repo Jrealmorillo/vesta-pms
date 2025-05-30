@@ -104,118 +104,224 @@ const VerReserva = () => {
       toast.error(`No se pudo anular la reserva: ${error.response?.data?.error || error.message}`);
     }
   };
-
-  if (!reserva) return <p className="mt-4">Cargando reserva...</p>;
+  if (!reserva) {
+    return (
+      <div className="container py-5 mt-4 text-center">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+        <p className="mt-3 text-muted">Cargando información de la reserva...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="container py-5 mt-4" style={{ maxWidth: "800px" }}>
-      <h2 className="mb-4">Detalle de la reserva #{reserva.id_reserva}</h2>
-      {/* Estado visual de la reserva */}
-      <div className="mb-3">
-        <span className="fw-bold">Estado: </span>
-        <span
-          className={`badge ${
-            reserva.estado === "Anulada"
-              ? "bg-danger"
-              : reserva.estado === "Confirmada"
-              ? "bg-success"
-              : reserva.estado === "Check-in"
-              ? "bg-primary"
-              : "bg-secondary"
-          }`}
-        >
-          {reserva.estado}
-        </span>
-      </div>
+    <div className="container py-5" style={{ maxWidth: "900px" }}>
+      {/* Header con información principal */}
+      <div className="row mb-4">
+        <div className="col-12">
+          <div className="card border-0 shadow-sm">
+            <div className="card-body p-4">
+              <div className="d-flex justify-content-between align-items-center flex-wrap">
+                <div>
+                  <h1 className="h3 mb-2 text-dark">Reserva #{reserva.id_reserva}</h1>
+                  <p className="text-muted mb-0">Información detallada de la reserva</p>
+                </div>
+                <div>
+                  <span
+                    className={`badge fs-6 px-3 py-2 ${
+                      reserva.estado === "Anulada"
+                        ? "bg-danger"
+                        : reserva.estado === "Confirmada"
+                        ? "bg-success"
+                        : reserva.estado === "Check-in"
+                        ? "bg-primary"
+                        : "bg-secondary"
+                    }`}
+                    style={{ borderRadius: '20px' }}
+                  >
+                    {reserva.estado}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>      {/* Información principal de la reserva */}
+      <div className="row mb-4">
+        <div className="col-lg-8">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-header bg-light border-0 py-3">
+              <h5 className="mb-0 fw-semibold text-dark">Datos de la reserva</h5>
+            </div>
+            <div className="card-body p-4">
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <label className="form-label text-muted small mb-1">Huésped principal</label>
+                  <p className="fw-medium mb-3">
+                    {reserva.nombre_huesped} {reserva.primer_apellido_huesped} {reserva.segundo_apellido_huesped}
+                  </p>
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label text-muted small mb-1">Número de habitación</label>
+                  <p className="fw-medium mb-3">{reserva.numero_habitacion || "Sin asignar"}</p>
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label text-muted small mb-1">Fecha de entrada</label>
+                  <p className="fw-medium mb-3">{new Date(reserva.fecha_entrada).toLocaleDateString('es-ES', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}</p>
+                </div>
+                <div className="col-md-6">
+                  <label className="form-label text-muted small mb-1">Fecha de salida</label>
+                  <p className="fw-medium mb-3">{new Date(reserva.fecha_salida).toLocaleDateString('es-ES', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}</p>
+                </div>
+                {reserva.observaciones && (
+                  <div className="col-12">
+                    <label className="form-label text-muted small mb-1">Observaciones</label>
+                    <div className="bg-light p-3 rounded">
+                      <p className="mb-0">{reserva.observaciones}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="col-lg-4">
+          <div className="card border-0 shadow-sm h-100">
+            <div className="card-header bg-light border-0 py-3">
+              <h5 className="mb-0 fw-semibold text-dark">Referencias</h5>
+            </div>
+            <div className="card-body p-4">
+              <div className="mb-3">
+                <label className="form-label text-muted small mb-1">ID Cliente</label>
+                <p className="fw-medium mb-0">{reserva.id_cliente || "No asignado"}</p>
+              </div>
+              <div className="mb-0">
+                <label className="form-label text-muted small mb-1">ID Empresa</label>
+                <p className="fw-medium mb-0">{reserva.id_empresa || "No asignado"}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>      {/* Líneas de reserva */}
+      <div className="row mb-4">
+        <div className="col-12">
+          <div className="card border-0 shadow-sm">
+            <div className="card-header bg-light border-0 py-3">
+              <h5 className="mb-0 fw-semibold text-dark">Líneas de reserva</h5>
+            </div>
+            <div className="card-body p-0">
+              {reserva.lineas && reserva.lineas.length > 0 ? (
+                <div className="table-responsive">
+                  <table className="table table-hover mb-0">
+                    <thead className="table-light">
+                      <tr>
+                        <th className="fw-semibold text-muted">Fecha</th>
+                        <th className="fw-semibold text-muted">Tipo habitación</th>
+                        <th className="fw-semibold text-muted">Régimen</th>
+                        <th className="fw-semibold text-muted text-center">Habitaciones</th>
+                        <th className="fw-semibold text-muted text-center">Ocupación</th>
+                        <th className="fw-semibold text-muted text-end">Precio</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {reserva.lineas.map((linea, index) => (
+                        <tr key={index} className="align-middle">
+                          <td className="fw-medium">{linea.fecha}</td>
+                          <td>{linea.tipo_habitacion}</td>
+                          <td>{linea.regimen}</td>
+                          <td className="text-center">
+                            <span className="badge bg-light text-dark">{linea.cantidad_habitaciones}</span>
+                          </td>
+                          <td className="text-center">
+                            <small className="text-muted">
+                              {linea.cantidad_adultos} ad / {linea.cantidad_ninos} ni
+                            </small>
+                          </td>
+                          <td className="text-end fw-semibold">{linea.precio} €</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="p-4 text-center">
+                  <p className="text-muted mb-0">No hay líneas de reserva asociadas</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>      {/* Acciones de la reserva */}
+      <div className="row">
+        <div className="col-12">
+          <div className="card border-0 shadow-sm">
+            <div className="card-header bg-light border-0 py-3">
+              <h5 className="mb-0 fw-semibold text-dark">Acciones disponibles</h5>
+            </div>
+            <div className="card-body p-4">
+              <div className="d-flex justify-content-center gap-3">
+                  {/* Botón para modificar la reserva */}
+                <button
+                  className="btn btn-primary px-4 py-2"
+                  onClick={() => {
+                    if (reserva.estado === "Anulada") {
+                      toast.warning(
+                        "Esta reserva está anulada y no se puede modificar. Debe recuperarla primero para poder editarla.",
+                        { autoClose: 5000 }
+                      );
+                      return;
+                    }
+                    navigate(`/reservas/editar/${reserva.id_reserva}`);
+                  }}
+                >
+                  Modificar reserva
+                </button>
+                
+                {/* Botón para recuperar reserva anulada */}
+                {reserva.estado === "Anulada" && (
+                  <button 
+                    className="btn btn-warning px-4 py-2" 
+                    onClick={recuperarReserva}
+                  >
+                    Recuperar reserva
+                  </button>
+                )}
 
-      {/* Datos generales de la reserva */}
-      <div className="card mb-4">
-        <div className="card-header bg-secondary text-white">
-          Datos generales
-        </div>
-        <div className="card-body">
-          <p>
-            <strong>Huésped:</strong> {reserva.nombre_huesped}{" "}
-            {reserva.primer_apellido_huesped} {reserva.segundo_apellido_huesped}
-          </p>
-          <p>
-            <strong>Fecha de entrada:</strong> {reserva.fecha_entrada}
-          </p>
-          <p>
-            <strong>Fecha de salida:</strong> {reserva.fecha_salida}
-          </p>
-          <p>
-            <strong>Número de habitación:</strong>{" "}
-            {reserva.numero_habitacion || "-"}
-          </p>
-          <p>
-            <strong>Observaciones:</strong> {reserva.observaciones || "Ninguna"}
-          </p>
-          <p>
-            <strong>ID cliente:</strong> {reserva.id_cliente || "—"}
-          </p>
-          <p>
-            <strong>ID empresa:</strong> {reserva.id_empresa || "—"}
-          </p>
+                {/* Botón para anular reserva confirmada */}
+                {reserva.estado === "Confirmada" && (
+                  <button
+                    className="btn btn-outline-danger px-4 py-2"
+                    onClick={anularReserva}
+                  >
+                    Anular reserva
+                  </button>
+                )}
+                
+                {/* Enlace al historial de la reserva */}
+                <Link
+                  to={`/reservas/${reserva.id_reserva}/historial`}
+                  className="btn btn-outline-secondary px-4 py-2"
+                >
+                  Ver historial
+                </Link>
+                
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* Líneas de reserva asociadas */}
-      <div className="card mb-4">
-        <div className="card-header bg-info text-white">Líneas de reserva</div>
-        <div className="card-body">
-          {reserva.lineas && reserva.lineas.length > 0 ? (
-            <ul className="list-group">
-              {reserva.lineas.map((linea, index) => (
-                <li className="list-group-item" key={index}>
-                  {linea.fecha} – {linea.tipo_habitacion} – {linea.regimen} –{" "}
-                  {linea.cantidad_habitaciones} hab – {linea.cantidad_adultos}{" "}
-                  ad / {linea.cantidad_ninos} ni – {linea.precio} €
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No hay líneas asociadas.</p>
-          )}
-        </div>
-      </div>
-      {/* Botón para recuperar reserva anulada */}
-      {reserva.estado === "Anulada" && (
-        <div className="mb-3">
-          <button className="btn btn-warning btn-lg" onClick={recuperarReserva}>
-            Recuperar reserva
-          </button>
-        </div>
-      )}
-
-      {/* Botón para modificar la reserva */}
-      <div className="mb-3">
-        <button
-          className="btn btn-primary btn-lg"
-          onClick={() => navigate(`/reservas/editar/${reserva.id_reserva}`)}
-        >
-          Modificar reserva
-        </button>
-      </div>
-      {/* Enlace al historial de la reserva */}
-      <Link
-        to={`/reservas/${reserva.id_reserva}/historial`}
-        className="btn btn-outline-secondary btn-sm"
-      >
-        Ver historial
-      </Link>
-
-      {/* Botón para anular reserva confirmada */}
-      {reserva.estado === "Confirmada" && (
-        <div className="my-3">
-          <button
-            className="btn btn-outline-danger btn-lg"
-            onClick={anularReserva}
-          >
-            Anular reserva
-          </button>
-        </div>
-      )}
     </div>
   );
 };
