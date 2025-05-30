@@ -43,10 +43,9 @@ const InformeOcupacion = () => {
           <div className="card border-0 shadow-sm mb-4">
             <div className="card-body">
               <div className="d-flex align-items-center">
-                <i className="bi bi-bar-chart fs-2 text-muted me-3"></i>
+                <i className="bi bi-bar-chart fs-2 text-primary me-3"></i>
                 <div>
                   <h2 className="mb-1">Informe de Ocupación</h2>
-                  <p className="text-muted mb-0">Análisis de ocupación hotelera por período</p>
                 </div>
               </div>
             </div>

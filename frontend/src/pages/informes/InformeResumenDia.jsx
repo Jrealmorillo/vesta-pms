@@ -40,16 +40,10 @@ const InformeResumenDia = () => {
                 <i className="bi bi-calendar-day text-primary me-3"></i>
                 Resumen del Día
               </h2>
-              <p className="text-muted mb-0">
-                Análisis completo de la actividad diaria del hotel
-              </p>
             </div>
             <div className="col-md-6">
               <div className="d-flex align-items-center gap-3">
                 <div className="flex-grow-1">
-                  <label className="form-label text-muted small mb-1">
-                    Fecha de consulta
-                  </label>
                   <input
                     type="date"
                     className="form-control"

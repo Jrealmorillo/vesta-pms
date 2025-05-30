@@ -68,9 +68,6 @@ const FacturacionDiaria = () => {
                 <i className="bi bi-receipt text-primary me-3"></i>
                 Facturación Diaria
               </h2>
-              <p className="text-muted mb-0">
-                Resumen de todas las facturas emitidas en una fecha específica
-              </p>
             </div>
             <div className="col-md-6">
               <div className="d-flex align-items-center gap-3">

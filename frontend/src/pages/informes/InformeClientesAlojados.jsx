@@ -37,9 +37,6 @@ const InformeClientesAlojados = () => {
                 <i className="bi bi-people text-primary me-3"></i>
                 Clientes Alojados
               </h2>
-              <p className="text-muted mb-0">
-                Listado de clientes actualmente hospedados en el hotel
-              </p>
             </div>
             <div className="col-md-6 text-end">
               <button

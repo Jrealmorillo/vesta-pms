@@ -21,40 +21,28 @@ const InformeEstadoHabitaciones = () => {
       }
     } catch (error) {
       toast.error(
-        `Error al obtener el informe: ${error.response?.data?.error || error.message}`
+        `Error al obtener el informe: ${
+          error.response?.data?.error || error.message
+        }`
       );
     }
   };
   return (
     <div className="container-fluid py-5 mt-4">
       <div className="row justify-content-center">
-        <div className="col-12">          {/* Header */}
+        <div className="col-12">
+          {" "}
+          {/* Header */}
           <div className="card border-0 shadow-sm mb-4">
             <div className="card-body">
               <div className="d-flex align-items-center">
-                <i className="bi bi-door-open-fill fs-2 text-muted me-3"></i>
+                <i className="bi bi-door-open-fill text-primary fs-2 me-3"></i>
                 <div>
                   <h2 className="mb-1">Estado de Habitaciones</h2>
-                  <p className="text-muted mb-0">Consulta del estado actual de ocupación</p>
-                </div>
-              </div>
-            </div>
-          </div>          {/* Filtros */}
-          <div className="card border-0 shadow-sm mb-4">
-            <div className="card-body">
-              <div className="row align-items-end">
-                <div className="col-md-6">
-                  <label className="form-label text-muted fw-medium">
-                    <i className="bi bi-search me-2"></i>
-                    Consultar estado actual
-                  </label>
-                  <p className="text-muted small mb-3">
-                    Obtiene el estado de ocupación de todas las habitaciones registradas
-                  </p>
                 </div>
                 <div className="col-md-6 text-end">
-                  <button 
-                    className="btn btn-primary btn-lg px-4" 
+                  <button
+                    className="btn btn-primary btn-lg px-4"
                     onClick={obtenerInforme}
                   >
                     <i className="bi bi-search me-2"></i>
@@ -63,7 +51,9 @@ const InformeEstadoHabitaciones = () => {
                 </div>
               </div>
             </div>
-          </div>          {/* Resultados */}
+          </div>{" "}
+
+          {/* Resultados */}
           {habitaciones.length > 0 ? (
             <div className="card border-0 shadow-sm">
               <div className="card-header bg-light border-bottom">
@@ -74,10 +64,15 @@ const InformeEstadoHabitaciones = () => {
                   </h5>
                   <div className="d-flex gap-2">
                     <span className="badge bg-light text-dark fs-6">
-                      {habitaciones.filter(h => h.estado === 'Libre').length} Libres
+                      {habitaciones.filter((h) => h.estado === "Libre").length}{" "}
+                      Libres
                     </span>
                     <span className="badge bg-primary fs-6">
-                      {habitaciones.filter(h => h.estado === 'Ocupada').length} Ocupadas
+                      {
+                        habitaciones.filter((h) => h.estado === "Ocupada")
+                          .length
+                      }{" "}
+                      Ocupadas
                     </span>
                   </div>
                 </div>
@@ -87,21 +82,11 @@ const InformeEstadoHabitaciones = () => {
                   <table className="table table-hover align-middle mb-0">
                     <thead className="bg-light">
                       <tr>
-                        <th className="px-4 py-3">
-                          Nº Habitación
-                        </th>
-                        <th className="px-4 py-3">
-                          Tipo
-                        </th>
-                        <th className="px-4 py-3">
-                          Capacidad
-                        </th>
-                        <th className="px-4 py-3">
-                          Precio
-                        </th>
-                        <th className="px-4 py-3">
-                          Estado
-                        </th>
+                        <th className="px-4 py-3">Nº Habitación</th>
+                        <th className="px-4 py-3">Tipo</th>
+                        <th className="px-4 py-3">Capacidad</th>
+                        <th className="px-4 py-3">Precio</th>
+                        <th className="px-4 py-3">Estado</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -117,7 +102,8 @@ const InformeEstadoHabitaciones = () => {
                           </td>
                           <td className="px-4 py-3">
                             <small className="text-muted">
-                              {h.capacidad_minima} - {h.capacidad_maxima} personas
+                              {h.capacidad_minima} - {h.capacidad_maxima}{" "}
+                              personas
                             </small>
                           </td>
                           <td className="px-4 py-3">
@@ -126,8 +112,20 @@ const InformeEstadoHabitaciones = () => {
                             </span>
                           </td>
                           <td className="px-4 py-3">
-                            <span className={`badge fs-6 ${h.estado === "Ocupada" ? "bg-danger" : "bg-success"}`}>
-                              <i className={`bi ${h.estado === "Ocupada" ? "bi-person-fill" : "bi-door-open"} me-1`}></i>
+                            <span
+                              className={`badge fs-6 ${
+                                h.estado === "Ocupada"
+                                  ? "bg-danger"
+                                  : "bg-success"
+                              }`}
+                            >
+                              <i
+                                className={`bi ${
+                                  h.estado === "Ocupada"
+                                    ? "bi-person-fill"
+                                    : "bi-door-open"
+                                } me-1`}
+                              ></i>
                               {h.estado}
                             </span>
                           </td>
@@ -137,13 +135,15 @@ const InformeEstadoHabitaciones = () => {
                   </table>
                 </div>
               </div>
-            </div>          ) : (
+            </div>
+          ) : (
             <div className="card border-0 shadow-sm">
               <div className="card-body text-center py-5">
                 <i className="bi bi-inbox fs-1 text-muted mb-3"></i>
                 <h5 className="text-muted">No hay datos para mostrar</h5>
                 <p className="text-muted mb-0">
-                  Haz clic en "Consultar" para obtener el estado de las habitaciones
+                  Haz clic en "Consultar" para obtener el estado de las
+                  habitaciones
                 </p>
               </div>
             </div>

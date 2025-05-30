@@ -40,9 +40,6 @@ const InformeSalidas = () => {
                 <i className="bi bi-calendar-x text-primary me-3"></i>
                 Salidas por Fecha
               </h2>
-              <p className="text-muted mb-0">
-                Consulta las reservas con salida programada para una fecha específica
-              </p>
             </div>
             <div className="col-md-6">
               <div className="d-flex align-items-center gap-3">

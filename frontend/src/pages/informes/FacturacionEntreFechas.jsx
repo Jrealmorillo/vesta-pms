@@ -92,9 +92,6 @@ const FacturacionEntreFechas = () => {
                 <i className="bi bi-calendar-range text-primary me-3"></i>
                 Facturación Entre Fechas
               </h2>
-              <p className="text-muted mb-0">
-                Análisis de facturación agrupado por fecha y forma de pago
-              </p>
             </div>
             <div className="col-md-6">
               <div className="row g-3">

@@ -38,7 +38,8 @@ const InformeCargos = () => {
     return cargos
       .reduce((sum, c) => sum + parseFloat(c.total || 0), 0)
       .toFixed(2);
-  };  return (
+  };
+  return (
     <div className="container-fluid py-5 mt-4">
       {/* Header Principal */}
       <div className="card border-0 shadow-sm mb-4">
@@ -49,9 +50,6 @@ const InformeCargos = () => {
                 <i className="bi bi-receipt text-primary me-3"></i>
                 Informe de Cargos
               </h2>
-              <p className="text-muted mb-0">
-                Consulta los cargos realizados por fecha específica
-              </p>
             </div>
             <div className="col-md-6">
               <div className="d-flex align-items-center gap-3">
@@ -98,7 +96,9 @@ const InformeCargos = () => {
             <div className="card border-0 bg-light h-100">
               <div className="card-body text-center">
                 <i className="bi bi-door-open text-info fs-2 mb-2"></i>
-                <h5 className="mb-1">{new Set(cargos.map((c) => c.numero_habitacion)).size}</h5>
+                <h5 className="mb-1">
+                  {new Set(cargos.map((c) => c.numero_habitacion)).size}
+                </h5>
                 <small className="text-muted">Habitaciones</small>
               </div>
             </div>
@@ -107,7 +107,9 @@ const InformeCargos = () => {
             <div className="card border-0 bg-light h-100">
               <div className="card-body text-center">
                 <i className="bi bi-bookmark text-warning fs-2 mb-2"></i>
-                <h5 className="mb-1">{new Set(cargos.map((c) => c.id_reserva)).size}</h5>
+                <h5 className="mb-1">
+                  {new Set(cargos.map((c) => c.id_reserva)).size}
+                </h5>
                 <small className="text-muted">Reservas</small>
               </div>
             </div>
@@ -131,7 +133,9 @@ const InformeCargos = () => {
             <h5 className="mb-0 d-flex align-items-center">
               <i className="bi bi-table text-muted me-2"></i>
               Detalle de Cargos
-              <span className="badge bg-primary ms-2">{cargos.length} registros</span>
+              <span className="badge bg-primary ms-2">
+                {cargos.length} registros
+              </span>
             </h5>
           </div>
           <div className="card-body p-0">
@@ -157,10 +161,14 @@ const InformeCargos = () => {
                         </span>
                       </td>
                       <td className="py-3">
-                        <span className="badge bg-light text-dark">#{c.id_reserva}</span>
+                        <span className="badge bg-light text-dark">
+                          #{c.id_reserva}
+                        </span>
                       </td>
                       <td className="py-3">
-                        <span className="fw-bold text-primary">{c.numero_habitacion}</span>
+                        <span className="fw-bold text-primary">
+                          {c.numero_habitacion}
+                        </span>
                       </td>
                       <td className="py-3">{c.concepto}</td>
                       <td className="py-3 text-center">
@@ -187,10 +195,14 @@ const InformeCargos = () => {
       {cargos.length === 0 && consultaRealizada && (
         <div className="card border-0 shadow-sm">
           <div className="card-body text-center py-5">
-            <i className="bi bi-inbox text-muted mb-3" style={{ fontSize: '3rem' }}></i>
+            <i
+              className="bi bi-inbox text-muted mb-3"
+              style={{ fontSize: "3rem" }}
+            ></i>
             <h5 className="text-muted mb-2">No hay cargos registrados</h5>
             <p className="text-muted mb-0">
-              No se encontraron cargos para la fecha seleccionada: <strong>{new Date(fecha).toLocaleDateString("es-ES")}</strong>
+              No se encontraron cargos para la fecha seleccionada:{" "}
+              <strong>{new Date(fecha).toLocaleDateString("es-ES")}</strong>
             </p>
           </div>
         </div>

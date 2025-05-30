@@ -71,7 +71,6 @@ const InformeConsumoFormaPago = () => {
                 <i className="bi bi-pie-chart fs-2 text-muted me-3"></i>
                 <div>
                   <h2 className="mb-1">Consumo por Forma de Pago</h2>
-                  <p className="text-muted mb-0">Análisis de ingresos agrupados por método de pago</p>
                 </div>
               </div>
             </div>
@@ -104,9 +103,6 @@ const InformeConsumoFormaPago = () => {
                   />
                 </div>
                 <div className="col-md-4">
-                  <p className="text-muted small mb-3">
-                    Selecciona un rango de fechas para consultar el consumo por forma de pago
-                  </p>
                 </div>
                 <div className="col-md-2 text-end">
                   <button 

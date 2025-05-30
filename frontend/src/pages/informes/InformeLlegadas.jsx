@@ -37,10 +37,9 @@ const InformeLlegadas = () => {
           <div className="card border-0 shadow-sm mb-4">
             <div className="card-body">
               <div className="d-flex align-items-center">
-                <i className="bi bi-calendar-check fs-2 text-muted me-3"></i>
+                <i className="bi bi-calendar-check fs-2 text-primary me-3"></i>
                 <div>
                   <h2 className="mb-1">Llegadas por Fecha</h2>
-                  <p className="text-muted mb-0">Listado de reservas con entrada programada</p>
                 </div>
               </div>
             </div>
@@ -62,9 +61,6 @@ const InformeLlegadas = () => {
                   />
                 </div>
                 <div className="col-md-6">
-                  <p className="text-muted small mb-3">
-                    Selecciona una fecha para consultar las reservas con entrada programada
-                  </p>
                 </div>
                 <div className="col-md-3 text-end">
                   <button 
