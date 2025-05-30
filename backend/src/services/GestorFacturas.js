@@ -156,6 +156,39 @@ class GestorFacturas {
         }
     }
 
+    // Recalcula el total de una factura sumando todos sus detalles activos
+    async recalcularTotalFactura(id_factura) {
+        try {
+            const factura = await Factura.findByPk(id_factura);
+            if (!factura) throw new Error("Factura no encontrada");
+
+            // Obtener todos los detalles activos de la factura
+            const detalles = await DetalleFactura.findAll({
+                where: {
+                    id_factura,
+                    activa: true
+                }
+            });
+
+            // Calcular el nuevo total
+            const nuevoTotal = detalles
+                .reduce((suma, detalle) => suma + parseFloat(detalle.total || 0), 0)
+                .toFixed(2);
+
+            // Actualizar el total de la factura
+            await factura.update({ total: nuevoTotal });
+
+            return { 
+                mensaje: "Total de factura recalculado correctamente",
+                total_anterior: factura.total,
+                total_nuevo: nuevoTotal,
+                factura 
+            };
+        } catch (error) {
+            throw new Error("Error al recalcular total de factura: " + error.message);
+        }
+    }
+
     // Anula una factura y todos sus detalles asociados, marcando la factura como anulada.
     async anularFactura(id_factura) {
         try {

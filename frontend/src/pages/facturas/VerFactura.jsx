@@ -7,13 +7,13 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 const VerFactura = () => {
   const { id } = useParams(); // Obtiene el ID de la factura desde la URL
   const [factura, setFactura] = useState(null); // Estado de la factura
   const token = localStorage.getItem("token");
   const navigate = useNavigate(); // Hook para navegar entre rutas
-
   // Carga la factura al montar el componente
   useEffect(() => {
     const cargarFactura = async () => {
@@ -26,9 +26,45 @@ const VerFactura = () => {
       } catch (error) {
         toast.error("Error al cargar la factura");
       }
-    };
-    cargarFactura();
-  }, [id]);
+    };    cargarFactura();
+  }, [id, token]);
+
+  // Función para anular una factura
+  const anularFactura = async () => {
+    const confirmacion = await Swal.fire({
+      title: "¿Anular factura?",
+      text: "Esta acción no se puede deshacer. La factura y todos sus cargos serán anulados.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, anular",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#dc3545",
+      cancelButtonColor: "#6c757d",
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    try {
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/facturas/${id}/anular`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      toast.success("Factura anulada correctamente");
+      
+      // Recargar los datos de la factura
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/facturas/${id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setFactura(data);
+    } catch (error) {
+      toast.error(
+        `Error al anular la factura: ${error.response?.data?.error || error.message}`
+      );
+    }
+  };
 
   // Muestra mensaje mientras se carga la factura
   if (!factura)
@@ -45,27 +81,48 @@ const VerFactura = () => {
           {/* Header */}
           <div className="card shadow-sm mb-4">
             <div className="card-header bg-light">
-              <div className="d-flex align-items-center justify-content-between">
-                <div className="d-flex align-items-center">
-                  <i className="bi bi-receipt text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+              <div className="d-flex align-items-center justify-content-between">                <div className="d-flex align-items-center">
+                  <i className="bi bi-receipt text-muted me-3" style={{ fontSize: "1.5rem" }}></i>
                   <div>
                     <h4 className="mb-0 fw-semibold">Factura #{factura.id_factura}</h4>
                     <small className="text-muted">Detalle completo de la factura</small>
                   </div>
                 </div>
-                <button
-                  className="btn btn-outline-secondary btn-sm"
-                  onClick={() => {
-                    if (window.history.length > 1) {
-                      navigate(-1);
-                    } else {
-                      navigate("/facturas/buscar");
-                    }
-                  }}
-                >
-                  <i className="bi bi-arrow-left me-1"></i>
-                  Volver
-                </button>
+                <div className="d-flex gap-2">
+                  {factura.estado !== "Anulada" && (
+                    <>
+                      <button
+                        className="btn btn-outline-primary btn-sm"
+                        onClick={() => navigate(`/facturas/editar/${id}`)}
+                        title="Editar factura"
+                      >
+                        <i className="bi bi-pencil me-1"></i>
+                        Editar
+                      </button>
+                      <button
+                        className="btn btn-outline-danger btn-sm"
+                        onClick={anularFactura}
+                        title="Anular factura"
+                      >
+                        <i className="bi bi-x-circle me-1"></i>
+                        Anular
+                      </button>
+                    </>
+                  )}
+                  <button
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={() => {
+                      if (window.history.length > 1) {
+                        navigate(-1);
+                      } else {
+                        navigate("/facturas/buscar");
+                      }
+                    }}
+                  >
+                    <i className="bi bi-arrow-left me-1"></i>
+                    Volver
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -74,7 +131,7 @@ const VerFactura = () => {
           <div className="card shadow-sm mb-4">
             <div className="card-header bg-light">
               <h5 className="mb-0 fw-semibold">
-                <i className="bi bi-file-earmark-text me-2 text-primary"></i>
+                <i className="bi bi-file-earmark-text me-2 text-muted"></i>
                 Información de la Factura
               </h5>
             </div>
@@ -126,7 +183,7 @@ const VerFactura = () => {
             <div className="card shadow-sm mb-4">
               <div className="card-header bg-light">
                 <h5 className="mb-0 fw-semibold">
-                  <i className="bi bi-person me-2 text-primary"></i>
+                  <i className="bi bi-person me-2 text-muted"></i>
                   Datos del Cliente
                 </h5>
               </div>
@@ -164,7 +221,7 @@ const VerFactura = () => {
           <div className="card shadow-sm">
             <div className="card-header bg-light">
               <h5 className="mb-0 fw-semibold">
-                <i className="bi bi-list-ul me-2 text-primary"></i>
+                <i className="bi bi-list-ul me-2 text-muted"></i>
                 Detalle de Cargos
                 <span className="badge bg-primary ms-2">{factura.detalles?.length || 0}</span>
               </h5>

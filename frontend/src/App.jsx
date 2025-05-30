@@ -35,6 +35,7 @@ import VerHistorialReserva from "./pages/reservas/VerHistorialReserva";
 import BuscarFacturas from "./pages/facturas/BuscarFacturas";
 import CheckOut from "./pages/facturas/CheckOut";
 import VerFactura from "./pages/facturas/VerFactura";
+import EditarFactura from "./pages/facturas/EditarFactura";
 import InformeOcupacion from "./pages/informes/InformeOcupacion";
 import FacturacionDiaria from "./pages/informes/FacturacionDiaria";
 import FacturacionEntreFechas from "./pages/informes/FacturacionEntreFechas";
@@ -148,6 +149,7 @@ const App = () => {
           <Route path="/facturas/buscar" element={<BuscarFacturas />} />
           <Route path="/facturas/check-out" element={<CheckOut />} />
           <Route path="/facturas/:id" element={<VerFactura />} />
+          <Route path="/facturas/editar/:id" element={<EditarFactura />} />
           {/* Informes */}
           <Route path="/informes/ocupacion" element={<InformeOcupacion />} />
           <Route
