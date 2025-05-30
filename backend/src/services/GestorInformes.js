@@ -1,11 +1,15 @@
 const { LineaReserva, Habitacion, Reserva, Factura, Cliente } = require("../models");
 const { Op } = require("sequelize");
 
-class GestorInformes {
-    async obtenerOcupacionEntreFechas(desde, hasta) {
+class GestorInformes {    async obtenerOcupacionEntreFechas(desde, hasta) {
         try {
             // Contar todas las habitaciones que NO están bloqueadas
             const totalHabitacionesDisponibles = await Habitacion.count();
+
+            // Calcular días del período
+            const fechaDesde = new Date(desde);
+            const fechaHasta = new Date(hasta);
+            const diasPeriodo = Math.ceil((fechaHasta - fechaDesde) / (1000 * 60 * 60 * 24)) + 1;
 
             // Buscar líneas activas dentro del rango con reservas válidas
             const lineas = await LineaReserva.findAll({
@@ -25,12 +29,13 @@ class GestorInformes {
                 ],
             });
 
-            const resumen = {};
+            const resumenPorFecha = {};
+            let totalNochesOcupadas = 0;
 
             for (const linea of lineas) {
                 const fecha = linea.fecha;
-                if (!resumen[fecha]) {
-                    resumen[fecha] = {
+                if (!resumenPorFecha[fecha]) {
+                    resumenPorFecha[fecha] = {
                         habitaciones_ocupadas: 0,
                         adultos: 0,
                         ninos: 0,
@@ -43,20 +48,29 @@ class GestorInformes {
                 const adultos = parseInt(linea.cantidad_adultos || 0);
                 const ninos = parseInt(linea.cantidad_ninos || 0);
 
-                resumen[fecha].habitaciones_ocupadas += habitaciones;
-                resumen[fecha].adultos += adultos;
-                resumen[fecha].ninos += ninos;
-                resumen[fecha].huespedes += adultos + ninos;
+                resumenPorFecha[fecha].habitaciones_ocupadas += habitaciones;
+                resumenPorFecha[fecha].adultos += adultos;
+                resumenPorFecha[fecha].ninos += ninos;
+                resumenPorFecha[fecha].huespedes += adultos + ninos;
+
+                totalNochesOcupadas += habitaciones;
             }
 
-            for (const fecha in resumen) {
-                const total = resumen[fecha].habitaciones_disponibles || 1;
-                resumen[fecha].porcentaje_ocupacion = Math.round(
-                    (resumen[fecha].habitaciones_ocupadas / total) * 100
-                );
-            }
+            // Calcular porcentaje de ocupación promedio
+            const nochesDisponibles = totalHabitacionesDisponibles * diasPeriodo;
+            const porcentajeOcupacion = nochesDisponibles > 0 
+                ? Math.round((totalNochesOcupadas / nochesDisponibles) * 100) 
+                : 0;
 
-            return resumen;
+            // Devolver resumen consolidado que espera el frontend
+            return {
+                total_habitaciones: totalHabitacionesDisponibles,
+                dias_periodo: diasPeriodo,
+                noches_ocupadas: totalNochesOcupadas,
+                noches_disponibles: nochesDisponibles,
+                porcentaje_ocupacion: porcentajeOcupacion,
+                detalle_por_fecha: resumenPorFecha // Mantener detalle por si se necesita
+            };
         } catch (error) {
             throw new Error("Error al calcular ocupación: " + error.message);
         }

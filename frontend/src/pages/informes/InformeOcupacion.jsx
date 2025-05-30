@@ -23,9 +23,8 @@ const InformeOcupacion = () => {
           params: { desde, hasta },
           headers: { Authorization: `Bearer ${token}` }
         }
-      );
-      setResumen(data);
-      if (!data.total_habitaciones) {
+      );      setResumen(data);
+      if (!data || data.total_habitaciones === 0) {
         toast.info("No hay datos de ocupación en ese periodo.");
       }
     } catch (error) {
@@ -43,7 +42,7 @@ const InformeOcupacion = () => {
           <div className="card border-0 shadow-sm mb-4">
             <div className="card-body">
               <div className="d-flex align-items-center">
-                <i className="bi bi-bar-chart fs-2 text-primary me-3"></i>
+                <i className="bi bi-bar-chart fs-2 text-muted me-3"></i>
                 <div>
                   <h2 className="mb-1">Informe de Ocupación</h2>
                 </div>
