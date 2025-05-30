@@ -35,14 +35,14 @@ const informeRoutes = require("./routes/informeRoutes");
 
 
 // Definir rutas de la API
-app.use("/api/usuarios", usuarioRoutes);
-app.use("/api/clientes", clienteRoutes);
-app.use("/api/empresas", empresaRoutes);
-app.use("/api/habitaciones", habitacionRoutes);
-app.use("/api/reservas", reservaRoutes);
-app.use("/api/facturas", facturaRoutes);
-app.use("/api/detalles-factura", detalleFacturaRoutes);
-app.use("/api/informes", informeRoutes);
+app.use("/usuarios", usuarioRoutes);
+app.use("/clientes", clienteRoutes);
+app.use("/empresas", empresaRoutes);
+app.use("/habitaciones", habitacionRoutes);
+app.use("/reservas", reservaRoutes);
+app.use("/facturas", facturaRoutes);
+app.use("/detalles-factura", detalleFacturaRoutes);
+app.use("/informes", informeRoutes);
 
 
 // Iniciar el servidor y escuchar en el puerto definido
