@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 
 const NuevaReserva = () => {
   const { token } = useContext(AuthContext);
-
   // Estado para los datos de la reserva principal
   const [reserva, setReserva] = useState({
     nombre_huesped: "",
@@ -36,19 +35,10 @@ const NuevaReserva = () => {
     cantidad_adultos: 1,
     cantidad_ninos: 0,
   });
-
   // Maneja cambios en los campos de la reserva principal
   const manejarCambioReserva = (e) => {
     const { name, value } = e.target;
-
-    // Convertir a null si está vacío, y a número si es id_cliente o id_empresa
-    let nuevoValor = value === "" ? null : value;
-
-    if (["id_cliente", "id_empresa"].includes(name)) {
-      nuevoValor = value === "" ? null : parseInt(value, 10);
-    }
-
-    setReserva({ ...reserva, [name]: nuevoValor });
+    setReserva(prev => ({ ...prev, [name]: value }));
   };
 
   // Maneja cambios en los campos de la línea de reserva en edición
@@ -124,7 +114,9 @@ const NuevaReserva = () => {
     if (salida <= entrada) {
       toast.error("La fecha de salida debe ser posterior a la de entrada");
       return;
-    }    try {
+    }
+
+    try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/reservas/registro`,
         {
@@ -135,10 +127,7 @@ const NuevaReserva = () => {
         {
           headers: { Authorization: `Bearer ${token}` },
         }
-      );
-
-     
-      setReserva({
+      );      setReserva({
         nombre_huesped: "",
         primer_apellido_huesped: "",
         segundo_apellido_huesped: "",
@@ -166,6 +155,7 @@ const NuevaReserva = () => {
         .toISOString()
         .split("T")[0]
     : "";
+
   return (
     <div className="container-fluid py-5 mt-4" style={{ maxWidth: "1200px" }}>
       <div className="row justify-content-center mb-4">
@@ -194,31 +184,7 @@ const NuevaReserva = () => {
               </h5>
             </div>
             <div className="card-body">
-              {/* Campos para los datos del cliente y empresa */}
-              <div className="row mb-3">
-                <div className="col-md-6">
-                  <label className="form-label text-muted fw-medium">Cliente (ID)</label>
-                  <input
-                    type="number"
-                    name="id_cliente"
-                    className="form-control rounded"
-                    placeholder="ID del cliente"
-                    value={reserva.id_cliente || ""}
-                    onChange={manejarCambioReserva}
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label text-muted fw-medium">Empresa (ID)</label>
-                  <input
-                    type="number"
-                    name="id_empresa"
-                    className="form-control rounded"
-                    placeholder="ID de la empresa"
-                    value={reserva.id_empresa || ""}
-                    onChange={manejarCambioReserva}
-                  />
-                </div>
-              </div>
+
               
               {/* Campos para los datos del huésped */}
               <div className="row mb-3">
