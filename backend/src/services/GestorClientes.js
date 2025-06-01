@@ -73,7 +73,6 @@ class GestorClientes {
       );
     }
   }
-
   // Buscar clientes por primer apellido (permite búsquedas parciales)
   async buscarClientesPorApellido(filtro) {
     try {
@@ -88,6 +87,24 @@ class GestorClientes {
     } catch (error) {
       throw new Error(
         "Error al buscar clientes por apellido: " + error.message
+      );
+    }
+  }
+
+  // Buscar clientes por nombre (permite búsquedas parciales)
+  async buscarClientesPorNombre(filtro) {
+    try {
+      // Busca todos los clientes cuyo nombre empieza por el filtro
+      const clientes = await Cliente.findAll({
+        where: { nombre: { [Op.startsWith]: filtro } },
+      });
+      // Si no se encuentra ninguno, lanza un error
+      if (clientes.length === 0)
+        throw new Error("No se encontraron clientes con ese nombre");
+      return clientes;
+    } catch (error) {
+      throw new Error(
+        "Error al buscar clientes por nombre: " + error.message
       );
     }
   }

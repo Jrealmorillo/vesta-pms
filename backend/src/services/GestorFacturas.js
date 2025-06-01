@@ -2,7 +2,7 @@
 // Este servicio centraliza la lógica de negocio para la gestión de facturas en el sistema Vesta PMS.
 // Permite crear, consultar, modificar, buscar y anular facturas, asegurando la integridad de los datos y la correcta asociación con reservas, clientes y detalles de factura.
 
-const { Factura, DetalleFactura, Reserva, Cliente } = require("../models");
+const { Factura, DetalleFactura, Reserva, Cliente, Empresa } = require("../models");
 const GestorDetalleFactura = require("./GestorDetalleFactura");
 const { Op } = require("sequelize");
 
@@ -14,6 +14,11 @@ class GestorFacturas {
             // Validar campos básicos obligatorios
             if (!forma_pago || !id_usuario || !detalles || detalles.length === 0) {
                 throw new Error("Faltan datos necesarios para emitir la factura");
+            }
+
+            // Validación de exclusión mutua: una factura no puede tener tanto cliente como empresa
+            if (id_cliente && id_empresa) {
+                throw new Error("Una factura no puede estar asociada tanto a un cliente como a una empresa al mismo tiempo");
             }
 
             // Buscar detalles activos y no facturados
@@ -70,9 +75,7 @@ class GestorFacturas {
         } catch (error) {
             throw new Error("Error al crear la factura: " + error.message);
         }
-    }
-
-    // Obtiene una factura por su ID, incluyendo detalles y cliente asociado.
+    }    // Obtiene una factura por su ID, incluyendo detalles y cliente asociado.
     async obtenerFacturaPorId(id_factura) {
         try {
             const factura = await Factura.findByPk(id_factura, {
@@ -86,6 +89,16 @@ class GestorFacturas {
                         model: Cliente,
                         as: "cliente",
                         required: false // Incluye cliente si existe
+                    },
+                    {
+                        model: Empresa,
+                        as: "empresa", 
+                        required: false // Incluye empresa si existe
+                    },
+                    {
+                        model: Reserva,
+                        as: "reserva",
+                        required: false // Incluye reserva para obtener datos del huésped
                     }
                 ]
             });
@@ -96,13 +109,26 @@ class GestorFacturas {
         } catch (error) {
             throw new Error("Error al obtener factura: " + error.message);
         }
-    }
-
-    // Modifica los datos generales de una factura (no los cargos/detalles).
+    }    // Modifica los datos generales de una factura (no los cargos/detalles).
     async modificarFactura(id_factura, nuevosDatos) {
         try {
             const factura = await Factura.findByPk(id_factura); // Buscar factura por ID
             if (!factura) throw new Error("Factura no encontrada"); // Validación de existencia
+
+            // Validación de exclusión mutua: una factura no puede tener tanto cliente como empresa
+            if (nuevosDatos.id_cliente && nuevosDatos.id_empresa) {
+                throw new Error("Una factura no puede estar asociada tanto a un cliente como a una empresa al mismo tiempo");
+            }
+
+            // Si se está asignando un cliente, limpiar la empresa
+            if (nuevosDatos.id_cliente !== undefined && nuevosDatos.id_cliente !== null) {
+                nuevosDatos.id_empresa = null;
+            }
+
+            // Si se está asignando una empresa, limpiar el cliente
+            if (nuevosDatos.id_empresa !== undefined && nuevosDatos.id_empresa !== null) {
+                nuevosDatos.id_cliente = null;
+            }
 
             await factura.update(nuevosDatos); // Actualizar campos permitidos
             return factura;

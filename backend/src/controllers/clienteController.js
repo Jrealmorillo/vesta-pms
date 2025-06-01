@@ -66,3 +66,16 @@ exports.buscarClientesPorApellido = async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 };
+
+exports.buscarClientesPorNombre = async (req, res) => {
+  try {
+    // Busca clientes por nombre usando el filtro recibido por parámetro
+    const clientes = await GestorClientes.buscarClientesPorNombre(
+      req.params.filtro
+    );
+    res.json(clientes);
+  } catch (error) {
+    // Devuelve un error si no se encuentran clientes
+    res.status(404).json({ error: error.message });
+  }
+};

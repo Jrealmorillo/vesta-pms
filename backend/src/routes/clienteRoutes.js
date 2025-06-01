@@ -16,10 +16,11 @@ router.post("/registro", clienteController.registrarCliente);
 // Ruta para modificar un cliente existente
 router.put("/:id", clienteController.modificarCliente);
 
-// Rutas para buscar clientes por ID, número de documento o apellido
+// Rutas para buscar clientes por ID, número de documento, apellido o nombre
 router.get("/id/:filtro", clienteController.buscarClientesPorId);
 router.get("/documento/:filtro", clienteController.buscarClientesPorNumeroDocumento);
 router.get("/apellido/:filtro", clienteController.buscarClientesPorApellido);
+router.get("/nombre/:filtro", clienteController.buscarClientesPorNombre);
 
 // Exporta el router para su uso en la aplicación principal
 module.exports = router;

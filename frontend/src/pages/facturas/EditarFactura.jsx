@@ -11,19 +11,164 @@ import Swal from "sweetalert2";
 
 const EditarFactura = () => {
   const { id } = useParams();
-  const navigate = useNavigate();  const [factura, setFactura] = useState(null);
+  const navigate = useNavigate();
+  const [factura, setFactura] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     forma_pago: "",
-    estado: ""
+    estado: "",
+    id_empresa: null,
+    id_cliente: null,
   });
   const [nuevoCargo, setNuevoCargo] = useState({
     concepto: "",
     cantidad: 1,
-    precio_unitario: 0
+    precio_unitario: 0,
   });
   const [mostrarFormularioCargo, setMostrarFormularioCargo] = useState(false);
+
+  // Estados para gestión de empresa
+  const [empresaSeleccionada, setEmpresaSeleccionada] = useState(null);
+  const [buscarEmpresa, setBuscarEmpresa] = useState("");
+  const [empresasSugeridas, setEmpresasSugeridas] = useState([]);
+  const [mostrarSugerenciasEmpresa, setMostrarSugerenciasEmpresa] =
+    useState(false);
+
+  // Estados para gestión de cliente
+  const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
+  const [buscarCliente, setBuscarCliente] = useState("");
+  const [clientesSugeridos, setClientesSugeridos] = useState([]);
+  const [mostrarSugerenciasCliente, setMostrarSugerenciasCliente] =
+    useState(false);
   const token = localStorage.getItem("token");
+
+  // Funciones para gestión de empresas
+  const buscarEmpresas = async (termino) => {
+    if (!termino || termino.length < 2) {
+      setEmpresasSugeridas([]);
+      setMostrarSugerenciasEmpresa(false);
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/empresas/nombre/${termino}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setEmpresasSugeridas(response.data || []);
+      setMostrarSugerenciasEmpresa(true);
+    } catch (error) {
+      console.error("Error buscando empresas:", error);
+      setEmpresasSugeridas([]);
+      setMostrarSugerenciasEmpresa(true);
+    }
+  };
+
+  const manejarCambioEmpresa = (e) => {
+    const valor = e.target.value;
+    setBuscarEmpresa(valor);
+
+    if (!valor) {
+      setEmpresaSeleccionada(null);
+      setFormData((prev) => ({ ...prev, id_empresa: null }));
+      setMostrarSugerenciasEmpresa(false);
+      setEmpresasSugeridas([]);
+      return;
+    }
+  };
+
+  const ejecutarBusquedaEmpresa = () => {
+    if (buscarEmpresa && buscarEmpresa.length >= 2) {
+      buscarEmpresas(buscarEmpresa);
+    } else if (buscarEmpresa.length < 2) {
+      toast.warning("Introduce al menos 2 caracteres para buscar");
+    }
+  };
+  const seleccionarEmpresa = (empresa) => {
+    setEmpresaSeleccionada(empresa);
+    setBuscarEmpresa(empresa.nombre);
+    setFormData((prev) => ({ ...prev, id_empresa: empresa.id_empresa }));
+    setMostrarSugerenciasEmpresa(false);
+
+    // EXCLUSIÓN MUTUA: Limpiar cliente cuando se selecciona empresa
+    if (clienteSeleccionado) {
+      setClienteSeleccionado(null);
+      setBuscarCliente("");
+      setFormData((prev) => ({ ...prev, id_cliente: null }));
+      setMostrarSugerenciasCliente(false);
+      toast.info(
+        "Cliente deseleccionado: una factura no puede tener empresa y cliente al mismo tiempo"
+      );
+    }
+  };
+
+  // Funciones para gestión de clientes
+  const buscarClientes = async (termino) => {
+    if (!termino || termino.length < 2) {
+      setClientesSugeridos([]);
+      setMostrarSugerenciasCliente(false);
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/clientes/nombre/${termino}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setClientesSugeridos(response.data || []);
+      setMostrarSugerenciasCliente(true);
+    } catch (error) {
+      console.error("Error buscando clientes:", error);
+      setClientesSugeridos([]);
+      setMostrarSugerenciasCliente(true);
+    }
+  };
+
+  const manejarCambioCliente = (e) => {
+    const valor = e.target.value;
+    setBuscarCliente(valor);
+
+    if (!valor) {
+      setClienteSeleccionado(null);
+      setFormData((prev) => ({ ...prev, id_cliente: null }));
+      setMostrarSugerenciasCliente(false);
+      setClientesSugeridos([]);
+      return;
+    }
+  };
+
+  const ejecutarBusquedaCliente = () => {
+    if (buscarCliente && buscarCliente.length >= 2) {
+      buscarClientes(buscarCliente);
+    } else if (buscarCliente.length < 2) {
+      toast.warning("Introduce al menos 2 caracteres para buscar");
+    }
+  };
+  const seleccionarCliente = (cliente) => {
+    setClienteSeleccionado(cliente);
+    setBuscarCliente(
+      `${cliente.nombre} ${cliente.primer_apellido || ""} ${
+        cliente.segundo_apellido || ""
+      }`
+    );
+    setFormData((prev) => ({ ...prev, id_cliente: cliente.id_cliente }));
+    setMostrarSugerenciasCliente(false);
+
+    // EXCLUSIÓN MUTUA: Limpiar empresa cuando se selecciona cliente
+    if (empresaSeleccionada) {
+      setEmpresaSeleccionada(null);
+      setBuscarEmpresa("");
+      setFormData((prev) => ({ ...prev, id_empresa: null }));
+      setMostrarSugerenciasEmpresa(false);
+      toast.info(
+        "Empresa deseleccionada: una factura no puede tener empresa y cliente al mismo tiempo"
+      );
+    }
+  };
 
   // Cargar datos de la factura
   useEffect(() => {
@@ -36,8 +181,26 @@ const EditarFactura = () => {
         setFactura(data);
         setFormData({
           forma_pago: data.forma_pago,
-          estado: data.estado
+          estado: data.estado,
+          id_empresa: data.id_empresa,
+          id_cliente: data.id_cliente,
         });
+        // Inicializar empresa seleccionada si existe
+        if (data.empresa) {
+          setEmpresaSeleccionada(data.empresa);
+          setBuscarEmpresa(data.empresa.nombre);
+        }
+
+        // Inicializar cliente seleccionado si existe
+        if (data.cliente) {
+          setClienteSeleccionado(data.cliente);
+          setBuscarCliente(
+            `${data.cliente.nombre} ${data.cliente.primer_apellido || ""} ${
+              data.cliente.segundo_apellido || ""
+            }`
+          );
+        }
+
         setLoading(false);
       } catch (error) {
         toast.error(`${error.response?.data?.error || error.message}`);
@@ -50,15 +213,15 @@ const EditarFactura = () => {
   // Manejar cambios en el formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
   // Guardar cambios
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.forma_pago || !formData.estado) {
       toast.error("Todos los campos son obligatorios");
       return;
@@ -70,12 +233,14 @@ const EditarFactura = () => {
         formData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       toast.success("Factura modificada correctamente");
       navigate(`/facturas/${id}`);
     } catch (error) {
       toast.error(
-        `Error al modificar la factura: ${error.response?.data?.error || error.message}`
+        `Error al modificar la factura: ${
+          error.response?.data?.error || error.message
+        }`
       );
     }
   };
@@ -83,21 +248,31 @@ const EditarFactura = () => {
   // Manejar cambios en el formulario de nuevo cargo
   const handleCargoChange = (e) => {
     const { name, value } = e.target;
-    setNuevoCargo(prev => ({
+    setNuevoCargo((prev) => ({
       ...prev,
-      [name]: name === 'cantidad' ? parseInt(value, 10) || 1 : 
-              name === 'precio_unitario' ? parseFloat(value) || 0 : value
+      [name]:
+        name === "cantidad"
+          ? parseInt(value, 10) || 1
+          : name === "precio_unitario"
+          ? parseFloat(value) || 0
+          : value,
     }));
   };
   // Agregar nuevo cargo
   const agregarCargo = async () => {
-    if (!nuevoCargo.concepto || nuevoCargo.cantidad <= 0 || nuevoCargo.precio_unitario < 0) {
+    if (
+      !nuevoCargo.concepto ||
+      nuevoCargo.cantidad <= 0 ||
+      nuevoCargo.precio_unitario < 0
+    ) {
       toast.error("Datos del cargo inválidos");
       return;
     }
 
     try {
-      const total = (nuevoCargo.cantidad * nuevoCargo.precio_unitario).toFixed(2);
+      const total = (nuevoCargo.cantidad * nuevoCargo.precio_unitario).toFixed(
+        2
+      );
 
       await axios.post(
         `${import.meta.env.VITE_API_URL}/detalles-factura`,
@@ -108,7 +283,7 @@ const EditarFactura = () => {
           cantidad: nuevoCargo.cantidad,
           precio_unitario: nuevoCargo.precio_unitario,
           total,
-          fecha: new Date().toISOString().split('T')[0] // Fecha actual
+          fecha: new Date().toISOString().split("T")[0], // Fecha actual
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -116,7 +291,7 @@ const EditarFactura = () => {
       toast.success("Cargo añadido correctamente");
       setNuevoCargo({ concepto: "", cantidad: 1, precio_unitario: 0 });
       setMostrarFormularioCargo(false);
-      
+
       // Recargar la factura para ver el nuevo cargo
       const { data } = await axios.get(
         `${import.meta.env.VITE_API_URL}/facturas/${id}`,
@@ -125,7 +300,9 @@ const EditarFactura = () => {
       setFactura(data);
     } catch (error) {
       toast.error(
-        `Error al agregar cargo: ${error.response?.data?.error || error.message}`
+        `Error al agregar cargo: ${
+          error.response?.data?.error || error.message
+        }`
       );
     }
   };
@@ -151,9 +328,9 @@ const EditarFactura = () => {
         { estado: "Pendiente" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       toast.success("Factura recuperada correctamente");
-      
+
       // Recargar los datos de la factura
       const { data } = await axios.get(
         `${import.meta.env.VITE_API_URL}/facturas/${id}`,
@@ -162,11 +339,15 @@ const EditarFactura = () => {
       setFactura(data);
       setFormData({
         forma_pago: data.forma_pago,
-        estado: data.estado
+        estado: data.estado,
+        id_empresa: data.id_empresa,
+        id_cliente: data.id_cliente,
       });
     } catch (error) {
       toast.error(
-        `Error al recuperar la factura: ${error.response?.data?.error || error.message}`
+        `Error al recuperar la factura: ${
+          error.response?.data?.error || error.message
+        }`
       );
     }
   };
@@ -178,7 +359,10 @@ const EditarFactura = () => {
           <div className="col-lg-8">
             <div className="card border-0 shadow-sm">
               <div className="card-body text-center py-5">
-                <i className="bi bi-clock text-muted mb-3" style={{ fontSize: '3rem' }}></i>
+                <i
+                  className="bi bi-clock text-muted mb-3"
+                  style={{ fontSize: "3rem" }}
+                ></i>
                 <h5 className="text-muted">Cargando datos de la factura...</h5>
               </div>
             </div>
@@ -197,12 +381,15 @@ const EditarFactura = () => {
             <div className="card-body">
               <div className="d-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center">
-                  <i className="bi bi-pencil-square fs-2 text-muted me-3"></i>
+                  <i className="bi bi-pencil-square fs-2 text-primary me-3"></i>
                   <div>
-                    <h2 className="mb-1">Editar Factura #{factura.id_factura}</h2>
-                    <small className="text-muted">Modificar forma de pago y estado</small>
+                    {" "}
+                    <h2 className="mb-1">
+                      Editar Factura #{factura.id_factura}
+                    </h2>
                   </div>
-                </div>                <button
+                </div>{" "}
+                <button
                   type="button"
                   className="btn btn-outline-secondary"
                   onClick={() => navigate(`/facturas/${id}`)}
@@ -222,8 +409,7 @@ const EditarFactura = () => {
                 )}
               </div>
             </div>
-          </div>
-
+          </div>{" "}
           {/* Información actual de la factura */}
           <div className="card border-0 shadow-sm mb-4">
             <div className="card-header bg-light border-bottom">
@@ -236,33 +422,109 @@ const EditarFactura = () => {
               <div className="row">
                 <div className="col-md-6">
                   <p className="mb-2">
-                    <span className="text-muted fw-medium">Fecha de emisión:</span><br />
-                    <strong>{new Date(factura.fecha_emision).toLocaleDateString("es-ES")}</strong>
-                  </p>
-                  <p className="mb-2">
-                    <span className="text-muted fw-medium">Huésped:</span><br />
+                    <span className="text-muted fw-medium">
+                      Fecha de emisión:
+                    </span>
+                    <br />
                     <strong>
-                      {factura.nombre_huesped ||
-                        (factura.cliente
-                          ? `${factura.cliente.nombre} ${factura.cliente.primer_apellido ?? ""} ${factura.cliente.segundo_apellido ?? ""}`
-                          : "—")}
+                      {new Date(factura.fecha_emision).toLocaleDateString(
+                        "es-ES"
+                      )}
+                    </strong>
+                  </p>{" "}
+                  <p className="mb-2">
+                    <span className="text-muted fw-medium">Huésped:</span>
+                    <br />{" "}
+                    <strong>
+                      {factura.reserva
+                        ? `${factura.reserva.nombre_huesped} ${
+                            factura.reserva.primer_apellido_huesped || ""
+                          } ${factura.reserva.segundo_apellido_huesped || ""}`
+                        : factura.nombre_huesped || "—"}
                     </strong>
                   </p>
+                  {/* Mostrar empresa actual si existe */}
+                  {factura.empresa && (
+                    <p className="mb-2">
+                      <span className="text-muted fw-medium">
+                        Empresa actual:
+                      </span>
+                      <br />
+                      <strong className="text-primary">
+                        {factura.empresa.nombre}
+                      </strong>
+                      {factura.empresa.cif && (
+                        <>
+                          <br />
+                          <small className="text-muted">
+                            CIF: {factura.empresa.cif}
+                          </small>
+                        </>
+                      )}
+                    </p>
+                  )}
+                  {/* Mostrar cliente actual si existe */}
+                  {factura.cliente && (
+                    <p className="mb-2">
+                      <span className="text-muted fw-medium">
+                        Cliente actual:
+                      </span>
+                      <br />
+                      <strong className="text-info">
+                        {factura.cliente.nombre}{" "}
+                        {factura.cliente.primer_apellido || ""}{" "}
+                        {factura.cliente.segundo_apellido || ""}
+                      </strong>
+                      {factura.cliente.numero_documento && (
+                        <>
+                          <br />
+                          <small className="text-muted">
+                            Doc: {factura.cliente.numero_documento}
+                          </small>
+                        </>
+                      )}
+                    </p>
+                  )}
                 </div>
                 <div className="col-md-6">
                   <p className="mb-2">
-                    <span className="text-muted fw-medium">Reserva:</span><br />
+                    <span className="text-muted fw-medium">Reserva:</span>
+                    <br />
                     <strong>#{factura.id_reserva}</strong>
                   </p>
                   <p className="mb-2">
-                    <span className="text-muted fw-medium">Total:</span><br />
-                    <strong className="text-primary fs-5">{parseFloat(factura.total).toFixed(2)}€</strong>
+                    <span className="text-muted fw-medium">Estado actual:</span>
+                    <br />
+                    <span
+                      className={`badge ${
+                        factura.estado === "Pagada"
+                          ? "bg-success"
+                          : factura.estado === "Anulada"
+                          ? "bg-danger"
+                          : "bg-warning"
+                      }`}
+                    >
+                      {factura.estado}
+                    </span>
+                  </p>
+                  <p className="mb-2">
+                    <span className="text-muted fw-medium">
+                      Forma de pago actual:
+                    </span>
+                    <br />
+                    <strong>{factura.forma_pago}</strong>
+                  </p>
+                  <p className="mb-2">
+                    <span className="text-muted fw-medium">Total:</span>
+                    <br />
+                    <strong className="text-primary fs-5">
+                      {parseFloat(factura.total).toFixed(2)}€
+                    </strong>
                   </p>
                 </div>
               </div>
             </div>
           </div>
-
           {/* Formulario de edición */}
           <form onSubmit={handleSubmit}>
             <div className="card border-0 shadow-sm">
@@ -307,13 +569,214 @@ const EditarFactura = () => {
                       <option value="">Seleccionar estado</option>
                       <option value="Pendiente">Pendiente</option>
                       <option value="Pagada">Pagada</option>
-                      <option value="Anulada">Anulada</option>
+                      <option value="Anulada">Anulada</option>{" "}
                     </select>
-                  </div>                </div>
+                  </div>
+                  {/* Nota informativa sobre exclusión mutua */}{" "}
+                  <div className="col-12">
+                    <div className="alert alert-info d-flex align-items-center">
+                      <i className="bi bi-info-circle-fill me-2"></i>
+                      <div>
+                        <strong>Nota:</strong> Una factura solo puede asociarse
+                        a una empresa <strong>o</strong> cliente. Seleccionar
+                        uno deselecciona el otro automáticamente.
+                      </div>
+                    </div>
+                  </div>
+                  {/* Sección de Empresa */}
+                  <div className="col-12">
+                    <label className="form-label text-muted fw-medium">
+                      Empresa
+                    </label>
+                    <div className="position-relative">
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control form-control-lg"
+                          placeholder="Buscar empresa..."
+                          value={buscarEmpresa}
+                          onChange={manejarCambioEmpresa}
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-outline-primary"
+                          onClick={ejecutarBusquedaEmpresa}
+                        >
+                          <i className="bi bi-search"></i>
+                        </button>
+                        {empresaSeleccionada && (
+                          <button
+                            type="button"
+                            className="btn btn-outline-danger"
+                            onClick={() => {
+                              setEmpresaSeleccionada(null);
+                              setBuscarEmpresa("");
+                              setFormData((prev) => ({
+                                ...prev,
+                                id_empresa: null,
+                              }));
+                              setMostrarSugerenciasEmpresa(false);
+                            }}
+                          >
+                            <i className="bi bi-x"></i>
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Dropdown de sugerencias de empresas */}
+                      {mostrarSugerenciasEmpresa && (
+                        <div
+                          className="dropdown-menu show w-100 mt-1 shadow-sm"
+                          style={{ maxHeight: "200px", overflowY: "auto" }}
+                        >
+                          {empresasSugeridas.length > 0 ? (
+                            empresasSugeridas.map((empresa) => (
+                              <button
+                                key={empresa.id_empresa}
+                                type="button"
+                                className="dropdown-item d-flex justify-content-between align-items-center"
+                                onClick={() => seleccionarEmpresa(empresa)}
+                              >
+                                <div>
+                                  <div className="fw-medium">
+                                    {empresa.nombre}
+                                  </div>
+                                  {empresa.cif && (
+                                    <small className="text-muted">
+                                      CIF: {empresa.cif}
+                                    </small>
+                                  )}
+                                </div>
+                              </button>
+                            ))
+                          ) : (
+                            <div className="dropdown-item-text text-muted">
+                              <i className="bi bi-info-circle me-2"></i>
+                              No se encontraron empresas
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Empresa seleccionada */}
+                      {empresaSeleccionada && (
+                        <div className="mt-2 p-2 bg-light rounded border">
+                          <small className="text-muted">
+                            Empresa seleccionada:
+                          </small>
+                          <div className="fw-medium">
+                            {empresaSeleccionada.nombre}
+                          </div>
+                          {empresaSeleccionada.cif && (
+                            <small className="text-muted">
+                              CIF: {empresaSeleccionada.cif}
+                            </small>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {/* Sección de Cliente */}
+                  <div className="col-12">
+                    <label className="form-label text-muted fw-medium">
+                      Cliente
+                    </label>
+                    <div className="position-relative">
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control form-control-lg"
+                          placeholder="Buscar cliente..."
+                          value={buscarCliente}
+                          onChange={manejarCambioCliente}
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-outline-primary"
+                          onClick={ejecutarBusquedaCliente}
+                        >
+                          <i className="bi bi-search"></i>
+                        </button>
+                        {clienteSeleccionado && (
+                          <button
+                            type="button"
+                            className="btn btn-outline-danger"
+                            onClick={() => {
+                              setClienteSeleccionado(null);
+                              setBuscarCliente("");
+                              setFormData((prev) => ({
+                                ...prev,
+                                id_cliente: null,
+                              }));
+                              setMostrarSugerenciasCliente(false);
+                            }}
+                          >
+                            <i className="bi bi-x"></i>
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Dropdown de sugerencias de clientes */}
+                      {mostrarSugerenciasCliente && (
+                        <div
+                          className="dropdown-menu show w-100 mt-1 shadow-sm"
+                          style={{ maxHeight: "200px", overflowY: "auto" }}
+                        >
+                          {clientesSugeridos.length > 0 ? (
+                            clientesSugeridos.map((cliente) => (
+                              <button
+                                key={cliente.id_cliente}
+                                type="button"
+                                className="dropdown-item d-flex justify-content-between align-items-center"
+                                onClick={() => seleccionarCliente(cliente)}
+                              >
+                                <div>
+                                  <div className="fw-medium">
+                                    {cliente.nombre}{" "}
+                                    {cliente.primer_apellido || ""}{" "}
+                                    {cliente.segundo_apellido || ""}
+                                  </div>
+                                  {cliente.email && (
+                                    <small className="text-muted">
+                                      {cliente.email}
+                                    </small>
+                                  )}
+                                </div>
+                              </button>
+                            ))
+                          ) : (
+                            <div className="dropdown-item-text text-muted">
+                              <i className="bi bi-info-circle me-2"></i>
+                              No se encontraron clientes
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Cliente seleccionado */}
+                      {clienteSeleccionado && (
+                        <div className="mt-2 p-2 bg-light rounded border">
+                          <small className="text-muted">
+                            Cliente seleccionado:
+                          </small>
+                          <div className="fw-medium">
+                            {clienteSeleccionado.nombre}{" "}
+                            {clienteSeleccionado.primer_apellido || ""}{" "}
+                            {clienteSeleccionado.segundo_apellido || ""}
+                          </div>
+                          {clienteSeleccionado.numero_documento && (
+                            <small className="text-muted">
+                              {clienteSeleccionado.numero_documento}
+                            </small>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>{" "}
+                </div>
               </div>
             </div>
           </form>
-
           {/* Tabla de cargos existentes */}
           {factura.detalles && factura.detalles.length > 0 && (
             <div className="card border-0 shadow-sm mb-4">
@@ -321,7 +784,9 @@ const EditarFactura = () => {
                 <h5 className="mb-0">
                   <i className="bi bi-list-ul text-muted me-2"></i>
                   Cargos Actuales
-                  <span className="badge bg-primary ms-2">{factura.detalles.length}</span>
+                  <span className="badge bg-primary ms-2">
+                    {factura.detalles.length}
+                  </span>
                 </h5>
               </div>
               <div className="card-body p-0">
@@ -339,10 +804,16 @@ const EditarFactura = () => {
                     <tbody>
                       {factura.detalles.map((detalle, index) => (
                         <tr key={index}>
-                          <td>{new Date(detalle.fecha).toLocaleDateString("es-ES")}</td>
+                          <td>
+                            {new Date(detalle.fecha).toLocaleDateString(
+                              "es-ES"
+                            )}
+                          </td>
                           <td>{detalle.concepto}</td>
                           <td className="text-center">{detalle.cantidad}</td>
-                          <td className="text-end">{parseFloat(detalle.precio_unitario).toFixed(2)}€</td>
+                          <td className="text-end">
+                            {parseFloat(detalle.precio_unitario).toFixed(2)}€
+                          </td>
                           <td className="text-end fw-medium">
                             {parseFloat(detalle.total).toFixed(2)}€
                           </td>
@@ -358,13 +829,13 @@ const EditarFactura = () => {
                   <span className="fw-bold text-primary fs-5">
                     {factura.detalles
                       .reduce((sum, d) => sum + parseFloat(d.total || 0), 0)
-                      .toFixed(2)}€
+                      .toFixed(2)}
+                    €
                   </span>
                 </div>
               </div>
             </div>
           )}
-
           {/* Sección para agregar nuevo cargo */}
           {factura.estado !== "Anulada" && (
             <div className="card border-0 shadow-sm mb-4">
@@ -376,15 +847,23 @@ const EditarFactura = () => {
                 <button
                   type="button"
                   className="btn btn-outline-primary btn-sm"
-                  onClick={() => setMostrarFormularioCargo(!mostrarFormularioCargo)}
+                  onClick={() =>
+                    setMostrarFormularioCargo(!mostrarFormularioCargo)
+                  }
                 >
-                  <i className={`bi ${mostrarFormularioCargo ? 'bi-dash' : 'bi-plus'} me-1`}></i>
-                  {mostrarFormularioCargo ? 'Cancelar' : 'Nuevo Cargo'}
+                  <i
+                    className={`bi ${
+                      mostrarFormularioCargo ? "bi-dash" : "bi-plus"
+                    } me-1`}
+                  ></i>
+                  {mostrarFormularioCargo ? "Cancelar" : "Nuevo Cargo"}
                 </button>
               </div>
               {mostrarFormularioCargo && (
                 <div className="card-body">
-                  <div className="row g-3">                    <div className="col-md-5">
+                  <div className="row g-3">
+                    {" "}
+                    <div className="col-md-5">
                       <label className="form-label text-muted fw-medium">
                         Concepto <span className="text-danger">*</span>
                       </label>
@@ -436,9 +915,14 @@ const EditarFactura = () => {
                       />
                     </div>
                     <div className="col-md-2">
-                      <label className="form-label text-muted fw-medium">Total</label>
+                      <label className="form-label text-muted fw-medium">
+                        Total
+                      </label>
                       <div className="form-control bg-light text-end">
-                        {(nuevoCargo.cantidad * nuevoCargo.precio_unitario).toFixed(2)}€
+                        {(
+                          nuevoCargo.cantidad * nuevoCargo.precio_unitario
+                        ).toFixed(2)}
+                        €
                       </div>
                     </div>
                   </div>
@@ -448,17 +932,21 @@ const EditarFactura = () => {
                         type="button"
                         className="btn btn-success"
                         onClick={agregarCargo}
-                        disabled={!nuevoCargo.concepto || nuevoCargo.cantidad <= 0 || nuevoCargo.precio_unitario < 0}
+                        disabled={
+                          !nuevoCargo.concepto ||
+                          nuevoCargo.cantidad <= 0 ||
+                          nuevoCargo.precio_unitario < 0
+                        }
                       >
                         <i className="bi bi-plus me-2"></i>
                         Agregar Cargo
                       </button>
                     </div>
                   </div>
-                </div>              )}
+                </div>
+              )}
             </div>
           )}
-
           {/* Botones de acción al final */}
           <div className="card border-0 shadow-sm">
             <div className="card-footer bg-light border-top">
