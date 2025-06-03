@@ -375,7 +375,7 @@ const EditarFactura = () => {
   return (
     <div className="container-fluid py-5 mt-4">
       <div className="row justify-content-center">
-        <div className="col-lg-8">
+        <div className="col-lg-10">
           {/* Header */}
           <div className="card border-0 shadow-sm mb-4">
             <div className="card-body">
@@ -518,7 +518,11 @@ const EditarFactura = () => {
                     <span className="text-muted fw-medium">Total:</span>
                     <br />
                     <strong className="text-primary fs-5">
-                      {parseFloat(factura.total).toFixed(2)}€
+                                          {factura.detalles
+                      .reduce((sum, d) => sum + parseFloat(d.total || 0), 0)
+                      .toFixed(2)}
+                    €
+                      {/* {parseFloat(factura.total).toFixed(2)}€ */}
                     </strong>
                   </p>
                 </div>
@@ -533,6 +537,205 @@ const EditarFactura = () => {
                   <i className="bi bi-gear text-muted me-2"></i>
                   Datos Modificables
                 </h5>
+              </div>
+              {/* Nota informativa sobre exclusión mutua */}{" "}
+              <div className="col-12 mt-2">
+                <div className="alert alert-info d-flex align-items-center">
+                  <i className="bi bi-info-circle-fill me-2"></i>
+                  <div>
+                    <strong>Nota:</strong> Una factura solo puede asociarse a
+                    una empresa <strong>o</strong> cliente. Seleccionar uno
+                    deselecciona el otro automáticamente.
+                  </div>
+                </div>
+              </div>
+              <div className="d-flex justify-content-between">
+              {/* Sección de Empresa */}
+              <div className="col-md-5">
+                <label className="form-label text-muted fw-medium">
+                  Empresa
+                </label>
+                <div className="position-relative">
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control form-control-lg"
+                      placeholder="Buscar empresa..."
+                      value={buscarEmpresa}
+                      onChange={manejarCambioEmpresa}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary"
+                      onClick={ejecutarBusquedaEmpresa}
+                    >
+                      <i className="bi bi-search"></i>
+                    </button>
+                    {empresaSeleccionada && (
+                      <button
+                        type="button"
+                        className="btn btn-outline-danger"
+                        onClick={() => {
+                          setEmpresaSeleccionada(null);
+                          setBuscarEmpresa("");
+                          setFormData((prev) => ({
+                            ...prev,
+                            id_empresa: null,
+                          }));
+                          setMostrarSugerenciasEmpresa(false);
+                        }}
+                      >
+                        <i className="bi bi-x"></i>
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Dropdown de sugerencias de empresas */}
+                  {mostrarSugerenciasEmpresa && (
+                    <div
+                      className="dropdown-menu show w-100 mt-1 shadow-sm"
+                      style={{ maxHeight: "200px", overflowY: "auto" }}
+                    >
+                      {empresasSugeridas.length > 0 ? (
+                        empresasSugeridas.map((empresa) => (
+                          <button
+                            key={empresa.id_empresa}
+                            type="button"
+                            className="dropdown-item d-flex justify-content-between align-items-center"
+                            onClick={() => seleccionarEmpresa(empresa)}
+                          >
+                            <div>
+                              <div className="fw-medium">{empresa.nombre}</div>
+                              {empresa.cif && (
+                                <small className="text-muted">
+                                  CIF: {empresa.cif}
+                                </small>
+                              )}
+                            </div>
+                          </button>
+                        ))
+                      ) : (
+                        <div className="dropdown-item-text text-muted">
+                          <i className="bi bi-info-circle me-2"></i>
+                          No se encontraron empresas
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Empresa seleccionada */}
+                  {empresaSeleccionada && (
+                    <div className="mt-2 p-2 bg-light rounded border">
+                      <small className="text-muted">
+                        Empresa seleccionada:
+                      </small>
+                      <div className="fw-medium">
+                        {empresaSeleccionada.nombre}
+                      </div>
+                      {empresaSeleccionada.cif && (
+                        <small className="text-muted">
+                          CIF: {empresaSeleccionada.cif}
+                        </small>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {/* Sección de Cliente */}
+              <div className="col-md-5">
+                <label className="form-label text-muted fw-medium">
+                  Cliente
+                </label>
+                <div className="position-relative">
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      className="form-control form-control-lg"
+                      placeholder="Buscar cliente..."
+                      value={buscarCliente}
+                      onChange={manejarCambioCliente}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary"
+                      onClick={ejecutarBusquedaCliente}
+                    >
+                      <i className="bi bi-search"></i>
+                    </button>
+                    {clienteSeleccionado && (
+                      <button
+                        type="button"
+                        className="btn btn-outline-danger"
+                        onClick={() => {
+                          setClienteSeleccionado(null);
+                          setBuscarCliente("");
+                          setFormData((prev) => ({
+                            ...prev,
+                            id_cliente: null,
+                          }));
+                          setMostrarSugerenciasCliente(false);
+                        }}
+                      >
+                        <i className="bi bi-x"></i>
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Dropdown de sugerencias de clientes */}
+                  {mostrarSugerenciasCliente && (
+                    <div
+                      className="dropdown-menu show w-100 mt-1 shadow-sm"
+                      style={{ maxHeight: "200px", overflowY: "auto" }}
+                    >
+                      {clientesSugeridos.length > 0 ? (
+                        clientesSugeridos.map((cliente) => (
+                          <button
+                            key={cliente.id_cliente}
+                            type="button"
+                            className="dropdown-item d-flex justify-content-between align-items-center"
+                            onClick={() => seleccionarCliente(cliente)}
+                          >
+                            <div>
+                              <div className="fw-medium">
+                                {cliente.nombre} {cliente.primer_apellido || ""}{" "}
+                                {cliente.segundo_apellido || ""}
+                              </div>
+                              {cliente.email && (
+                                <small className="text-muted">
+                                  {cliente.email}
+                                </small>
+                              )}
+                            </div>
+                          </button>
+                        ))
+                      ) : (
+                        <div className="dropdown-item-text text-muted">
+                          <i className="bi bi-info-circle me-2"></i>
+                          No se encontraron clientes
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {/* Cliente seleccionado */}
+                  {clienteSeleccionado && (
+                    <div className="mt-2 p-2 bg-light rounded border">
+                      <small className="text-muted">
+                        Cliente seleccionado:
+                      </small>
+                      <div className="fw-medium">
+                        {clienteSeleccionado.nombre}{" "}
+                        {clienteSeleccionado.primer_apellido || ""}{" "}
+                        {clienteSeleccionado.segundo_apellido || ""}
+                      </div>
+                      {clienteSeleccionado.numero_documento && (
+                        <small className="text-muted">
+                          {clienteSeleccionado.numero_documento}
+                        </small>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>{" "}
               </div>
               <div className="card-body">
                 <div className="row g-4">
@@ -572,207 +775,7 @@ const EditarFactura = () => {
                       <option value="Anulada">Anulada</option>{" "}
                     </select>
                   </div>
-                  {/* Nota informativa sobre exclusión mutua */}{" "}
-                  <div className="col-12">
-                    <div className="alert alert-info d-flex align-items-center">
-                      <i className="bi bi-info-circle-fill me-2"></i>
-                      <div>
-                        <strong>Nota:</strong> Una factura solo puede asociarse
-                        a una empresa <strong>o</strong> cliente. Seleccionar
-                        uno deselecciona el otro automáticamente.
-                      </div>
-                    </div>
-                  </div>
-                  {/* Sección de Empresa */}
-                  <div className="col-12">
-                    <label className="form-label text-muted fw-medium">
-                      Empresa
-                    </label>
-                    <div className="position-relative">
-                      <div className="input-group">
-                        <input
-                          type="text"
-                          className="form-control form-control-lg"
-                          placeholder="Buscar empresa..."
-                          value={buscarEmpresa}
-                          onChange={manejarCambioEmpresa}
-                        />
-                        <button
-                          type="button"
-                          className="btn btn-outline-primary"
-                          onClick={ejecutarBusquedaEmpresa}
-                        >
-                          <i className="bi bi-search"></i>
-                        </button>
-                        {empresaSeleccionada && (
-                          <button
-                            type="button"
-                            className="btn btn-outline-danger"
-                            onClick={() => {
-                              setEmpresaSeleccionada(null);
-                              setBuscarEmpresa("");
-                              setFormData((prev) => ({
-                                ...prev,
-                                id_empresa: null,
-                              }));
-                              setMostrarSugerenciasEmpresa(false);
-                            }}
-                          >
-                            <i className="bi bi-x"></i>
-                          </button>
-                        )}
-                      </div>
 
-                      {/* Dropdown de sugerencias de empresas */}
-                      {mostrarSugerenciasEmpresa && (
-                        <div
-                          className="dropdown-menu show w-100 mt-1 shadow-sm"
-                          style={{ maxHeight: "200px", overflowY: "auto" }}
-                        >
-                          {empresasSugeridas.length > 0 ? (
-                            empresasSugeridas.map((empresa) => (
-                              <button
-                                key={empresa.id_empresa}
-                                type="button"
-                                className="dropdown-item d-flex justify-content-between align-items-center"
-                                onClick={() => seleccionarEmpresa(empresa)}
-                              >
-                                <div>
-                                  <div className="fw-medium">
-                                    {empresa.nombre}
-                                  </div>
-                                  {empresa.cif && (
-                                    <small className="text-muted">
-                                      CIF: {empresa.cif}
-                                    </small>
-                                  )}
-                                </div>
-                              </button>
-                            ))
-                          ) : (
-                            <div className="dropdown-item-text text-muted">
-                              <i className="bi bi-info-circle me-2"></i>
-                              No se encontraron empresas
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Empresa seleccionada */}
-                      {empresaSeleccionada && (
-                        <div className="mt-2 p-2 bg-light rounded border">
-                          <small className="text-muted">
-                            Empresa seleccionada:
-                          </small>
-                          <div className="fw-medium">
-                            {empresaSeleccionada.nombre}
-                          </div>
-                          {empresaSeleccionada.cif && (
-                            <small className="text-muted">
-                              CIF: {empresaSeleccionada.cif}
-                            </small>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  {/* Sección de Cliente */}
-                  <div className="col-12">
-                    <label className="form-label text-muted fw-medium">
-                      Cliente
-                    </label>
-                    <div className="position-relative">
-                      <div className="input-group">
-                        <input
-                          type="text"
-                          className="form-control form-control-lg"
-                          placeholder="Buscar cliente..."
-                          value={buscarCliente}
-                          onChange={manejarCambioCliente}
-                        />
-                        <button
-                          type="button"
-                          className="btn btn-outline-primary"
-                          onClick={ejecutarBusquedaCliente}
-                        >
-                          <i className="bi bi-search"></i>
-                        </button>
-                        {clienteSeleccionado && (
-                          <button
-                            type="button"
-                            className="btn btn-outline-danger"
-                            onClick={() => {
-                              setClienteSeleccionado(null);
-                              setBuscarCliente("");
-                              setFormData((prev) => ({
-                                ...prev,
-                                id_cliente: null,
-                              }));
-                              setMostrarSugerenciasCliente(false);
-                            }}
-                          >
-                            <i className="bi bi-x"></i>
-                          </button>
-                        )}
-                      </div>
-
-                      {/* Dropdown de sugerencias de clientes */}
-                      {mostrarSugerenciasCliente && (
-                        <div
-                          className="dropdown-menu show w-100 mt-1 shadow-sm"
-                          style={{ maxHeight: "200px", overflowY: "auto" }}
-                        >
-                          {clientesSugeridos.length > 0 ? (
-                            clientesSugeridos.map((cliente) => (
-                              <button
-                                key={cliente.id_cliente}
-                                type="button"
-                                className="dropdown-item d-flex justify-content-between align-items-center"
-                                onClick={() => seleccionarCliente(cliente)}
-                              >
-                                <div>
-                                  <div className="fw-medium">
-                                    {cliente.nombre}{" "}
-                                    {cliente.primer_apellido || ""}{" "}
-                                    {cliente.segundo_apellido || ""}
-                                  </div>
-                                  {cliente.email && (
-                                    <small className="text-muted">
-                                      {cliente.email}
-                                    </small>
-                                  )}
-                                </div>
-                              </button>
-                            ))
-                          ) : (
-                            <div className="dropdown-item-text text-muted">
-                              <i className="bi bi-info-circle me-2"></i>
-                              No se encontraron clientes
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Cliente seleccionado */}
-                      {clienteSeleccionado && (
-                        <div className="mt-2 p-2 bg-light rounded border">
-                          <small className="text-muted">
-                            Cliente seleccionado:
-                          </small>
-                          <div className="fw-medium">
-                            {clienteSeleccionado.nombre}{" "}
-                            {clienteSeleccionado.primer_apellido || ""}{" "}
-                            {clienteSeleccionado.segundo_apellido || ""}
-                          </div>
-                          {clienteSeleccionado.numero_documento && (
-                            <small className="text-muted">
-                              {clienteSeleccionado.numero_documento}
-                            </small>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>{" "}
                 </div>
               </div>
             </div>

@@ -297,7 +297,7 @@ const VerFactura = () => {
                     <span className="text-muted fw-medium">Total factura:</span>
                     <br />
                     <strong className="text-primary fs-5">
-                      {parseFloat(factura.total || 0).toFixed(2)}€
+                      {total}€
                     </strong>
                   </p>
                 </div>
