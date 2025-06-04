@@ -264,22 +264,21 @@ const EditarCliente = () => {
                 </h5>
               </div>
               <div className="card-body">
-                <div className="mb-3">
-                  <label className="form-label text-muted fw-medium">
-                    Dirección
-                  </label>
-                  <input
-                    type="text"
-                    name="direccion"
-                    className="form-control rounded"
-                    placeholder="Dirección completa"
-                    value={cliente.direccion || ""}
-                    onChange={manejarCambio}
-                  />
-                </div>
-
-                <div className="row">
-                  <div className="col-md-4 mb-3">
+<div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">
+                      Dirección
+                    </label>
+                    <input
+                      type="text"
+                      name="direccion"
+                      className="form-control rounded"
+                      placeholder="Dirección completa"
+                      value={cliente.direccion}
+                      onChange={manejarCambio}
+                    />
+                  </div>
+                  <div className="col-md-3 mb-3">
                     <label className="form-label text-muted fw-medium">
                       Ciudad
                     </label>
@@ -288,13 +287,13 @@ const EditarCliente = () => {
                       name="ciudad"
                       className="form-control rounded"
                       placeholder="Ciudad de residencia"
-                      value={cliente.ciudad || ""}
+                      value={cliente.ciudad}
                       onChange={manejarCambio}
                     />
                   </div>
-                  <div className="col-md-4 mb-3">
+                  <div className="col-md-3 mb-3">
                     <label className="form-label text-muted fw-medium">
-                      País
+                      País *
                     </label>
                     <input
                       type="text"
@@ -303,9 +302,12 @@ const EditarCliente = () => {
                       placeholder="País de residencia"
                       value={cliente.pais}
                       onChange={manejarCambio}
+                      required
                     />
                   </div>
-                  <div className="col-md-4 mb-3">
+                </div>
+                <div className="row">
+                  <div className="col-md-3 mb-3">
                     <label className="form-label text-muted fw-medium">
                       Código postal
                     </label>
@@ -314,14 +316,11 @@ const EditarCliente = () => {
                       name="codigo_postal"
                       className="form-control rounded"
                       placeholder="CP"
-                      value={cliente.codigo_postal || ""}
+                      value={cliente.codigo_postal}
                       onChange={manejarCambio}
                     />
                   </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-6 mb-3">
+                  <div className="col-md-3 mb-3">
                     <label className="form-label text-muted fw-medium">
                       Teléfono
                     </label>
@@ -330,7 +329,7 @@ const EditarCliente = () => {
                       name="telefono"
                       className="form-control rounded"
                       placeholder="Número de teléfono"
-                      value={cliente.telefono || ""}
+                      value={cliente.telefono}
                       onChange={manejarCambio}
                     />
                   </div>
@@ -343,11 +342,13 @@ const EditarCliente = () => {
                       name="email"
                       className="form-control rounded"
                       placeholder="correo@ejemplo.com"
-                      value={cliente.email || ""}
+                      value={cliente.email}
                       onChange={manejarCambio}
                     />
                   </div>
                 </div>
+
+                {/* Campo de observaciones */}
 
                 <div className="mb-0">
                   <label className="form-label text-muted fw-medium">

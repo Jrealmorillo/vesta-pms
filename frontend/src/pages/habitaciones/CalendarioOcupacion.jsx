@@ -8,8 +8,7 @@ const CalendarioOcupacion = () => {
   const [datosOcupacion, setDatosOcupacion] = useState({});
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
-
-  // Inicializar fechas con el mes actual
+  // Inicializar fechas con el mes actual (sin cargar datos automáticamente)
   useEffect(() => {
     const hoy = new Date();
     const primerDia = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
@@ -20,6 +19,7 @@ const CalendarioOcupacion = () => {
 
     setFechaInicio(fechaInicioFormateada);
     setFechaFin(fechaFinFormateada);
+    // Los datos no se cargan automáticamente, solo al presionar "Buscar"
   }, []);
 
   // Funciones para manejar cambios de fecha
@@ -51,9 +51,8 @@ const CalendarioOcupacion = () => {
       return;
     }
     setLoading(true);
-    try {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/informes/ocupacion`,
+    try {      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/informes/ocupacion/calendario`,
         {
           params: {
             desde: fechaInicio,
@@ -74,13 +73,12 @@ const CalendarioOcupacion = () => {
       setLoading(false);
     }
   }, [fechaInicio, fechaFin, token]);
-
-  // Cargar datos automáticamente cuando cambien las fechas
-  useEffect(() => {
-    if (fechaInicio && fechaFin) {
-      obtenerDatosOcupacion();
-    }
-  }, [fechaInicio, fechaFin, obtenerDatosOcupacion]);
+  // Comentado: ya no cargar datos automáticamente cuando cambien las fechas
+  // useEffect(() => {
+  //   if (fechaInicio && fechaFin) {
+  //     obtenerDatosOcupacion();
+  //   }
+  // }, [fechaInicio, fechaFin, obtenerDatosOcupacion]);
 
   const obtenerColorOcupacion = (porcentaje) => {
     if (porcentaje > 100) return "bg-danger text-white";
@@ -235,8 +233,7 @@ const CalendarioOcupacion = () => {
                 </span>
               </div>
             </div>
-          </div>{" "}
-          {/* Loading */}
+          </div>{" "}          {/* Loading */}
           {loading && (
             <div className="card shadow-sm">
               <div className="card-body text-center py-5">
@@ -247,6 +244,19 @@ const CalendarioOcupacion = () => {
                   Cargando datos de ocupación...
                 </h4>
                 <p className="text-muted">Por favor espera un momento</p>
+              </div>
+            </div>
+          )}
+
+          {/* Mensaje cuando no hay datos */}
+          {!loading && Object.keys(datosOcupacion).length === 0 && (
+            <div className="card shadow-sm">
+              <div className="card-body text-center py-5">
+                <i className="bi bi-calendar-x fs-1 text-muted mb-3"></i>
+                <h4 className="text-muted">No hay datos cargados</h4>
+                <p className="text-muted">
+                  Selecciona las fechas de inicio y fin, luego presiona "Buscar" para ver los datos de ocupación
+                </p>
               </div>
             </div>
           )}

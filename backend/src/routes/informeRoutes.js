@@ -11,6 +11,9 @@ router.use(authMiddleware);
 // Obtener el informe de ocupación
 router.get("/ocupacion", informeController.obtenerOcupacionEntreFechas);
 
+// Obtener datos para el calendario de ocupación
+router.get("/ocupacion/calendario", informeController.obtenerDatosCalendarioOcupacion);
+
 // Obtener el informe de facturación
 router.get("/facturacion", informeController.obtenerFacturacionPorFecha);
 

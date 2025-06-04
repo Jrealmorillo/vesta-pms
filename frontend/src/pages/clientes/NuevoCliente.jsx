@@ -242,22 +242,21 @@ const NuevoCliente = () => {
                 </h5>
               </div>
               <div className="card-body">
-                <div className="mb-3">
-                  <label className="form-label text-muted fw-medium">
-                    Dirección
-                  </label>
-                  <input
-                    type="text"
-                    name="direccion"
-                    className="form-control rounded"
-                    placeholder="Dirección completa"
-                    value={cliente.direccion}
-                    onChange={manejarCambio}
-                  />
-                </div>
-
                 <div className="row">
-                  <div className="col-md-4 mb-3">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label text-muted fw-medium">
+                      Dirección
+                    </label>
+                    <input
+                      type="text"
+                      name="direccion"
+                      className="form-control rounded"
+                      placeholder="Dirección completa"
+                      value={cliente.direccion}
+                      onChange={manejarCambio}
+                    />
+                  </div>
+                  <div className="col-md-3 mb-3">
                     <label className="form-label text-muted fw-medium">
                       Ciudad
                     </label>
@@ -270,7 +269,7 @@ const NuevoCliente = () => {
                       onChange={manejarCambio}
                     />
                   </div>
-                  <div className="col-md-4 mb-3">
+                  <div className="col-md-3 mb-3">
                     <label className="form-label text-muted fw-medium">
                       País *
                     </label>
@@ -284,7 +283,9 @@ const NuevoCliente = () => {
                       required
                     />
                   </div>
-                  <div className="col-md-4 mb-3">
+                </div>
+                <div className="row">
+                  <div className="col-md-3 mb-3">
                     <label className="form-label text-muted fw-medium">
                       Código postal
                     </label>
@@ -297,10 +298,7 @@ const NuevoCliente = () => {
                       onChange={manejarCambio}
                     />
                   </div>
-                </div>
-
-                <div className="row">
-                  <div className="col-md-6 mb-3">
+                  <div className="col-md-3 mb-3">
                     <label className="form-label text-muted fw-medium">
                       Teléfono
                     </label>
@@ -327,6 +325,8 @@ const NuevoCliente = () => {
                     />
                   </div>
                 </div>
+
+                {/* Campo de observaciones */}
 
                 <div className="mb-0">
                   <label className="form-label text-muted fw-medium">

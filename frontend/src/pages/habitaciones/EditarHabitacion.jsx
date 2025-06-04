@@ -207,24 +207,31 @@ const EditarHabitacion = () => {
                   </div>
                 </div>
 
-                <div className="d-flex justify-content-center gap-3">
-                  <button type="submit" className="btn btn-success px-4 py-2">
-                    <i className="bi bi-check-circle me-2"></i>
-                    Guardar cambios
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-secondary px-4 py-2"
-                    onClick={() => {
-                      navigate("/habitaciones");
-                      toast.info(
-                        `Edición de habitación ${habitacion.numero_habitacion} cancelada`
-                      );
-                    }}
-                  >
-                    <i className="bi bi-x-circle me-2"></i>
-                    Cancelar
-                  </button>
+                <div className="row">
+                  <div className="col-md-10 mx-auto">
+                    <div className="d-flex justify-content-center gap-3">
+                      <button
+                        type="submit"
+                        className="btn btn-success px-4 py-2 w-50"
+                      >
+                        <i className="bi bi-check-circle me-2"></i>
+                        Guardar cambios
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-secondary px-4 py-2 w-50"
+                        onClick={() => {
+                          navigate("/habitaciones");
+                          toast.info(
+                            `Edición de habitación ${habitacion.numero_habitacion} cancelada`
+                          );
+                        }}
+                      >
+                        <i className="bi bi-x-circle me-2"></i>
+                        Cancelar
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </form>
             </div>

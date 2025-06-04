@@ -406,20 +406,22 @@ const ModalBloqueoHabitacion = ({ numeroHabitacion, onBloquear, onCerrar }) => {
             </div>
           </div>
           <div className="modal-footer">
+            <div className="d-flex justify-content-end w-75 gap-3">
             <button
               type="button"
-              className="btn btn-secondary"
+              className="btn btn-secondary w-100"
               onClick={onCerrar}
             >
               Cancelar
             </button>
             <button
               type="button"
-              className="btn btn-warning"
+              className="btn btn-warning w-100"
               onClick={manejarBloqueo}
             >
               Bloquear Habitación
             </button>
+          </div>
           </div>
         </div>
       </div>

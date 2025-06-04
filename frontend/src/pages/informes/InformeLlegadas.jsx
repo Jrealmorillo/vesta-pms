@@ -117,7 +117,7 @@ const InformeLlegadas = () => {
                           </td>
                           <td className="px-4 py-3">
                             <span className="badge bg-success fs-6">
-                              {r.numero_habitacion || "Sin asignar"}
+                              {r.numero_habitacion || "-"}
                             </span>
                           </td>
                           <td className="px-4 py-3">

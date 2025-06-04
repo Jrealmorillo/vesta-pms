@@ -139,24 +139,38 @@ exports.obtenerKPIsDashboard = async (req, res) => {
   try {
     const models = require("../models");
     const { Op } = require("sequelize");
-    // Ocupación real: habitaciones con reservas en check-in
+    
+    // Fecha actual
+    const hoy = new Date().toISOString().split('T')[0];
+    
+    // Total de habitaciones
     const total = await models.Habitacion.count();
+    
+    // Ocupación real: habitaciones con reservas en check-in
     const ocupadasReales = await models.Reserva.count({ where: { estado: "Check-in" } });
     const ocupacionReal = total > 0 ? Math.round((ocupadasReales / total) * 100) : 0;
-    // Ocupación prevista: reservas confirmadas o check-in para hoy
-    const hoy = new Date().toISOString().split("T")[0]; const ocupadasPrevistas = await models.Reserva.count({
+
+    // Ocupación prevista: reservas que están activas hoy (entre fecha_entrada y fecha_salida)
+    const ocupadasPrevistas = await models.Reserva.count({
       where: {
         estado: { [Op.in]: ["Confirmada", "Check-in"] },
-        fecha_entrada: hoy
+        fecha_entrada: { [Op.lte]: hoy },
+        fecha_salida: { [Op.gte]: hoy }
       }
     });
-    const ocupacionPrevista = total > 0 ? Math.round((ocupadasPrevistas / total) * 100) : 0;
+    const ocupacionPrevista = total > 0 ? Math.round((ocupadasPrevistas / total) * 100) : 0;    // Fechas para cálculos mensuales
+    const now = new Date();
+    const inicioMes = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+    // Calcular el último día del mes correctamente
+    const ultimoDiaDelMes = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const finMes = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(ultimoDiaDelMes).padStart(2, "0")}`;
 
     // Reservas de la semana actual (lunes a domingo)
-    const inicioSemana = new Date(hoy);
-    const diaSemana = inicioSemana.getDay(); // 0 = domingo, 1 = lunes, etc.
-    const diasHastaLunes = diaSemana === 0 ? 6 : diaSemana - 1; // Calcular días hasta el lunes anterior
-    inicioSemana.setDate(inicioSemana.getDate() - diasHastaLunes);
+    const fechaHoy = new Date();
+    const diaSemana = fechaHoy.getDay(); // 0 = domingo, 1 = lunes, etc.
+    const diasHastaLunes = diaSemana === 0 ? 6 : diaSemana - 1;
+    const inicioSemana = new Date(fechaHoy);
+    inicioSemana.setDate(fechaHoy.getDate() - diasHastaLunes);
     const finSemana = new Date(inicioSemana);
     finSemana.setDate(inicioSemana.getDate() + 6);
 
@@ -168,36 +182,30 @@ exports.obtenerKPIsDashboard = async (req, res) => {
         estado: { [Op.in]: ["Confirmada", "Check-in", "Check-out"] }
       }
     });
-    // Ingresos reales del mes actual (facturado)
-    const now = new Date();
 
-    // Reservas del mes actual
-    const inicioMes = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
-    const finMes = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-31`;
-
+    // Reservas del mes actual (con entrada en el mes)
     const reservasMensuales = await models.Reserva.count({
       where: {
-        fecha_entrada: {
-          [Op.between]: [inicioMes, finMes]
-        },
+        fecha_entrada: { [Op.between]: [inicioMes, finMes] },
         estado: { [Op.in]: ["Confirmada", "Check-in", "Check-out"] }
       }
-    });
-    const desde = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
-    const hasta = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-31`;
+    });    // Ingresos reales del mes actual (facturas emitidas)
     const ingresos = await models.Factura.sum("total", {
       where: {
-        fecha_emision: { [Op.between]: [`${desde} 00:00:00`, `${hasta} 23:59:59`] }
+        fecha_emision: { [Op.between]: [`${inicioMes} 00:00:00`, `${finMes} 23:59:59`] }
       }
     }) || 0;
-    // Ingresos previstos: suma de líneas de reserva activas para el mes
-    const lineas = await models.LineaReserva.findAll({
+
+    // Ingresos previstos: suma de líneas de reserva activas del mes actual
+    // Solo líneas activas del mes actual, sin filtrar por estado de reserva por ahora
+    const lineasPrevistos = await models.LineaReserva.findAll({
       where: {
-        fecha: { [Op.between]: [`${desde}`, `${hasta}`] },
+        fecha: { [Op.between]: [inicioMes, finMes] },
         activa: true
       }
     });
-    const ingresosPrevistos = lineas.reduce((acc, l) => acc + (parseFloat(l.precio) * l.cantidad_habitaciones), 0);
+    
+    const ingresosPrevistos = lineasPrevistos.reduce((acc, l) => acc + (parseFloat(l.precio) * l.cantidad_habitaciones), 0);
 
     res.json({
       ocupacionReal,
@@ -348,6 +356,21 @@ exports.obtenerReservasPorEstado = async (req, res) => {
       salidasRealizadas,
       salidasPendientes
     });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Obtener datos para el calendario de ocupación
+exports.obtenerDatosCalendarioOcupacion = async (req, res) => {
+  try {
+    const { desde, hasta } = req.query;
+    if (!desde || !hasta) {
+      return res.status(400).json({ error: "Debes especificar fecha 'desde' y 'hasta'" });
+    }
+
+    const datos = await GestorInformes.obtenerDatosCalendarioOcupacion(desde, hasta);
+    res.json(datos);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

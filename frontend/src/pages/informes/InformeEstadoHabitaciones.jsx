@@ -55,6 +55,7 @@ const InformeEstadoHabitaciones = () => {
           {/* Resultados */}
           {habitaciones.length > 0 ? (
             <div className="card border-0 shadow-sm">
+              {" "}
               <div className="card-header bg-light border-bottom">
                 <div className="d-flex justify-content-between align-items-center">
                   <h5 className="mb-0">
@@ -73,6 +74,16 @@ const InformeEstadoHabitaciones = () => {
                       }{" "}
                       Ocupadas
                     </span>
+                    <span className="badge bg-info fs-6">
+                      {habitaciones
+                        .filter((h) => h.ocupacion_actual)
+                        .reduce(
+                          (total, h) =>
+                            total + h.ocupacion_actual.total_huespedes,
+                          0
+                        )}{" "}
+                      Huéspedes
+                    </span>
                   </div>
                 </div>
               </div>
@@ -83,8 +94,8 @@ const InformeEstadoHabitaciones = () => {
                       <tr>
                         <th className="px-4 py-3">Nº Habitación</th>
                         <th className="px-4 py-3">Tipo</th>
-                        <th className="px-4 py-3">Capacidad</th>
-                        <th className="px-4 py-3">Precio</th>
+                        <th className="px-4 py-3">Ocupación Actual</th>
+                        <th className="px-4 py-3">Checkout</th>
                         <th className="px-4 py-3">Estado</th>
                       </tr>
                     </thead>
@@ -100,15 +111,31 @@ const InformeEstadoHabitaciones = () => {
                             <span className="fw-medium">{h.tipo}</span>
                           </td>
                           <td className="px-4 py-3">
-                            <small className="text-muted">
-                              {h.capacidad_minima} - {h.capacidad_maxima}{" "}
-                              personas
-                            </small>
+                            {h.ocupacion_actual ? (
+                              <div>
+                                <span className="fw-bold">
+                                  {h.ocupacion_actual.total_huespedes} huéspedes
+                                </span>
+                                <br />
+                                <small className="text-muted">
+                                  {h.ocupacion_actual.adultos}A +{" "}
+                                  {h.ocupacion_actual.ninos}N
+                                </small>
+                              </div>
+                            ) : (
+                              <span className="text-muted">—</span>
+                            )}
                           </td>
-                          <td className="px-4 py-3">
-                            <span className="fw-bold text-success">
-                              {parseFloat(h.precio_oficial).toFixed(2)} €
-                            </span>
+                          <td className="px-4 py-3 fw-bold">
+                            {h.ocupacion_actual?.fecha_checkout ? (
+                              <span className="fw-medium">
+                                {new Date(
+                                  h.ocupacion_actual.fecha_checkout
+                                ).toLocaleDateString("es-ES")}
+                              </span>
+                            ) : (
+                              <span className="text-muted">—</span>
+                            )}
                           </td>
                           <td className="px-4 py-3">
                             <span

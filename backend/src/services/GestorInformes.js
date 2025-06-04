@@ -31,9 +31,7 @@ class GestorInformes {
             });
 
             const resumenPorFecha = {};
-            let totalNochesOcupadas = 0;
-
-            for (const linea of lineas) {
+            let totalNochesOcupadas = 0;            for (const linea of lineas) {
                 const fecha = linea.fecha;
                 if (!resumenPorFecha[fecha]) {
                     resumenPorFecha[fecha] = {
@@ -57,20 +55,26 @@ class GestorInformes {
                 totalNochesOcupadas += habitaciones;
             }
 
+            // Calcular porcentaje de ocupación por día
+            Object.keys(resumenPorFecha).forEach(fecha => {
+                const datos = resumenPorFecha[fecha];
+                datos.porcentaje_ocupacion = datos.habitaciones_disponibles > 0
+                    ? Math.round((datos.habitaciones_ocupadas / datos.habitaciones_disponibles) * 100)
+                    : 0;
+            });
+
             // Calcular porcentaje de ocupación promedio
             const nochesDisponibles = totalHabitacionesDisponibles * diasPeriodo;
             const porcentajeOcupacion = nochesDisponibles > 0
                 ? Math.round((totalNochesOcupadas / nochesDisponibles) * 100)
-                : 0;
-
-            // Devolver resumen consolidado que espera el frontend
+                : 0;            // Devolver resumen consolidado que espera el frontend
             return {
                 total_habitaciones: totalHabitacionesDisponibles,
                 dias_periodo: diasPeriodo,
                 noches_ocupadas: totalNochesOcupadas,
                 noches_disponibles: nochesDisponibles,
                 porcentaje_ocupacion: porcentajeOcupacion,
-                detalle_por_fecha: resumenPorFecha // Mantener detalle por si se necesita
+                detalle_por_fecha: resumenPorFecha
             };
         } catch (error) {
             throw new Error("Error al calcular ocupación: " + error.message);
@@ -164,31 +168,64 @@ class GestorInformes {
             }));
         } catch (error) {
             throw new Error("Error al obtener cargos por habitación: " + error.message);
-        }
-    }
+        }    }
 
     // Estado actual de habitaciones
     async obtenerEstadoActualHabitaciones() {
         try {
             // Todas las habitaciones
             const habitaciones = await Habitacion.findAll();
-            // Reservas activas (Check-in) con habitación asignada
+              // Reservas activas (Check-in) con habitación asignada, incluyendo líneas de reserva
             const reservas = await Reserva.findAll({
                 where: {
                     estado: 'Check-in',
                     numero_habitacion: { [Op.ne]: null }
                 },
-                attributes: ['numero_habitacion']
+                include: [{
+                    model: LineaReserva,
+                    as: 'lineas',
+                    where: { activa: true },
+                    required: false
+                }],
+                attributes: ['numero_habitacion', 'fecha_salida']
             });
-            const ocupadas = reservas.map(r => r.numero_habitacion);
-            return habitaciones.map(h => ({
-                numero_habitacion: h.numero_habitacion,
-                tipo: h.tipo,
-                estado: ocupadas.includes(h.numero_habitacion) ? 'Ocupada' : 'Libre',
-                capacidad_maxima: h.capacidad_maxima,
-                capacidad_minima: h.capacidad_minima,
-                precio_oficial: h.precio_oficial
-            }));
+
+            // Crear mapa de ocupación por habitación
+            const ocupacionPorHabitacion = {};
+            reservas.forEach(reserva => {
+                const numHab = reserva.numero_habitacion;
+                if (!ocupacionPorHabitacion[numHab]) {
+                    ocupacionPorHabitacion[numHab] = {
+                        fecha_checkout: reserva.fecha_salida,
+                        total_adultos: 0,
+                        total_ninos: 0
+                    };
+                }
+                  // Sumar huéspedes de todas las líneas activas
+                if (reserva.lineas && reserva.lineas.length > 0) {
+                    reserva.lineas.forEach(linea => {
+                        ocupacionPorHabitacion[numHab].total_adultos += linea.cantidad_adultos;
+                        ocupacionPorHabitacion[numHab].total_ninos += linea.cantidad_ninos;
+                    });
+                }
+            });
+
+            return habitaciones.map(h => {
+                const ocupacion = ocupacionPorHabitacion[h.numero_habitacion];
+                const estaOcupada = !!ocupacion;
+                  return {
+                    numero_habitacion: h.numero_habitacion,
+                    tipo: h.tipo,
+                    estado: estaOcupada ? 'Ocupada' : 'Libre',
+                    // Nuevos campos para ocupación real
+                    ocupacion_actual: estaOcupada ? {
+                        total_huespedes: ocupacion.total_adultos + ocupacion.total_ninos,
+                        adultos: ocupacion.total_adultos,
+                        ninos: ocupacion.total_ninos,
+                        fecha_checkout: ocupacion.fecha_checkout
+                    } : null
+                };
+            });
         } catch (error) {
             throw new Error('Error al obtener estado actual de habitaciones: ' + error.message);
         }
@@ -279,6 +316,69 @@ class GestorInformes {
             return resumen;
         } catch (error) {
             throw new Error('Error al obtener consumo por forma de pago: ' + error.message);
+        }
+    }
+
+    // Método específico para el calendario de ocupación - devuelve datos por día
+    async obtenerDatosCalendarioOcupacion(desde, hasta) {
+        try {
+            // Contar todas las habitaciones que NO están bloqueadas
+            const totalHabitacionesDisponibles = await Habitacion.count();
+
+            // Buscar líneas activas dentro del rango con reservas válidas
+            const lineas = await LineaReserva.findAll({
+                where: {
+                    fecha: { [Op.between]: [desde, hasta] },
+                    activa: true,
+                },
+                include: [
+                    {
+                        model: Reserva,
+                        as: "reserva",
+                        where: {
+                            estado: { [Op.in]: ["Confirmada", "Check-in"] },
+                        },
+                        required: true,
+                    },
+                ],
+            });
+
+            const resumenPorFecha = {};
+
+            for (const linea of lineas) {
+                const fecha = linea.fecha;
+                if (!resumenPorFecha[fecha]) {
+                    resumenPorFecha[fecha] = {
+                        habitaciones_ocupadas: 0,
+                        adultos: 0,
+                        ninos: 0,
+                        huespedes: 0,
+                        habitaciones_disponibles: totalHabitacionesDisponibles,
+                    };
+                }
+
+                const habitaciones = parseInt(linea.cantidad_habitaciones || 0);
+                const adultos = parseInt(linea.cantidad_adultos || 0);
+                const ninos = parseInt(linea.cantidad_ninos || 0);
+
+                resumenPorFecha[fecha].habitaciones_ocupadas += habitaciones;
+                resumenPorFecha[fecha].adultos += adultos;
+                resumenPorFecha[fecha].ninos += ninos;
+                resumenPorFecha[fecha].huespedes += adultos + ninos;
+            }
+
+            // Calcular porcentaje de ocupación por día
+            Object.keys(resumenPorFecha).forEach(fecha => {
+                const datos = resumenPorFecha[fecha];
+                datos.porcentaje_ocupacion = datos.habitaciones_disponibles > 0
+                    ? Math.round((datos.habitaciones_ocupadas / datos.habitaciones_disponibles) * 100)
+                    : 0;
+            });
+
+            // Devolver directamente los datos por fecha para el calendario
+            return resumenPorFecha;
+        } catch (error) {
+            throw new Error("Error al obtener datos del calendario de ocupación: " + error.message);
         }
     }
 }
