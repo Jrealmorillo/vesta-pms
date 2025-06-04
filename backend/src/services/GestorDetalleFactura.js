@@ -10,7 +10,7 @@ class GestorDetalleFactura {
             // Crea un nuevo detalle de factura y lo marca como activo
             const nuevoDetalle = await DetalleFactura.create({
                 ...datos,
-                activa: true, 
+                activa: true,
             });
             return nuevoDetalle;
         } catch (error) {

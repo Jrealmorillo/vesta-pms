@@ -26,7 +26,8 @@ const InformeClientesAlojados = () => {
         }`
       );
     }
-  };  return (
+  };
+  return (
     <div className="container-fluid py-5 mt-4">
       {/* Header Principal */}
       <div className="card border-0 shadow-sm mb-4">
@@ -39,10 +40,7 @@ const InformeClientesAlojados = () => {
               </h2>
             </div>
             <div className="col-md-6 text-end">
-              <button
-                className="btn btn-primary px-4"
-                onClick={obtenerInforme}
-              >
+              <button className="btn btn-primary px-4" onClick={obtenerInforme}>
                 <i className="bi bi-search me-2"></i>
                 Consultar
               </button>
@@ -67,7 +65,9 @@ const InformeClientesAlojados = () => {
             <div className="card border-0 bg-light h-100">
               <div className="card-body text-center">
                 <i className="bi bi-door-open text-info fs-2 mb-2"></i>
-                <h5 className="mb-1">{new Set(clientes.map(c => c.numero_habitacion)).size}</h5>
+                <h5 className="mb-1">
+                  {new Set(clientes.map((c) => c.numero_habitacion)).size}
+                </h5>
                 <small className="text-muted">Habitaciones Ocupadas</small>
               </div>
             </div>
@@ -76,7 +76,15 @@ const InformeClientesAlojados = () => {
             <div className="card border-0 bg-light h-100">
               <div className="card-body text-center">
                 <i className="bi bi-calendar-check text-success fs-2 mb-2"></i>
-                <h5 className="mb-1">{clientes.filter(c => new Date(c.fecha_entrada).toDateString() === new Date().toDateString()).length}</h5>
+                <h5 className="mb-1">
+                  {
+                    clientes.filter(
+                      (c) =>
+                        new Date(c.fecha_entrada).toDateString() ===
+                        new Date().toDateString()
+                    ).length
+                  }
+                </h5>
                 <small className="text-muted">Llegadas Hoy</small>
               </div>
             </div>
@@ -85,7 +93,15 @@ const InformeClientesAlojados = () => {
             <div className="card border-0 bg-light h-100">
               <div className="card-body text-center">
                 <i className="bi bi-calendar-x text-warning fs-2 mb-2"></i>
-                <h5 className="mb-1">{clientes.filter(c => new Date(c.fecha_salida).toDateString() === new Date().toDateString()).length}</h5>
+                <h5 className="mb-1">
+                  {
+                    clientes.filter(
+                      (c) =>
+                        new Date(c.fecha_salida).toDateString() ===
+                        new Date().toDateString()
+                    ).length
+                  }
+                </h5>
                 <small className="text-muted">Salidas Hoy</small>
               </div>
             </div>
@@ -100,7 +116,9 @@ const InformeClientesAlojados = () => {
             <h5 className="mb-0 d-flex align-items-center">
               <i className="bi bi-table text-muted me-2"></i>
               Clientes Hospedados
-              <span className="badge bg-primary ms-2">{clientes.length} huéspedes</span>
+              <span className="badge bg-primary ms-2">
+                {clientes.length} huéspedes
+              </span>
             </h5>
           </div>
           <div className="card-body p-0">
@@ -119,7 +137,9 @@ const InformeClientesAlojados = () => {
                   {clientes.map((c) => (
                     <tr key={c.id_reserva}>
                       <td className="py-3">
-                        <span className="badge bg-light text-dark">#{c.id_reserva}</span>
+                        <span className="badge bg-light text-dark">
+                          #{c.id_reserva}
+                        </span>
                       </td>
                       <td className="py-3">
                         <span className="fw-bold text-primary">
@@ -138,7 +158,9 @@ const InformeClientesAlojados = () => {
                       </td>
                       <td className="py-3">
                         <span className="text-muted">
-                          {new Date(c.fecha_entrada).toLocaleDateString("es-ES")}
+                          {new Date(c.fecha_entrada).toLocaleDateString(
+                            "es-ES"
+                          )}
                         </span>
                       </td>
                       <td className="py-3">
@@ -156,10 +178,14 @@ const InformeClientesAlojados = () => {
       ) : (
         <div className="card border-0 shadow-sm">
           <div className="card-body text-center py-5">
-            <i className="bi bi-people text-muted mb-3" style={{ fontSize: '3rem' }}></i>
+            <i
+              className="bi bi-people text-muted mb-3"
+              style={{ fontSize: "3rem" }}
+            ></i>
             <h5 className="text-muted mb-2">No hay clientes alojados</h5>
             <p className="text-muted mb-0">
-              Haz clic en "Consultar" para obtener el listado actual de huéspedes
+              Haz clic en "Consultar" para obtener el listado actual de
+              huéspedes
             </p>
           </div>
         </div>

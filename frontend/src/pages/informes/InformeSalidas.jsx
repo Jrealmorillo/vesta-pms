@@ -26,10 +26,13 @@ const InformeSalidas = () => {
       }
     } catch (error) {
       toast.error(
-        `Error al obtener el informe: ${error.response?.data?.error || error.message}`
+        `Error al obtener el informe: ${
+          error.response?.data?.error || error.message
+        }`
       );
     }
-  };  return (
+  };
+  return (
     <div className="container-fluid py-5 mt-4">
       {/* Header Principal */}
       <div className="card border-0 shadow-sm mb-4">
@@ -86,7 +89,9 @@ const InformeSalidas = () => {
             <div className="card border-0 bg-light h-100">
               <div className="card-body text-center">
                 <i className="bi bi-door-open text-info fs-2 mb-2"></i>
-                <h5 className="mb-1">{new Set(reservas.map(r => r.numero_habitacion)).size}</h5>
+                <h5 className="mb-1">
+                  {new Set(reservas.map((r) => r.numero_habitacion)).size}
+                </h5>
                 <small className="text-muted">Habitaciones</small>
               </div>
             </div>
@@ -95,7 +100,9 @@ const InformeSalidas = () => {
             <div className="card border-0 bg-light h-100">
               <div className="card-body text-center">
                 <i className="bi bi-check-circle text-success fs-2 mb-2"></i>
-                <h5 className="mb-1">{reservas.filter(r => r.estado === 'Check-out').length}</h5>
+                <h5 className="mb-1">
+                  {reservas.filter((r) => r.estado === "Check-out").length}
+                </h5>
                 <small className="text-muted">Check-out</small>
               </div>
             </div>
@@ -104,7 +111,9 @@ const InformeSalidas = () => {
             <div className="card border-0 bg-light h-100">
               <div className="card-body text-center">
                 <i className="bi bi-clock text-warning fs-2 mb-2"></i>
-                <h5 className="mb-1">{reservas.filter(r => r.estado === 'Check-in').length}</h5>
+                <h5 className="mb-1">
+                  {reservas.filter((r) => r.estado === "Check-in").length}
+                </h5>
                 <small className="text-muted">Pendientes</small>
               </div>
             </div>
@@ -118,8 +127,10 @@ const InformeSalidas = () => {
           <div className="card-header bg-white border-bottom">
             <h5 className="mb-0 d-flex align-items-center">
               <i className="bi bi-table text-muted me-2"></i>
-              Salidas del {new Date(fecha).toLocaleDateString('es-ES')}
-              <span className="badge bg-primary ms-2">{reservas.length} salidas</span>
+              Salidas del {new Date(fecha).toLocaleDateString("es-ES")}
+              <span className="badge bg-primary ms-2">
+                {reservas.length} salidas
+              </span>
             </h5>
           </div>
           <div className="card-body p-0">
@@ -140,11 +151,13 @@ const InformeSalidas = () => {
                   {reservas.map((r) => (
                     <tr key={r.id_reserva}>
                       <td className="py-3">
-                        <span className="badge bg-light text-dark">#{r.id_reserva}</span>
+                        <span className="badge bg-light text-dark">
+                          #{r.id_reserva}
+                        </span>
                       </td>
                       <td className="py-3">
                         <span className="fw-bold text-primary">
-                          {r.numero_habitacion || 'Sin asignar'}
+                          {r.numero_habitacion || "Sin asignar"}
                         </span>
                       </td>
                       <td className="py-3">
@@ -167,23 +180,30 @@ const InformeSalidas = () => {
                         )}
                       </td>
                       <td className="py-3 text-center">
-                        <span className={`badge ${
-                          r.estado === 'Confirmada' ? 'bg-warning text-dark' :
-                          r.estado === 'Check-in' ? 'bg-success' :
-                          r.estado === 'Check-out' ? 'bg-info' :
-                          'bg-secondary'
-                        }`}>
+                        <span
+                          className={`badge ${
+                            r.estado === "Confirmada"
+                              ? "bg-warning text-dark"
+                              : r.estado === "Check-in"
+                              ? "bg-success"
+                              : r.estado === "Check-out"
+                              ? "bg-info"
+                              : "bg-secondary"
+                          }`}
+                        >
                           {r.estado}
                         </span>
                       </td>
                       <td className="py-3">
                         <span className="text-muted">
-                          {new Date(r.fecha_entrada).toLocaleDateString('es-ES')}
+                          {new Date(r.fecha_entrada).toLocaleDateString(
+                            "es-ES"
+                          )}
                         </span>
                       </td>
                       <td className="py-3">
                         <span className="text-muted">
-                          {new Date(r.fecha_salida).toLocaleDateString('es-ES')}
+                          {new Date(r.fecha_salida).toLocaleDateString("es-ES")}
                         </span>
                       </td>
                     </tr>
@@ -196,17 +216,24 @@ const InformeSalidas = () => {
       ) : fecha ? (
         <div className="card border-0 shadow-sm">
           <div className="card-body text-center py-5">
-            <i className="bi bi-calendar-x text-muted mb-3" style={{ fontSize: '3rem' }}></i>
+            <i
+              className="bi bi-calendar-x text-muted mb-3"
+              style={{ fontSize: "3rem" }}
+            ></i>
             <h5 className="text-muted mb-2">No hay salidas programadas</h5>
             <p className="text-muted mb-0">
-              No se encontraron reservas con salida para el <strong>{new Date(fecha).toLocaleDateString('es-ES')}</strong>
+              No se encontraron reservas con salida para el{" "}
+              <strong>{new Date(fecha).toLocaleDateString("es-ES")}</strong>
             </p>
           </div>
         </div>
       ) : (
         <div className="card border-0 shadow-sm">
           <div className="card-body text-center py-5">
-            <i className="bi bi-calendar-event text-muted mb-3" style={{ fontSize: '3rem' }}></i>
+            <i
+              className="bi bi-calendar-event text-muted mb-3"
+              style={{ fontSize: "3rem" }}
+            ></i>
             <h5 className="text-muted mb-2">Selecciona una fecha</h5>
             <p className="text-muted mb-0">
               Elige una fecha para consultar las salidas programadas

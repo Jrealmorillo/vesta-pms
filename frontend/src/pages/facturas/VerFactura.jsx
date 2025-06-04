@@ -296,9 +296,7 @@ const VerFactura = () => {
                   <p className="mb-2">
                     <span className="text-muted fw-medium">Total factura:</span>
                     <br />
-                    <strong className="text-primary fs-5">
-                      {total}€
-                    </strong>
+                    <strong className="text-primary fs-5">{total}€</strong>
                   </p>
                 </div>
               </div>

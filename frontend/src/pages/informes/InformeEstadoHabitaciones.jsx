@@ -52,7 +52,6 @@ const InformeEstadoHabitaciones = () => {
               </div>
             </div>
           </div>{" "}
-
           {/* Resultados */}
           {habitaciones.length > 0 ? (
             <div className="card border-0 shadow-sm">

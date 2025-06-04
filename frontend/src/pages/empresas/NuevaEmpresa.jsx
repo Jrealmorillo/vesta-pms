@@ -71,7 +71,10 @@ const NuevaEmpresa = () => {
           <div className="card shadow-sm">
             <div className="card-header bg-light">
               <div className="d-flex align-items-center">
-                <i className="bi bi-building-add text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <i
+                  className="bi bi-building-add text-primary me-3"
+                  style={{ fontSize: "1.5rem" }}
+                ></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Registrar Nueva Empresa</h4>
                 </div>
@@ -95,7 +98,9 @@ const NuevaEmpresa = () => {
               <div className="card-body">
                 <div className="row">
                   <div className="col-md-8 mb-3">
-                    <label className="form-label text-muted fw-medium">Nombre *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Nombre *
+                    </label>
                     <input
                       type="text"
                       name="nombre"
@@ -108,7 +113,9 @@ const NuevaEmpresa = () => {
                   </div>
 
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">CIF *</label>
+                    <label className="form-label text-muted fw-medium">
+                      CIF *
+                    </label>
                     <input
                       type="text"
                       name="cif"
@@ -120,9 +127,10 @@ const NuevaEmpresa = () => {
                     />
                   </div>
                 </div>
-
                 <div className="mb-3">
-                  <label className="form-label text-muted fw-medium">Dirección</label>
+                  <label className="form-label text-muted fw-medium">
+                    Dirección
+                  </label>
                   <input
                     type="text"
                     name="direccion"
@@ -131,9 +139,12 @@ const NuevaEmpresa = () => {
                     value={empresa.direccion}
                     onChange={manejarCambio}
                   />
-                </div>                <div className="row">
+                </div>{" "}
+                <div className="row">
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Ciudad</label>
+                    <label className="form-label text-muted fw-medium">
+                      Ciudad
+                    </label>
                     <input
                       type="text"
                       name="ciudad"
@@ -144,7 +155,9 @@ const NuevaEmpresa = () => {
                     />
                   </div>
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">País *</label>
+                    <label className="form-label text-muted fw-medium">
+                      País *
+                    </label>
                     <input
                       type="text"
                       name="pais"
@@ -156,7 +169,9 @@ const NuevaEmpresa = () => {
                     />
                   </div>
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Código postal</label>
+                    <label className="form-label text-muted fw-medium">
+                      Código postal
+                    </label>
                     <input
                       type="text"
                       name="codigo_postal"
@@ -166,9 +181,12 @@ const NuevaEmpresa = () => {
                       onChange={manejarCambio}
                     />
                   </div>
-                </div>                <div className="row">
+                </div>{" "}
+                <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Teléfono</label>
+                    <label className="form-label text-muted fw-medium">
+                      Teléfono
+                    </label>
                     <input
                       type="tel"
                       name="telefono"
@@ -179,7 +197,9 @@ const NuevaEmpresa = () => {
                     />
                   </div>
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Correo electrónico</label>
+                    <label className="form-label text-muted fw-medium">
+                      Correo electrónico
+                    </label>
                     <input
                       type="email"
                       name="email"
@@ -190,7 +210,6 @@ const NuevaEmpresa = () => {
                     />
                   </div>
                 </div>
-
                 <div className="row">
                   <div className="col-md-4 mb-3">
                     <div className="form-check">
@@ -203,15 +222,19 @@ const NuevaEmpresa = () => {
                           setEmpresa({ ...empresa, credito: e.target.checked })
                         }
                       />
-                      <label className="form-check-label fw-medium" htmlFor="creditoCheck">
+                      <label
+                        className="form-check-label fw-medium"
+                        htmlFor="creditoCheck"
+                      >
                         Empresa con crédito
                       </label>
                     </div>
                   </div>
                 </div>
-
                 <div className="mb-0">
-                  <label className="form-label text-muted fw-medium">Observaciones</label>
+                  <label className="form-label text-muted fw-medium">
+                    Observaciones
+                  </label>
                   <textarea
                     name="observaciones"
                     className="form-control rounded"
@@ -236,6 +259,6 @@ const NuevaEmpresa = () => {
       </div>
     </div>
   );
-}
+};
 
 export default NuevaEmpresa;

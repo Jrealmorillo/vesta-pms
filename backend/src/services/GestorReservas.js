@@ -390,7 +390,7 @@ class GestorReservas {
   // Obtener todas las reservas asignadas entre dos fechas
   async obtenerReservasAsignadasEntreFechas(desde, hasta) {
     try {
-       
+
       const reservas = await Reserva.findAll({
         where: {
           estado: {

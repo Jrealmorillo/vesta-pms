@@ -60,7 +60,10 @@ const BuscarUsuarios = () => {
           <div className="card shadow-sm">
             <div className="card-header bg-light">
               <div className="d-flex align-items-center">
-                <i className="bi bi-people text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <i
+                  className="bi bi-people text-primary me-3"
+                  style={{ fontSize: "1.5rem" }}
+                ></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Gestión de Usuarios</h4>
                 </div>
@@ -94,34 +97,43 @@ const BuscarUsuarios = () => {
                       value={idBuscado}
                       onChange={(e) => setIdBuscado(e.target.value)}
                       onKeyDown={(e) => {
-                        if(e.key === "Enter") {
+                        if (e.key === "Enter") {
                           e.preventDefault();
                           buscarPorId();
                         }
                       }}
                     />
-                    <button className="btn btn-primary rounded-end" onClick={buscarPorId}>
+                    <button
+                      className="btn btn-primary rounded-end"
+                      onClick={buscarPorId}
+                    >
                       <i className="bi bi-search me-1"></i>
                       Buscar
                     </button>
                   </div>
                 </div>
                 <div className="col-md-6 d-flex align-items-end">
-                  <button className="btn btn-outline-secondary w-100" onClick={obtenerTodos}>
+                  <button
+                    className="btn btn-outline-secondary w-100"
+                    onClick={obtenerTodos}
+                  >
                     <i className="bi bi-list-ul me-2"></i>
                     Mostrar todos los usuarios
                   </button>
                 </div>
               </div>
             </div>
-          </div>          {/* Card: Resultados */}
+          </div>{" "}
+          {/* Card: Resultados */}
           {usuarios.length > 0 ? (
             <div className="card shadow-sm">
               <div className="card-header bg-light">
                 <h5 className="mb-0 fw-semibold">
                   <i className="bi bi-table me-2 text-primary"></i>
                   Resultados de la búsqueda
-                  <span className="badge bg-primary ms-2">{usuarios.length}</span>
+                  <span className="badge bg-primary ms-2">
+                    {usuarios.length}
+                  </span>
                 </h5>
               </div>
               <div className="card-body p-0">
@@ -144,19 +156,33 @@ const BuscarUsuarios = () => {
                           <td>{u.nombre}</td>
                           <td className="text-muted">{u.nombre_usuario}</td>
                           <td>
-                            <span className={`badge ${u.rol.id_rol == 1 ? 'bg-danger-subtle text-danger' : 'bg-info-subtle text-info'}`}>
+                            <span
+                              className={`badge ${
+                                u.rol.id_rol == 1
+                                  ? "bg-danger-subtle text-danger"
+                                  : "bg-info-subtle text-info"
+                              }`}
+                            >
                               {u.rol.id_rol == 1 ? "Administrador" : "Empleado"}
                             </span>
                           </td>
                           <td>
-                            <span className={`badge ${u.activo ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary'}`}>
+                            <span
+                              className={`badge ${
+                                u.activo
+                                  ? "bg-success-subtle text-success"
+                                  : "bg-secondary-subtle text-secondary"
+                              }`}
+                            >
                               {u.activo ? "Activo" : "Inactivo"}
                             </span>
                           </td>
                           <td className="text-center">
                             <button
                               className="btn btn-sm btn-outline-primary rounded"
-                              onClick={() => navigate(`/usuarios/editar/${u.id_usuario}`)}
+                              onClick={() =>
+                                navigate(`/usuarios/editar/${u.id_usuario}`)
+                              }
                             >
                               <i className="bi bi-pencil me-1"></i>
                               Editar
@@ -172,9 +198,16 @@ const BuscarUsuarios = () => {
           ) : (
             <div className="card shadow-sm">
               <div className="card-body text-center py-5">
-                <i className="bi bi-inbox text-muted" style={{ fontSize: "3rem" }}></i>
-                <h6 className="mt-3 text-muted">No hay usuarios para mostrar</h6>
-                <p className="text-muted mb-0">Realiza una búsqueda o consulta todos los usuarios</p>
+                <i
+                  className="bi bi-inbox text-muted"
+                  style={{ fontSize: "3rem" }}
+                ></i>
+                <h6 className="mt-3 text-muted">
+                  No hay usuarios para mostrar
+                </h6>
+                <p className="text-muted mb-0">
+                  Realiza una búsqueda o consulta todos los usuarios
+                </p>
               </div>
             </div>
           )}
@@ -182,6 +215,6 @@ const BuscarUsuarios = () => {
       </div>
     </div>
   );
-}
+};
 
 export default BuscarUsuarios;

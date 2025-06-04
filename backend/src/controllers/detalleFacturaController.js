@@ -10,12 +10,12 @@ exports.registrarDetalle = async (req, res) => {
   try {
     // Registra un nuevo detalle de factura con los datos recibidos
     const detalle = await GestorDetalleFactura.registrarDetalleFactura(req.body);
-    
+
     // Si el detalle está asociado a una factura, recalcular el total automáticamente
     if (detalle.id_factura) {
       await GestorFacturas.recalcularTotalFactura(detalle.id_factura);
     }
-    
+
     // Devuelve el detalle creado y un mensaje de éxito
     res.status(201).json({
       mensaje: "Detalle de factura registrado correctamente",
@@ -34,12 +34,12 @@ exports.modificarDetalle = async (req, res) => {
       req.params.id,
       req.body
     );
-    
+
     // Si el detalle está asociado a una factura, recalcular el total automáticamente
     if (detalle.id_factura) {
       await GestorFacturas.recalcularTotalFactura(detalle.id_factura);
     }
-    
+
     // Devuelve el detalle modificado y un mensaje de éxito
     res.json({
       mensaje: "Detalle de factura modificado correctamente",
@@ -55,15 +55,15 @@ exports.anularDetalle = async (req, res) => {
   try {
     // Obtener el detalle antes de anularlo para conocer su id_factura
     const detalleAntes = await GestorDetalleFactura.obtenerDetallePorId(req.params.id);
-    
+
     // Marca el detalle como anulado en la base de datos
     const resultado = await GestorDetalleFactura.anularDetalleFactura(req.params.id);
-    
+
     // Si el detalle estaba asociado a una factura, recalcular el total automáticamente
     if (detalleAntes && detalleAntes.id_factura) {
       await GestorFacturas.recalcularTotalFactura(detalleAntes.id_factura);
     }
-    
+
     res.json(resultado);
   } catch (error) {
     // Devuelve un error si la anulación falla

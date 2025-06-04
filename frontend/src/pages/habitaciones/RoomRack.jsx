@@ -99,7 +99,9 @@ const RoomRack = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }        );        const asignadas = res.data.map((r) => r.numero_habitacion);
+          }
+        );
+        const asignadas = res.data.map((r) => r.numero_habitacion);
         setHabitacionesAsignadas(asignadas);
       } catch (error) {
         console.error("Error al obtener habitaciones asignadas:", error);
@@ -163,22 +165,26 @@ const RoomRack = () => {
   // Elimina bloqueos de una habitación
   const eliminarBloqueo = (bloqueoId) => {
     setBloqueos((prev) => prev.filter((b) => b.id !== bloqueoId));
-  };  // Renderiza la tarjeta visual de cada habitación
+  }; // Renderiza la tarjeta visual de cada habitación
   const renderHabitacion = (estado) => {
     // Determina clases CSS según estado de ocupación y limpieza
     const hoy = new Date().toISOString().split("T")[0];
-    const estadoOcupacionHoy = getEstadoOcupacion(estado.numero, hoy);    // Determinar clase de fondo con la prioridad correcta
+    const estadoOcupacionHoy = getEstadoOcupacion(estado.numero, hoy); // Determinar clase de fondo con la prioridad correcta
     let claseFondo;
     if (estadoOcupacionHoy === "bloqueada") {
       // Las habitaciones bloqueadas tienen máxima prioridad (fondo negro)
-      claseFondo = "fondo-bloqueada";    } else if (estadoOcupacionHoy === "libre" && habitacionesAsignadas.includes(estado.numero)) {
+      claseFondo = "fondo-bloqueada";
+    } else if (
+      estadoOcupacionHoy === "libre" &&
+      habitacionesAsignadas.includes(estado.numero)
+    ) {
       // Las habitaciones libres pero asignadas para hoy (fondo amarillo)
       claseFondo = "fondo-asignada";
     } else {
       // Estados normales: ocupada (azul) o libre (blanco)
       claseFondo = `fondo-${estadoOcupacionHoy}`;
     }
-    
+
     const claseTexto = `texto-${estado.limpieza}`;
 
     // Obtener bloqueos activos para esta habitación

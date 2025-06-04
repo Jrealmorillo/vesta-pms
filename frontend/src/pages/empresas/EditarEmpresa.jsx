@@ -1,4 +1,4 @@
-// Página para editar los datos de una empresa 
+// Página para editar los datos de una empresa
 // Permite cargar los datos actuales, modificarlos y guardarlos mediante un formulario controlado.
 // Incluye validaciones, notificaciones y navegación tras la edición.
 
@@ -67,26 +67,33 @@ const EditarEmpresa = () => {
       toast.success(`Empresa ${empresa.nombre} actualizada correctamente`);
       navigate("/empresas/buscar");
     } catch (error) {
-      toast.error(`Error al actualizar empresa: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `Error al actualizar empresa: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   };
   // Muestra un mensaje mientras se cargan los datos
-  if (!empresa) return (
-    <div className="container-fluid py-5 mt-4">
-      <div className="row justify-content-center">
-        <div className="col-lg-6">
-          <div className="card shadow-sm">
-            <div className="card-body text-center py-5">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Cargando...</span>
+  if (!empresa)
+    return (
+      <div className="container-fluid py-5 mt-4">
+        <div className="row justify-content-center">
+          <div className="col-lg-6">
+            <div className="card shadow-sm">
+              <div className="card-body text-center py-5">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Cargando...</span>
+                </div>
+                <p className="mt-3 text-muted">
+                  Cargando datos de la empresa...
+                </p>
               </div>
-              <p className="mt-3 text-muted">Cargando datos de la empresa...</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
 
   return (
     <div className="container-fluid py-5 mt-4">
@@ -96,10 +103,15 @@ const EditarEmpresa = () => {
           <div className="card shadow-sm">
             <div className="card-header bg-light">
               <div className="d-flex align-items-center">
-                <i className="bi bi-building-gear text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <i
+                  className="bi bi-building-gear text-primary me-3"
+                  style={{ fontSize: "1.5rem" }}
+                ></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Editar Empresa</h4>
-                  <small className="text-muted">Modificar datos de la empresa #{id}</small>
+                  <small className="text-muted">
+                    Modificar datos de la empresa #{id}
+                  </small>
                 </div>
               </div>
             </div>
@@ -121,7 +133,9 @@ const EditarEmpresa = () => {
               <div className="card-body">
                 <div className="row">
                   <div className="col-md-9 mb-3">
-                    <label className="form-label text-muted fw-medium">Nombre *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Nombre *
+                    </label>
                     <input
                       type="text"
                       name="nombre"
@@ -134,7 +148,9 @@ const EditarEmpresa = () => {
                   </div>
 
                   <div className="col-md-3 mb-3">
-                    <label className="form-label text-muted fw-medium">CIF *</label>
+                    <label className="form-label text-muted fw-medium">
+                      CIF *
+                    </label>
                     <input
                       type="text"
                       name="cif"
@@ -146,9 +162,10 @@ const EditarEmpresa = () => {
                     />
                   </div>
                 </div>
-
                 <div className="mb-3">
-                  <label className="form-label text-muted fw-medium">Dirección</label>
+                  <label className="form-label text-muted fw-medium">
+                    Dirección
+                  </label>
                   <input
                     type="text"
                     name="direccion"
@@ -157,9 +174,12 @@ const EditarEmpresa = () => {
                     value={empresa.direccion || ""}
                     onChange={manejarCambio}
                   />
-                </div>                <div className="row">
+                </div>{" "}
+                <div className="row">
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Ciudad</label>
+                    <label className="form-label text-muted fw-medium">
+                      Ciudad
+                    </label>
                     <input
                       type="text"
                       name="ciudad"
@@ -170,7 +190,9 @@ const EditarEmpresa = () => {
                     />
                   </div>
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">País</label>
+                    <label className="form-label text-muted fw-medium">
+                      País
+                    </label>
                     <input
                       type="text"
                       name="pais"
@@ -181,7 +203,9 @@ const EditarEmpresa = () => {
                     />
                   </div>
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Código postal</label>
+                    <label className="form-label text-muted fw-medium">
+                      Código postal
+                    </label>
                     <input
                       type="text"
                       name="codigo_postal"
@@ -191,9 +215,12 @@ const EditarEmpresa = () => {
                       onChange={manejarCambio}
                     />
                   </div>
-                </div>                <div className="row">
+                </div>{" "}
+                <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Teléfono</label>
+                    <label className="form-label text-muted fw-medium">
+                      Teléfono
+                    </label>
                     <input
                       type="tel"
                       name="telefono"
@@ -204,7 +231,9 @@ const EditarEmpresa = () => {
                     />
                   </div>
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Correo electrónico</label>
+                    <label className="form-label text-muted fw-medium">
+                      Correo electrónico
+                    </label>
                     <input
                       type="email"
                       name="email"
@@ -215,7 +244,6 @@ const EditarEmpresa = () => {
                     />
                   </div>
                 </div>
-
                 <div className="row">
                   <div className="col-md-4 mb-3">
                     <div className="form-check">
@@ -229,15 +257,19 @@ const EditarEmpresa = () => {
                           setEmpresa({ ...empresa, credito: e.target.checked })
                         }
                       />
-                      <label className="form-check-label fw-medium" htmlFor="creditoCheck">
+                      <label
+                        className="form-check-label fw-medium"
+                        htmlFor="creditoCheck"
+                      >
                         Empresa con crédito
                       </label>
                     </div>
                   </div>
                 </div>
-
                 <div className="mb-0">
-                  <label className="form-label text-muted fw-medium">Observaciones</label>
+                  <label className="form-label text-muted fw-medium">
+                    Observaciones
+                  </label>
                   <textarea
                     name="observaciones"
                     className="form-control rounded"
@@ -253,7 +285,10 @@ const EditarEmpresa = () => {
             {/* Botones de acción */}
             <div className="row g-3">
               <div className="col-md-6">
-                <button type="submit" className="btn btn-success btn-lg w-100 rounded">
+                <button
+                  type="submit"
+                  className="btn btn-success btn-lg w-100 rounded"
+                >
                   <i className="bi bi-check-circle me-2"></i>
                   Guardar Cambios
                 </button>
@@ -277,6 +312,6 @@ const EditarEmpresa = () => {
       </div>
     </div>
   );
-}
+};
 
 export default EditarEmpresa;

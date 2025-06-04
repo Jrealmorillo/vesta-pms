@@ -72,10 +72,16 @@ const EditarUsuario = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      toast.success(`Usuario ${datos.nombre_usuario} actualizado correctamente`);
+      toast.success(
+        `Usuario ${datos.nombre_usuario} actualizado correctamente`
+      );
       navigate("/usuarios/buscar");
     } catch (error) {
-      toast.error(`Error al actualizar el usuario: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `Error al actualizar el usuario: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   };
   return (
@@ -86,7 +92,10 @@ const EditarUsuario = () => {
           <div className="card shadow-sm">
             <div className="card-header bg-light">
               <div className="d-flex align-items-center">
-                <i className="bi bi-person-gear text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <i
+                  className="bi bi-person-gear text-primary me-3"
+                  style={{ fontSize: "1.5rem" }}
+                ></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Editar Usuario</h4>
                 </div>
@@ -110,7 +119,9 @@ const EditarUsuario = () => {
                 <div className="row">
                   {/* Campo para el nombre completo */}
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Nombre completo *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Nombre completo *
+                    </label>
                     <input
                       type="text"
                       name="nombre"
@@ -124,7 +135,9 @@ const EditarUsuario = () => {
 
                   {/* Campo para el nombre de usuario */}
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Nombre de usuario *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Nombre de usuario *
+                    </label>
                     <input
                       type="text"
                       name="nombre_usuario"
@@ -138,7 +151,9 @@ const EditarUsuario = () => {
 
                   {/* Campo para el correo electrónico */}
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Correo electrónico *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Correo electrónico *
+                    </label>
                     <input
                       type="email"
                       name="mail"
@@ -152,12 +167,15 @@ const EditarUsuario = () => {
 
                   {/* Selector de rol */}
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Rol del usuario *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Rol del usuario *
+                    </label>
                     <select
                       name="id_rol"
                       className="form-select rounded"
                       value={datos.id_rol}
-                      onChange={manejarCambio}                    >
+                      onChange={manejarCambio}
+                    >
                       <option value={1}>Administrador</option>
                       <option value={2}>Empleado</option>
                     </select>
@@ -174,7 +192,10 @@ const EditarUsuario = () => {
                         onChange={manejarCambio}
                         id="activoCheck"
                       />
-                      <label className="form-check-label fw-medium" htmlFor="activoCheck">
+                      <label
+                        className="form-check-label fw-medium"
+                        htmlFor="activoCheck"
+                      >
                         <i className="bi bi-check-circle me-1 text-success"></i>
                         Usuario activo
                       </label>
@@ -185,7 +206,10 @@ const EditarUsuario = () => {
                 {/* Botones de acción */}
                 <div className="row g-3">
                   <div className="col-md-6">
-                    <button type="submit" className="btn btn-success btn-lg w-100 rounded">
+                    <button
+                      type="submit"
+                      className="btn btn-success btn-lg w-100 rounded"
+                    >
                       <i className="bi bi-check-circle me-2"></i>
                       Guardar Cambios
                     </button>
@@ -196,7 +220,9 @@ const EditarUsuario = () => {
                       className="btn btn-outline-secondary btn-lg w-100 rounded"
                       onClick={() => {
                         navigate("/usuarios/buscar");
-                        toast.info(`Edición de usuario ${datos.nombre_usuario} cancelada`);
+                        toast.info(
+                          `Edición de usuario ${datos.nombre_usuario} cancelada`
+                        );
                       }}
                     >
                       <i className="bi bi-x-circle me-2"></i>
@@ -211,6 +237,6 @@ const EditarUsuario = () => {
       </div>
     </div>
   );
-}
+};
 
 export default EditarUsuario;

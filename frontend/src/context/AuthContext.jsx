@@ -18,9 +18,13 @@ export function AuthProvider({ children }) {
     const nombre_usuario = localStorage.getItem("nombre_usuario");
     const id_rol = localStorage.getItem("id_rol");
     const id_usuario = localStorage.getItem("id_usuario");
-    
+
     if (tokenAlmacenado && nombre_usuario && id_rol && id_usuario) {
-      setUsuario({ nombre_usuario, id_rol: Number(id_rol), id_usuario: Number(id_usuario) });
+      setUsuario({
+        nombre_usuario,
+        id_rol: Number(id_rol),
+        id_usuario: Number(id_usuario),
+      });
       setToken(tokenAlmacenado);
     }
     setCargando(false); // Finaliza la carga inicial
@@ -32,10 +36,13 @@ export function AuthProvider({ children }) {
     localStorage.setItem("id_usuario", id_usuario);
     localStorage.setItem("nombre_usuario", nombre_usuario);
     localStorage.setItem("id_rol", id_rol);
-    setUsuario({ id_usuario: Number(id_usuario), nombre_usuario, id_rol: Number(id_rol) });
+    setUsuario({
+      id_usuario: Number(id_usuario),
+      nombre_usuario,
+      id_rol: Number(id_rol),
+    });
     setToken(token);
   };
-  
 
   // Función para cerrar sesión y limpiar datos de localStorage
   const logout = () => {

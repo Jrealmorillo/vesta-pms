@@ -4,6 +4,18 @@
 
 ---
 
+## 🏗️ Arquitectura y Patrón de Diseño
+
+El proyecto sigue una arquitectura cliente-servidor, separando claramente el frontend y el backend. En el backend se implementa el patrón **Modelo-Vista-Controlador (MVC)**, ampliamente utilizado en el desarrollo de aplicaciones web para organizar el código y separar responsabilidades:
+
+- **Modelos (Model):** Definen la estructura de los datos y su lógica de acceso, representando las entidades principales del sistema (Cliente, Empresa, Factura, etc.).
+- **Controladores (Controller):** Gestionan la lógica de negocio y las peticiones del usuario, actuando como intermediarios entre los modelos y las rutas.
+- **Vistas (View):** En este caso, al tratarse de una API REST, las vistas corresponden a las respuestas en formato JSON que el backend envía al frontend.
+
+El frontend, desarrollado con React, sigue una arquitectura basada en componentes reutilizables y gestión de rutas, promoviendo la separación de responsabilidades y la escalabilidad.
+
+---
+
 ## 🚀 Tecnologías Utilizadas
 
 - **Backend:** Node.js, Express, MySQL, Sequelize
@@ -34,9 +46,9 @@
 ```
 backend/
   src/
-    controllers/      # Lógica de negocio y endpoints
+    controllers/      # Lógica de negocio y endpoints (Controladores - MVC)
     middlewares/      # Autenticación y control de roles
-    models/           # Modelos Sequelize (ORM)
+    models/           # Modelos Sequelize (ORM - MVC)
     routes/           # Definición de rutas de la API
     services/         # Servicios de negocio reutilizables
     config/           # Configuración de base de datos
@@ -50,6 +62,8 @@ frontend/
     routes.js         # Definición de rutas del frontend
     main.jsx          # Arranque de la app React
     App.jsx           # Componente raíz
+    services/         # (Recomendado) Funciones para llamadas a la API y lógica reutilizable
+    assets/           # Recursos estáticos (imágenes, logos)
 ```
 
 ---
@@ -66,19 +80,23 @@ frontend/
 ## 👜 Instalación y Puesta en Marcha
 
 ### 1️⃣ Clonar el repositorio
+
 ```sh
 git clone https://github.com/Jrealmorillo/vesta-pms.git
 cd vesta-pms
 ```
 
 ### 2️⃣ Backend
+
 ```sh
 cd backend
 npm install
 ```
 
 #### 2.1 Configurar variables de entorno
+
 Crea un archivo `.env` en `backend` con los datos de conexión:
+
 ```sh
 PORT=5000
 DB_HOST=localhost
@@ -89,29 +107,37 @@ JWT_SECRET=your_secret_key
 ```
 
 #### 2.2 Crear la base de datos MySQL
+
 ```sql
 CREATE DATABASE vesta_pms;
 ```
+
 O ejecuta el script SQL incluido:
+
 ```sh
 mysql -u root -p vesta_pms < VESTA.sql
 ```
 
 #### 2.3 Iniciar el servidor backend
+
 ```sh
 npm run dev  # (Requiere nodemon)
 ```
+
 Si falla, prueba:
+
 ```sh
 node src/server.js
 ```
 
 ### 3️⃣ Frontend
+
 ```sh
 cd ../frontend
 npm install
 npm run dev
 ```
+
 Accede a la app en: [http://localhost:5173](http://localhost:5173)
 
 ---
@@ -119,6 +145,7 @@ Accede a la app en: [http://localhost:5173](http://localhost:5173)
 ## 🛠️ Endpoints y API
 
 ### **Usuarios**
+
 - `POST /usuarios/registro` – Registrar usuario
 - `GET /usuarios` – Listar usuarios
 - `GET /usuarios/:id` – Consultar usuario
@@ -127,6 +154,7 @@ Accede a la app en: [http://localhost:5173](http://localhost:5173)
 - `DELETE /usuarios/:id` – Desactivar usuario
 
 ### **Reservas**
+
 - `POST /reservas/registro` – Crear reserva
 - `GET /reservas/id/:id` – Consultar reserva
 - `PUT /reservas/:id` – Editar reserva
@@ -138,6 +166,7 @@ Accede a la app en: [http://localhost:5173](http://localhost:5173)
 - `GET /reservas/:id/historial` – Ver historial de acciones
 
 ### **Clientes y Empresas**
+
 - `POST /clientes/registro` – Registrar cliente
 - `GET /clientes` – Listar clientes
 - `GET /clientes/:id` – Consultar cliente
@@ -148,14 +177,17 @@ Accede a la app en: [http://localhost:5173](http://localhost:5173)
 - `PUT /empresas/:id` – Editar empresa
 
 ### **Habitaciones**
+
 - `GET /habitaciones` – Listar habitaciones
 - `PUT /habitaciones/:id` – Editar habitación
 
 ### **Facturación**
+
 - `POST /facturas/registro` – Generar factura
 - `GET /facturas/:id` – Consultar factura
 
 ### **Informes**
+
 - `GET /informes/ocupacion` – Informe de ocupación entre fechas
 - `GET /informes/facturacion` – Facturación diaria
 - `GET /informes/facturacion/rango` – Facturación entre fechas
@@ -173,36 +205,43 @@ Accede a la app en: [http://localhost:5173](http://localhost:5173)
 
 - Acceso protegido mediante JWT y control de roles (Administrador/Empleado).
 - Los endpoints protegidos requieren el header:
+
 ```sh
 Authorization: Bearer <tu_token>
 ```
+
 - Contraseñas cifradas con bcryptjs.
 
 ---
 
 ## 🖥️ Estructura de Carpetas Destacadas
 
-- `backend/src/controllers/` – Lógica de negocio de cada entidad.
-- `backend/src/models/` – Modelos de datos y relaciones.
+- `backend/src/controllers/` – Lógica de negocio de cada entidad (Controladores - MVC).
+- `backend/src/models/` – Modelos de datos y relaciones (Modelos - MVC).
 - `backend/src/services/` – Lógica reutilizable y operaciones complejas.
 - `frontend/src/pages/` – Páginas principales de la interfaz React.
 - `frontend/src/components/` – Componentes reutilizables (Navbar, Layout, etc).
 - `frontend/src/context/AuthContext.jsx` – Contexto global de autenticación y usuario.
+- `frontend/src/services/` – (Recomendado) Funciones para llamadas a la API y lógica reutilizable.
 
 ---
 
 ## 🛠️ Solución de Problemas
 
 **1. Puerto en uso**
+
 ```sh
 npx kill-port 5000
 npm run dev
 ```
+
 **2. Error de conexión a la base de datos**
+
 ```sh
 mysql -u root -p
 SHOW DATABASES;
 ```
+
 **3. Variables de entorno**
 Verifica que el archivo `.env` esté correctamente configurado.
 
@@ -237,10 +276,21 @@ Para dudas o colaboraciones, contacta a:
 
 ---
 
-
 # 🏨 Vesta PMS - Hassle-free Hotel Management System (English)
 
 **Vesta PMS** is a complete and modern Property Management System (PMS) designed to simplify the management of reservations, clients, billing, rooms, reports, and users for hotels of any size. Built with **Node.js, Express, MySQL, React, and Bootstrap**, Vesta PMS provides an efficient, intuitive, and secure experience for hotel staff and management.
+
+---
+
+## 🏗️ Architecture and Design Pattern
+
+The project follows a client-server architecture, clearly separating the frontend and backend. The backend implements the **Model-View-Controller (MVC)** pattern, widely used in web application development to organize code and separate responsibilities:
+
+- **Models:** Define the data structure and access logic, representing the main entities of the system (Client, Company, Invoice, etc.).
+- **Controllers:** Manage business logic and user requests, acting as intermediaries between models and routes.
+- **Views:** In this case, since it is a REST API, the views correspond to the JSON format responses that the backend sends to the frontend.
+
+The frontend, developed with React, follows an architecture based on reusable components and route management, promoting separation of responsibilities and scalability.
 
 ---
 
@@ -274,9 +324,9 @@ Para dudas o colaboraciones, contacta a:
 ```
 backend/
   src/
-    controllers/      # Business logic and endpoints
+    controllers/      # Business logic and endpoints (Controllers - MVC)
     middlewares/      # Authentication and role control
-    models/           # Sequelize models (ORM)
+    models/           # Sequelize models (ORM - MVC)
     routes/           # API route definitions
     services/         # Reusable business services
     config/           # Database configuration
@@ -290,6 +340,8 @@ frontend/
     routes.js         # Frontend route definitions
     main.jsx          # React app entry point
     App.jsx           # Root component
+    services/         # (Recommended) Functions for API calls and reusable logic
+    assets/           # Static resources (images, logos)
 ```
 
 ---
@@ -306,19 +358,23 @@ frontend/
 ## 👜 Installation & Getting Started
 
 ### 1️⃣ Clone the repository
+
 ```sh
 git clone https://github.com/Jrealmorillo/vesta-pms.git
 cd vesta-pms
 ```
 
 ### 2️⃣ Backend
+
 ```sh
 cd backend
 npm install
 ```
 
 #### 2.1 Configure environment variables
+
 Create a `.env` file in `backend` with your connection data:
+
 ```sh
 PORT=5000
 DB_HOST=localhost
@@ -329,29 +385,37 @@ JWT_SECRET=your_secret_key
 ```
 
 #### 2.2 Create the MySQL database
+
 ```sql
 CREATE DATABASE vesta_pms;
 ```
+
 Or run the included SQL script:
+
 ```sh
 mysql -u root -p vesta_pms < VESTA.sql
 ```
 
 #### 2.3 Start the backend server
+
 ```sh
 npm run dev  # (Requires nodemon)
 ```
+
 If it fails, try:
+
 ```sh
 node src/server.js
 ```
 
 ### 3️⃣ Frontend
+
 ```sh
 cd ../frontend
 npm install
 npm run dev
 ```
+
 Access the app at: [http://localhost:5173](http://localhost:5173)
 
 ---
@@ -359,6 +423,7 @@ Access the app at: [http://localhost:5173](http://localhost:5173)
 ## 🛠️ Endpoints & API
 
 ### **Users**
+
 - `POST /usuarios/registro` – Register user
 - `GET /usuarios` – List users
 - `GET /usuarios/:id` – Get user
@@ -367,6 +432,7 @@ Access the app at: [http://localhost:5173](http://localhost:5173)
 - `DELETE /usuarios/:id` – Deactivate user
 
 ### **Reservations**
+
 - `POST /reservas/registro` – Create reservation
 - `GET /reservas/id/:id` – Get reservation
 - `PUT /reservas/:id` – Edit reservation
@@ -378,6 +444,7 @@ Access the app at: [http://localhost:5173](http://localhost:5173)
 - `GET /reservas/:id/historial` – View reservation history
 
 ### **Clients & Companies**
+
 - `POST /clientes/registro` – Register client
 - `GET /clientes` – List clients
 - `GET /clientes/:id` – Get client
@@ -388,14 +455,17 @@ Access the app at: [http://localhost:5173](http://localhost:5173)
 - `PUT /empresas/:id` – Edit company
 
 ### **Rooms**
+
 - `GET /habitaciones` – List rooms
 - `PUT /habitaciones/:id` – Edit room
 
 ### **Billing**
+
 - `POST /facturas/registro` – Generate invoice
 - `GET /facturas/:id` – Get invoice
 
 ### **Reports**
+
 - `GET /informes/ocupacion` – Occupancy report (date range)
 - `GET /informes/facturacion` – Daily billing
 - `GET /informes/facturacion/rango` – Billing between dates
@@ -413,36 +483,43 @@ Access the app at: [http://localhost:5173](http://localhost:5173)
 
 - Protected access via JWT and role control (Admin/Employee).
 - Protected endpoints require the header:
+
 ```sh
 Authorization: Bearer <your_token>
 ```
+
 - Passwords encrypted with bcryptjs.
 
 ---
 
 ## 🖥️ Key Folder Structure
 
-- `backend/src/controllers/` – Business logic for each entity.
-- `backend/src/models/` – Data models and relationships.
+- `backend/src/controllers/` – Business logic for each entity (Controllers - MVC).
+- `backend/src/models/` – Data models and relationships (Models - MVC).
 - `backend/src/services/` – Reusable logic and complex operations.
 - `frontend/src/pages/` – Main React interface pages.
 - `frontend/src/components/` – Reusable components (Navbar, Layout, etc).
 - `frontend/src/context/AuthContext.jsx` – Global authentication and user context.
+- `frontend/src/services/` – (Recommended) Functions for API calls and reusable logic.
 
 ---
 
 ## 🛠️ Troubleshooting
 
 **1. Port in use**
+
 ```sh
 npx kill-port 5000
 npm run dev
 ```
+
 **2. Database connection error**
+
 ```sh
 mysql -u root -p
 SHOW DATABASES;
 ```
+
 **3. Environment variables**
 Check that your `.env` file is correctly configured.
 
@@ -476,4 +553,3 @@ For questions or collaborations, contact:
 📧 **jrealmorillo@gmail.com**
 
 ---
-

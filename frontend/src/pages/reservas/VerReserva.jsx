@@ -29,7 +29,11 @@ const VerReserva = () => {
         );
         setReserva(response.data);
       } catch (error) {
-        toast.error(`Error al obtener la reserva: ${error.response?.data?.error || error.message}`);
+        toast.error(
+          `Error al obtener la reserva: ${
+            error.response?.data?.error || error.message
+          }`
+        );
       }
     };
 
@@ -67,7 +71,11 @@ const VerReserva = () => {
       );
       setReserva(response.data);
     } catch (error) {
-      toast.error(`Error al recuperar la reserva: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `Error al recuperar la reserva: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   };
 
@@ -101,7 +109,11 @@ const VerReserva = () => {
       );
       setReserva(response.data);
     } catch (error) {
-      toast.error(`No se pudo anular la reserva: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `No se pudo anular la reserva: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   };
   if (!reserva) {
@@ -124,8 +136,12 @@ const VerReserva = () => {
             <div className="card-body p-4">
               <div className="d-flex justify-content-between align-items-center flex-wrap">
                 <div>
-                  <h1 className="h3 mb-2 text-dark">Reserva #{reserva.id_reserva}</h1>
-                  <p className="text-muted mb-0">Información detallada de la reserva</p>
+                  <h1 className="h3 mb-2 text-dark">
+                    Reserva #{reserva.id_reserva}
+                  </h1>
+                  <p className="text-muted mb-0">
+                    Información detallada de la reserva
+                  </p>
                 </div>
                 <div>
                   <span
@@ -138,7 +154,7 @@ const VerReserva = () => {
                         ? "bg-primary"
                         : "bg-secondary"
                     }`}
-                    style={{ borderRadius: '20px' }}
+                    style={{ borderRadius: "20px" }}
                   >
                     {reserva.estado}
                   </span>
@@ -147,46 +163,72 @@ const VerReserva = () => {
             </div>
           </div>
         </div>
-      </div>      {/* Información principal de la reserva */}
+      </div>{" "}
+      {/* Información principal de la reserva */}
       <div className="row mb-4">
         <div className="col-lg-8">
           <div className="card border-0 shadow-sm h-100">
             <div className="card-header bg-light border-0 py-3">
-              <h5 className="mb-0 fw-semibold text-dark">Datos de la reserva</h5>
+              <h5 className="mb-0 fw-semibold text-dark">
+                Datos de la reserva
+              </h5>
             </div>
             <div className="card-body p-4">
               <div className="row g-3">
                 <div className="col-md-6">
-                  <label className="form-label text-muted small mb-1">Huésped principal</label>
+                  <label className="form-label text-muted small mb-1">
+                    Huésped principal
+                  </label>
                   <p className="fw-medium mb-3">
-                    {reserva.nombre_huesped} {reserva.primer_apellido_huesped} {reserva.segundo_apellido_huesped}
+                    {reserva.nombre_huesped} {reserva.primer_apellido_huesped}{" "}
+                    {reserva.segundo_apellido_huesped}
                   </p>
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label text-muted small mb-1">Número de habitación</label>
-                  <p className="fw-medium mb-3">{reserva.numero_habitacion || "Sin asignar"}</p>
+                  <label className="form-label text-muted small mb-1">
+                    Número de habitación
+                  </label>
+                  <p className="fw-medium mb-3">
+                    {reserva.numero_habitacion || "Sin asignar"}
+                  </p>
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label text-muted small mb-1">Fecha de entrada</label>
-                  <p className="fw-medium mb-3">{new Date(reserva.fecha_entrada).toLocaleDateString('es-ES', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}</p>
+                  <label className="form-label text-muted small mb-1">
+                    Fecha de entrada
+                  </label>
+                  <p className="fw-medium mb-3">
+                    {new Date(reserva.fecha_entrada).toLocaleDateString(
+                      "es-ES",
+                      {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )}
+                  </p>
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label text-muted small mb-1">Fecha de salida</label>
-                  <p className="fw-medium mb-3">{new Date(reserva.fecha_salida).toLocaleDateString('es-ES', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}</p>
+                  <label className="form-label text-muted small mb-1">
+                    Fecha de salida
+                  </label>
+                  <p className="fw-medium mb-3">
+                    {new Date(reserva.fecha_salida).toLocaleDateString(
+                      "es-ES",
+                      {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }
+                    )}
+                  </p>
                 </div>
                 {reserva.observaciones && (
                   <div className="col-12">
-                    <label className="form-label text-muted small mb-1">Observaciones</label>
+                    <label className="form-label text-muted small mb-1">
+                      Observaciones
+                    </label>
                     <div className="bg-light p-3 rounded">
                       <p className="mb-0">{reserva.observaciones}</p>
                     </div>
@@ -196,7 +238,7 @@ const VerReserva = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="col-lg-4">
           <div className="card border-0 shadow-sm h-100">
             <div className="card-header bg-light border-0 py-3">
@@ -204,17 +246,26 @@ const VerReserva = () => {
             </div>
             <div className="card-body p-4">
               <div className="mb-3">
-                <label className="form-label text-muted small mb-1">ID Cliente</label>
-                <p className="fw-medium mb-0">{reserva.id_cliente || "No asignado"}</p>
+                <label className="form-label text-muted small mb-1">
+                  ID Cliente
+                </label>
+                <p className="fw-medium mb-0">
+                  {reserva.id_cliente || "No asignado"}
+                </p>
               </div>
               <div className="mb-0">
-                <label className="form-label text-muted small mb-1">ID Empresa</label>
-                <p className="fw-medium mb-0">{reserva.id_empresa || "No asignado"}</p>
+                <label className="form-label text-muted small mb-1">
+                  ID Empresa
+                </label>
+                <p className="fw-medium mb-0">
+                  {reserva.id_empresa || "No asignado"}
+                </p>
               </div>
             </div>
           </div>
         </div>
-      </div>      {/* Líneas de reserva */}
+      </div>{" "}
+      {/* Líneas de reserva */}
       <div className="row mb-4">
         <div className="col-12">
           <div className="card border-0 shadow-sm">
@@ -228,11 +279,19 @@ const VerReserva = () => {
                     <thead className="table-light">
                       <tr>
                         <th className="fw-semibold text-muted">Fecha</th>
-                        <th className="fw-semibold text-muted">Tipo habitación</th>
+                        <th className="fw-semibold text-muted">
+                          Tipo habitación
+                        </th>
                         <th className="fw-semibold text-muted">Régimen</th>
-                        <th className="fw-semibold text-muted text-center">Habitaciones</th>
-                        <th className="fw-semibold text-muted text-center">Ocupación</th>
-                        <th className="fw-semibold text-muted text-end">Precio</th>
+                        <th className="fw-semibold text-muted text-center">
+                          Habitaciones
+                        </th>
+                        <th className="fw-semibold text-muted text-center">
+                          Ocupación
+                        </th>
+                        <th className="fw-semibold text-muted text-end">
+                          Precio
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -242,14 +301,19 @@ const VerReserva = () => {
                           <td>{linea.tipo_habitacion}</td>
                           <td>{linea.regimen}</td>
                           <td className="text-center">
-                            <span className="badge bg-light text-dark">{linea.cantidad_habitaciones}</span>
+                            <span className="badge bg-light text-dark">
+                              {linea.cantidad_habitaciones}
+                            </span>
                           </td>
                           <td className="text-center">
                             <small className="text-muted">
-                              {linea.cantidad_adultos} ad / {linea.cantidad_ninos} ni
+                              {linea.cantidad_adultos} ad /{" "}
+                              {linea.cantidad_ninos} ni
                             </small>
                           </td>
-                          <td className="text-end fw-semibold">{linea.precio} €</td>
+                          <td className="text-end fw-semibold">
+                            {linea.precio} €
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -257,22 +321,27 @@ const VerReserva = () => {
                 </div>
               ) : (
                 <div className="p-4 text-center">
-                  <p className="text-muted mb-0">No hay líneas de reserva asociadas</p>
+                  <p className="text-muted mb-0">
+                    No hay líneas de reserva asociadas
+                  </p>
                 </div>
               )}
             </div>
           </div>
         </div>
-      </div>      {/* Acciones de la reserva */}
+      </div>{" "}
+      {/* Acciones de la reserva */}
       <div className="row">
         <div className="col-12">
           <div className="card border-0 shadow-sm">
             <div className="card-header bg-light border-0 py-3">
-              <h5 className="mb-0 fw-semibold text-dark">Acciones disponibles</h5>
+              <h5 className="mb-0 fw-semibold text-dark">
+                Acciones disponibles
+              </h5>
             </div>
             <div className="card-body p-4">
               <div className="d-flex justify-content-center gap-3">
-                  {/* Botón para modificar la reserva */}
+                {/* Botón para modificar la reserva */}
                 <button
                   className="btn btn-primary px-4 py-2"
                   onClick={() => {
@@ -288,11 +357,11 @@ const VerReserva = () => {
                 >
                   Modificar reserva
                 </button>
-                
+
                 {/* Botón para recuperar reserva anulada */}
                 {reserva.estado === "Anulada" && (
-                  <button 
-                    className="btn btn-warning px-4 py-2" 
+                  <button
+                    className="btn btn-warning px-4 py-2"
                     onClick={recuperarReserva}
                   >
                     Recuperar reserva
@@ -308,7 +377,7 @@ const VerReserva = () => {
                     Anular reserva
                   </button>
                 )}
-                
+
                 {/* Enlace al historial de la reserva */}
                 <Link
                   to={`/reservas/${reserva.id_reserva}/historial`}
@@ -316,7 +385,6 @@ const VerReserva = () => {
                 >
                   Ver historial
                 </Link>
-                
               </div>
             </div>
           </div>

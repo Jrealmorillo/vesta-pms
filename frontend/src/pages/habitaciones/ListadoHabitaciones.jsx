@@ -17,12 +17,19 @@ const ListadoHabitaciones = () => {
   // Obtiene todas las habitaciones del backend
   const obtenerHabitaciones = useCallback(async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/habitaciones`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/habitaciones`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setHabitaciones(res.data.habitaciones); // Actualiza el estado con la lista de habitaciones
     } catch (error) {
-      toast.error(`Error al obtener habitaciones: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `Error al obtener habitaciones: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   }, [token]);
 
@@ -47,25 +54,26 @@ const ListadoHabitaciones = () => {
       confirmButtonColor: "#d33",
       cancelButtonColor: "#6c757d",
     });
-  
+
     if (confirmacion.isConfirmed) {
       eliminarHabitacion(id);
     }
   };
-  
+
   // Elimina la habitación seleccionada y recarga la lista
   const eliminarHabitacion = async (id) => {
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/habitaciones/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.delete(`${import.meta.env.VITE_API_URL}/habitaciones/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       toast.success(`Habitación ${id} eliminada correctamente`);
       obtenerHabitaciones(); // Actualiza la lista
     } catch (error) {
-      toast.error(`Error al eliminar habitación: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `Error al eliminar habitación: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   };
   return (
@@ -92,32 +100,55 @@ const ListadoHabitaciones = () => {
                   <table className="table table-hover align-middle mb-0">
                     <thead className="table-light">
                       <tr>
-                        <th><i className="bi bi-door-closed me-2"></i>Nº Habitación</th>
-                        <th><i className="bi bi-house me-2"></i>Tipo</th>
-                        <th><i className="bi bi-people me-2"></i>Capacidad</th>
-                        <th><i className="bi bi-currency-euro me-2"></i>Precio oficial</th>
-                        <th><i className="bi bi-journal-text me-2"></i>Observaciones</th>
-                        <th><i className="bi bi-gear me-2"></i>Acciones</th>
+                        <th>
+                          <i className="bi bi-door-closed me-2"></i>Nº
+                          Habitación
+                        </th>
+                        <th>
+                          <i className="bi bi-house me-2"></i>Tipo
+                        </th>
+                        <th>
+                          <i className="bi bi-people me-2"></i>Capacidad
+                        </th>
+                        <th>
+                          <i className="bi bi-currency-euro me-2"></i>Precio
+                          oficial
+                        </th>
+                        <th>
+                          <i className="bi bi-journal-text me-2"></i>
+                          Observaciones
+                        </th>
+                        <th>
+                          <i className="bi bi-gear me-2"></i>Acciones
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {habitaciones.map((h) => (
                         <tr key={h.numero_habitacion}>
                           <td>
-                            <span className="badge bg-primary fs-6">{h.numero_habitacion}</span>
+                            <span className="badge bg-primary fs-6">
+                              {h.numero_habitacion}
+                            </span>
                           </td>
                           <td>
                             <span className="fw-medium">{h.tipo}</span>
                           </td>
                           <td>
-                            <small className="text-muted">min:</small> {h.capacidad_minima}, 
-                            <small className="text-muted"> max:</small> {h.capacidad_maxima}
+                            <small className="text-muted">min:</small>{" "}
+                            {h.capacidad_minima},
+                            <small className="text-muted"> max:</small>{" "}
+                            {h.capacidad_maxima}
                           </td>
                           <td>
-                            <span className="fw-bold text-success">{parseFloat(h.precio_oficial).toFixed(2)} €</span>
+                            <span className="fw-bold text-success">
+                              {parseFloat(h.precio_oficial).toFixed(2)} €
+                            </span>
                           </td>
                           <td>
-                            <span className={h.notas ? "text-dark" : "text-muted"}>
+                            <span
+                              className={h.notas ? "text-dark" : "text-muted"}
+                            >
                               {h.notas || "Sin observaciones"}
                             </span>
                           </td>
@@ -132,7 +163,11 @@ const ListadoHabitaciones = () => {
                               </button>
                               <button
                                 className="btn btn-sm btn-outline-danger d-flex align-items-center"
-                                onClick={() => confirmarEliminacionHabitacion(h.numero_habitacion)}
+                                onClick={() =>
+                                  confirmarEliminacionHabitacion(
+                                    h.numero_habitacion
+                                  )
+                                }
                               >
                                 <i className="bi bi-trash me-1"></i>
                                 Eliminar
@@ -149,9 +184,16 @@ const ListadoHabitaciones = () => {
           ) : (
             <div className="card shadow-sm">
               <div className="card-body text-center py-5">
-                <i className="bi bi-door-closed text-muted" style={{ fontSize: "4rem" }}></i>
-                <h4 className="text-muted mt-3">No hay habitaciones registradas</h4>
-                <p className="text-muted">Comienza registrando tu primera habitación</p>
+                <i
+                  className="bi bi-door-closed text-muted"
+                  style={{ fontSize: "4rem" }}
+                ></i>
+                <h4 className="text-muted mt-3">
+                  No hay habitaciones registradas
+                </h4>
+                <p className="text-muted">
+                  Comienza registrando tu primera habitación
+                </p>
               </div>
             </div>
           )}
@@ -159,7 +201,6 @@ const ListadoHabitaciones = () => {
       </div>
     </div>
   );
-}
+};
 
 export default ListadoHabitaciones;
-

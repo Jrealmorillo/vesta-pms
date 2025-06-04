@@ -46,7 +46,7 @@ async function cargarReservasHoy() {
           precio: precioPorNoche.toFixed(2),
           activa: true
         });
-        
+
       }
 
       console.log(`Reserva de ${reserva.nombre_huesped} ${reserva.primer_apellido_huesped} insertada con ${noches} líneas.`);

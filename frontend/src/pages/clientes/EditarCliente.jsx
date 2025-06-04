@@ -64,29 +64,32 @@ const EditarCliente = () => {
           },
         }
       );
-      toast.success(`Cliente ${cliente.nombre} ${cliente.primer_apellido} actualizado correctamente`);
+      toast.success(
+        `Cliente ${cliente.nombre} ${cliente.primer_apellido} actualizado correctamente`
+      );
       navigate("/clientes/buscar");
     } catch (error) {
       toast.error(`${error.response?.data?.error || error.message}`);
     }
   };
   // Muestra un mensaje mientras se cargan los datos
-  if (!cliente) return (
-    <div className="container-fluid py-5 mt-4">
-      <div className="row justify-content-center">
-        <div className="col-lg-6">
-          <div className="card shadow-sm">
-            <div className="card-body text-center py-5">
-              <div className="spinner-border text-primary" role="status">
-                <span className="visually-hidden">Cargando...</span>
+  if (!cliente)
+    return (
+      <div className="container-fluid py-5 mt-4">
+        <div className="row justify-content-center">
+          <div className="col-lg-6">
+            <div className="card shadow-sm">
+              <div className="card-body text-center py-5">
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Cargando...</span>
+                </div>
+                <p className="mt-3 text-muted">Cargando datos del cliente...</p>
               </div>
-              <p className="mt-3 text-muted">Cargando datos del cliente...</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
 
   return (
     <div className="container-fluid py-5 mt-4">
@@ -96,10 +99,15 @@ const EditarCliente = () => {
           <div className="card shadow-sm">
             <div className="card-header bg-light">
               <div className="d-flex align-items-center">
-                <i className="bi bi-person-gear text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <i
+                  className="bi bi-person-gear text-primary me-3"
+                  style={{ fontSize: "1.5rem" }}
+                ></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Editar Cliente</h4>
-                  <small className="text-muted">Modificar datos del cliente #{id}</small>
+                  <small className="text-muted">
+                    Modificar datos del cliente #{id}
+                  </small>
                 </div>
               </div>
             </div>
@@ -121,7 +129,9 @@ const EditarCliente = () => {
               <div className="card-body">
                 <div className="row">
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Nombre *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Nombre *
+                    </label>
                     <input
                       type="text"
                       name="nombre"
@@ -133,7 +143,9 @@ const EditarCliente = () => {
                     />
                   </div>
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Primer apellido *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Primer apellido *
+                    </label>
                     <input
                       type="text"
                       name="primer_apellido"
@@ -145,7 +157,9 @@ const EditarCliente = () => {
                     />
                   </div>
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Segundo apellido</label>
+                    <label className="form-label text-muted fw-medium">
+                      Segundo apellido
+                    </label>
                     <input
                       type="text"
                       name="segundo_apellido"
@@ -159,7 +173,9 @@ const EditarCliente = () => {
 
                 <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Fecha de nacimiento *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Fecha de nacimiento *
+                    </label>
                     <input
                       type="date"
                       name="fecha_nacimiento"
@@ -170,13 +186,16 @@ const EditarCliente = () => {
                     />
                   </div>
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Género *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Género *
+                    </label>
                     <select
                       name="genero"
                       className="form-select rounded"
                       value={cliente.genero}
                       onChange={manejarCambio}
-                      required                    >
+                      required
+                    >
                       <option value="Masculino">Masculino</option>
                       <option value="Femenino">Femenino</option>
                     </select>
@@ -185,20 +204,30 @@ const EditarCliente = () => {
 
                 <div className="row">
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Tipo de documento *</label>                    <select
+                    <label className="form-label text-muted fw-medium">
+                      Tipo de documento *
+                    </label>{" "}
+                    <select
                       name="tipo_documento"
                       className="form-select rounded"
                       value={cliente.tipo_documento}
                       onChange={manejarCambio}
-                      required                    >
+                      required
+                    >
                       <option value="DNI">DNI</option>
                       <option value="Pasaporte">Pasaporte</option>
-                      <option value="Documento de Identidad">Documento de Identidad</option>
-                      <option value="Permiso de Residencia">Permiso de Residencia</option>
+                      <option value="Documento de Identidad">
+                        Documento de Identidad
+                      </option>
+                      <option value="Permiso de Residencia">
+                        Permiso de Residencia
+                      </option>
                     </select>
                   </div>
                   <div className="col-md-5 mb-3">
-                    <label className="form-label text-muted fw-medium">Número de documento *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Número de documento *
+                    </label>
                     <input
                       type="text"
                       name="numero_documento"
@@ -210,7 +239,9 @@ const EditarCliente = () => {
                     />
                   </div>
                   <div className="col-md-3 mb-3">
-                    <label className="form-label text-muted fw-medium">Fecha de expedición *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Fecha de expedición *
+                    </label>
                     <input
                       type="date"
                       name="fecha_expedicion"
@@ -234,7 +265,9 @@ const EditarCliente = () => {
               </div>
               <div className="card-body">
                 <div className="mb-3">
-                  <label className="form-label text-muted fw-medium">Dirección</label>
+                  <label className="form-label text-muted fw-medium">
+                    Dirección
+                  </label>
                   <input
                     type="text"
                     name="direccion"
@@ -247,7 +280,9 @@ const EditarCliente = () => {
 
                 <div className="row">
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Ciudad</label>
+                    <label className="form-label text-muted fw-medium">
+                      Ciudad
+                    </label>
                     <input
                       type="text"
                       name="ciudad"
@@ -258,7 +293,9 @@ const EditarCliente = () => {
                     />
                   </div>
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">País</label>
+                    <label className="form-label text-muted fw-medium">
+                      País
+                    </label>
                     <input
                       type="text"
                       name="pais"
@@ -269,7 +306,9 @@ const EditarCliente = () => {
                     />
                   </div>
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Código postal</label>
+                    <label className="form-label text-muted fw-medium">
+                      Código postal
+                    </label>
                     <input
                       type="text"
                       name="codigo_postal"
@@ -283,7 +322,9 @@ const EditarCliente = () => {
 
                 <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Teléfono</label>
+                    <label className="form-label text-muted fw-medium">
+                      Teléfono
+                    </label>
                     <input
                       type="tel"
                       name="telefono"
@@ -294,7 +335,9 @@ const EditarCliente = () => {
                     />
                   </div>
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Correo electrónico</label>
+                    <label className="form-label text-muted fw-medium">
+                      Correo electrónico
+                    </label>
                     <input
                       type="email"
                       name="email"
@@ -307,7 +350,9 @@ const EditarCliente = () => {
                 </div>
 
                 <div className="mb-0">
-                  <label className="form-label text-muted fw-medium">Observaciones</label>
+                  <label className="form-label text-muted fw-medium">
+                    Observaciones
+                  </label>
                   <textarea
                     name="observaciones"
                     className="form-control rounded"
@@ -323,7 +368,10 @@ const EditarCliente = () => {
             {/* Botones de acción */}
             <div className="row g-3">
               <div className="col-md-6">
-                <button type="submit" className="btn btn-success btn-lg w-100 rounded">
+                <button
+                  type="submit"
+                  className="btn btn-success btn-lg w-100 rounded"
+                >
                   <i className="bi bi-check-circle me-2"></i>
                   Guardar Cambios
                 </button>
@@ -334,7 +382,9 @@ const EditarCliente = () => {
                   className="btn btn-outline-secondary btn-lg w-100 rounded"
                   onClick={() => {
                     navigate("/clientes/buscar");
-                    toast.info(`Edición de cliente ${cliente.nombre} ${cliente.primer_apellido} cancelada`);
+                    toast.info(
+                      `Edición de cliente ${cliente.nombre} ${cliente.primer_apellido} cancelada`
+                    );
                   }}
                 >
                   <i className="bi bi-x-circle me-2"></i>

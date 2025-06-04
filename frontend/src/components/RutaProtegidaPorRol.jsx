@@ -1,4 +1,4 @@
-// Componente para proteger rutas según el rol del usuario 
+// Componente para proteger rutas según el rol del usuario
 // Solo permite el acceso si el usuario está autenticado y tiene el rol requerido.
 // Redirige al login si no hay sesión, o al dashboard si el rol no coincide.
 
@@ -16,6 +16,6 @@ const RutaProtegidaPorRol = ({ children, rolRequerido }) => {
   if (usuario.id_rol !== rolRequerido) return <Navigate to="/dashboard" />;
 
   return children;
-}
+};
 
 export default RutaProtegidaPorRol;

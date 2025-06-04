@@ -92,7 +92,7 @@ class GestorFacturas {
                     },
                     {
                         model: Empresa,
-                        as: "empresa", 
+                        as: "empresa",
                         required: false // Incluye empresa si existe
                     },
                     {
@@ -204,11 +204,11 @@ class GestorFacturas {
             // Actualizar el total de la factura
             await factura.update({ total: nuevoTotal });
 
-            return { 
+            return {
                 mensaje: "Total de factura recalculado correctamente",
                 total_anterior: factura.total,
                 total_nuevo: nuevoTotal,
-                factura 
+                factura
             };
         } catch (error) {
             throw new Error("Error al recalcular total de factura: " + error.message);

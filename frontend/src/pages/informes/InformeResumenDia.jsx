@@ -26,10 +26,13 @@ const InformeResumenDia = () => {
       }
     } catch (error) {
       toast.error(
-        `Error al obtener el informe: ${error.response?.data?.error || error.message}`
+        `Error al obtener el informe: ${
+          error.response?.data?.error || error.message
+        }`
       );
     }
-  };  return (
+  };
+  return (
     <div className="container-fluid py-5 mt-4">
       {/* Header Principal */}
       <div className="card border-0 shadow-sm mb-4">
@@ -110,7 +113,9 @@ const InformeResumenDia = () => {
             <div className="card border-0 bg-light h-100">
               <div className="card-body text-center">
                 <i className="bi bi-currency-euro text-info fs-2 mb-2"></i>
-                <h5 className="mb-1">{parseFloat(resumen.facturacion || 0).toFixed(2)}€</h5>
+                <h5 className="mb-1">
+                  {parseFloat(resumen.facturacion || 0).toFixed(2)}€
+                </h5>
                 <small className="text-muted">Facturación Total</small>
               </div>
             </div>
@@ -124,7 +129,7 @@ const InformeResumenDia = () => {
           <div className="card-header bg-white border-bottom">
             <h5 className="mb-0 d-flex align-items-center">
               <i className="bi bi-table text-muted me-2"></i>
-              Resumen del {new Date(fecha).toLocaleDateString('es-ES')}
+              Resumen del {new Date(fecha).toLocaleDateString("es-ES")}
               <span className="badge bg-primary ms-2">Informe Diario</span>
             </h5>
           </div>
@@ -145,7 +150,7 @@ const InformeResumenDia = () => {
                   <tr>
                     <td className="py-3">
                       <span className="fw-medium">
-                        {new Date(resumen.fecha).toLocaleDateString('es-ES')}
+                        {new Date(resumen.fecha).toLocaleDateString("es-ES")}
                       </span>
                     </td>
                     <td className="py-3 text-center">
@@ -164,9 +169,7 @@ const InformeResumenDia = () => {
                       </span>
                     </td>
                     <td className="py-3 text-center">
-                      <span className="badge bg-success">
-                        {resumen.libres}
-                      </span>
+                      <span className="badge bg-success">{resumen.libres}</span>
                     </td>
                     <td className="py-3 text-end">
                       <span className="fw-bold">
@@ -182,17 +185,24 @@ const InformeResumenDia = () => {
       ) : fecha ? (
         <div className="card border-0 shadow-sm">
           <div className="card-body text-center py-5">
-            <i className="bi bi-calendar-day text-muted mb-3" style={{ fontSize: '3rem' }}></i>
+            <i
+              className="bi bi-calendar-day text-muted mb-3"
+              style={{ fontSize: "3rem" }}
+            ></i>
             <h5 className="text-muted mb-2">No hay datos disponibles</h5>
             <p className="text-muted mb-0">
-              No se encontraron datos para el <strong>{new Date(fecha).toLocaleDateString('es-ES')}</strong>
+              No se encontraron datos para el{" "}
+              <strong>{new Date(fecha).toLocaleDateString("es-ES")}</strong>
             </p>
           </div>
         </div>
       ) : (
         <div className="card border-0 shadow-sm">
           <div className="card-body text-center py-5">
-            <i className="bi bi-calendar-event text-muted mb-3" style={{ fontSize: '3rem' }}></i>
+            <i
+              className="bi bi-calendar-event text-muted mb-3"
+              style={{ fontSize: "3rem" }}
+            ></i>
             <h5 className="text-muted mb-2">Selecciona una fecha</h5>
             <p className="text-muted mb-0">
               Elige una fecha para obtener el resumen de actividad

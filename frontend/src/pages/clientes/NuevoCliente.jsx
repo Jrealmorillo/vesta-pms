@@ -83,7 +83,10 @@ const NuevoCliente = () => {
           <div className="card shadow-sm">
             <div className="card-header bg-light">
               <div className="d-flex align-items-center">
-                <i className="bi bi-person-plus text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <i
+                  className="bi bi-person-plus text-primary me-3"
+                  style={{ fontSize: "1.5rem" }}
+                ></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Registrar Nuevo Cliente</h4>
                 </div>
@@ -107,7 +110,9 @@ const NuevoCliente = () => {
               <div className="card-body">
                 <div className="row">
                   <div className="col-md-3 mb-3">
-                    <label className="form-label text-muted fw-medium">Nombre *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Nombre *
+                    </label>
                     <input
                       type="text"
                       name="nombre"
@@ -119,7 +124,9 @@ const NuevoCliente = () => {
                     />
                   </div>
                   <div className="col-md-3 mb-3">
-                    <label className="form-label text-muted fw-medium">Primer apellido *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Primer apellido *
+                    </label>
                     <input
                       type="text"
                       name="primer_apellido"
@@ -131,7 +138,9 @@ const NuevoCliente = () => {
                     />
                   </div>
                   <div className="col-md-3 mb-3">
-                    <label className="form-label text-muted fw-medium">Segundo apellido</label>
+                    <label className="form-label text-muted fw-medium">
+                      Segundo apellido
+                    </label>
                     <input
                       type="text"
                       name="segundo_apellido"
@@ -142,7 +151,9 @@ const NuevoCliente = () => {
                     />
                   </div>
                   <div className="col-md-3 mb-3">
-                    <label className="form-label text-muted fw-medium">Fecha de nacimiento *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Fecha de nacimiento *
+                    </label>
                     <input
                       type="date"
                       name="fecha_nacimiento"
@@ -156,34 +167,46 @@ const NuevoCliente = () => {
 
                 <div className="row">
                   <div className="col-md-3 mb-3">
-                    <label className="form-label text-muted fw-medium">Género *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Género *
+                    </label>
                     <select
                       name="genero"
                       className="form-select rounded"
                       value={cliente.genero}
                       onChange={manejarCambio}
-                      required                    >
+                      required
+                    >
                       <option value="Masculino">Masculino</option>
                       <option value="Femenino">Femenino</option>
                     </select>
                   </div>
 
                   <div className="col-md-3 mb-3">
-                    <label className="form-label text-muted fw-medium">Tipo de documento *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Tipo de documento *
+                    </label>
                     <select
                       name="tipo_documento"
                       className="form-select rounded"
                       value={cliente.tipo_documento}
                       onChange={manejarCambio}
-                      required                    >
+                      required
+                    >
                       <option value="DNI">DNI</option>
                       <option value="Pasaporte">Pasaporte</option>
-                      <option value="Documento de Identidad">Documento de Identidad</option>
-                      <option value="Permiso de Residencia">Permiso de Residencia</option>
+                      <option value="Documento de Identidad">
+                        Documento de Identidad
+                      </option>
+                      <option value="Permiso de Residencia">
+                        Permiso de Residencia
+                      </option>
                     </select>
                   </div>
                   <div className="col-md-3 mb-3">
-                    <label className="form-label text-muted fw-medium">Número de documento *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Número de documento *
+                    </label>
                     <input
                       type="text"
                       name="numero_documento"
@@ -195,7 +218,9 @@ const NuevoCliente = () => {
                     />
                   </div>
                   <div className="col-md-3 mb-3">
-                    <label className="form-label text-muted fw-medium">Fecha de expedición *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Fecha de expedición *
+                    </label>
                     <input
                       type="date"
                       name="fecha_expedicion"
@@ -207,7 +232,8 @@ const NuevoCliente = () => {
                   </div>
                 </div>
               </div>
-            </div>            {/* Card: Dirección y contacto */}
+            </div>{" "}
+            {/* Card: Dirección y contacto */}
             <div className="card shadow-sm mb-4">
               <div className="card-header bg-light">
                 <h5 className="mb-0 fw-semibold">
@@ -217,7 +243,9 @@ const NuevoCliente = () => {
               </div>
               <div className="card-body">
                 <div className="mb-3">
-                  <label className="form-label text-muted fw-medium">Dirección</label>
+                  <label className="form-label text-muted fw-medium">
+                    Dirección
+                  </label>
                   <input
                     type="text"
                     name="direccion"
@@ -230,7 +258,9 @@ const NuevoCliente = () => {
 
                 <div className="row">
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Ciudad</label>
+                    <label className="form-label text-muted fw-medium">
+                      Ciudad
+                    </label>
                     <input
                       type="text"
                       name="ciudad"
@@ -241,7 +271,9 @@ const NuevoCliente = () => {
                     />
                   </div>
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">País *</label>
+                    <label className="form-label text-muted fw-medium">
+                      País *
+                    </label>
                     <input
                       type="text"
                       name="pais"
@@ -253,7 +285,9 @@ const NuevoCliente = () => {
                     />
                   </div>
                   <div className="col-md-4 mb-3">
-                    <label className="form-label text-muted fw-medium">Código postal</label>
+                    <label className="form-label text-muted fw-medium">
+                      Código postal
+                    </label>
                     <input
                       type="text"
                       name="codigo_postal"
@@ -267,7 +301,9 @@ const NuevoCliente = () => {
 
                 <div className="row">
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Teléfono</label>
+                    <label className="form-label text-muted fw-medium">
+                      Teléfono
+                    </label>
                     <input
                       type="tel"
                       name="telefono"
@@ -278,7 +314,9 @@ const NuevoCliente = () => {
                     />
                   </div>
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Correo electrónico</label>
+                    <label className="form-label text-muted fw-medium">
+                      Correo electrónico
+                    </label>
                     <input
                       type="email"
                       name="email"
@@ -291,7 +329,9 @@ const NuevoCliente = () => {
                 </div>
 
                 <div className="mb-0">
-                  <label className="form-label text-muted fw-medium">Observaciones</label>
+                  <label className="form-label text-muted fw-medium">
+                    Observaciones
+                  </label>
                   <textarea
                     name="observaciones"
                     className="form-control rounded"
@@ -303,7 +343,6 @@ const NuevoCliente = () => {
                 </div>
               </div>
             </div>
-
             {/* Botón de registro */}
             <div className="d-grid">
               <button type="submit" className="btn btn-primary btn-lg rounded">

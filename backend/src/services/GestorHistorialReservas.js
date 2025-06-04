@@ -31,7 +31,7 @@ class GestorHistorialReservas {
       throw new Error("Error al obtener historial: " + error.message);
     }
   }
-  
+
 }
 
 module.exports = new GestorHistorialReservas();

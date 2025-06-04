@@ -18,14 +18,14 @@ const EditarHabitacion = () => {
   useEffect(() => {
     // Carga los datos de la habitación al montar el componente
     const obtenerHabitacion = async () => {
-      try {        
+      try {
         const res = await axios.get(
           `${import.meta.env.VITE_API_URL}/habitaciones/${id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        
+
         // El backend devuelve { mensaje, habitacion }, necesitamos extraer solo habitacion
         const habitacionData = res.data.habitacion || res.data;
         setHabitacion(habitacionData);
@@ -43,9 +43,9 @@ const EditarHabitacion = () => {
   // Maneja los cambios en los campos del formulario
   const manejarCambio = (e) => {
     const { name, value } = e.target;
-    setHabitacion(prevHabitacion => ({ 
-      ...prevHabitacion, 
-      [name]: value 
+    setHabitacion((prevHabitacion) => ({
+      ...prevHabitacion,
+      [name]: value,
     }));
   };
 
@@ -61,12 +61,14 @@ const EditarHabitacion = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      toast.success(`Habitación ${habitacion.numero_habitacion} actualizada correctamente`);
+      toast.success(
+        `Habitación ${habitacion.numero_habitacion} actualizada correctamente`
+      );
       navigate("/habitaciones");
     } catch (error) {
       toast.error(`${error.response?.data?.error || error.message}`);
     }
-  };  // Muestra un mensaje mientras se cargan los datos
+  }; // Muestra un mensaje mientras se cargan los datos
   if (!habitacion) {
     return (
       <div className="container-fluid py-5 mt-4">
@@ -77,7 +79,9 @@ const EditarHabitacion = () => {
                 <div className="spinner-border text-primary" role="status">
                   <span className="visually-hidden">Cargando...</span>
                 </div>
-                <h4 className="text-muted mt-3">Cargando datos de la habitación...</h4>
+                <h4 className="text-muted mt-3">
+                  Cargando datos de la habitación...
+                </h4>
                 <p className="text-muted">Por favor espera un momento</p>
               </div>
             </div>
@@ -98,7 +102,10 @@ const EditarHabitacion = () => {
                 <i className="bi bi-pencil-square fs-2 text-primary me-3"></i>
                 <div>
                   <h2 className="mb-1">Editar Habitación</h2>
-                  <p className="text-muted mb-0">Habitación #{habitacion.numero_habitacion} - Modifica los datos</p>
+                  <p className="text-muted mb-0">
+                    Habitación #{habitacion.numero_habitacion} - Modifica los
+                    datos
+                  </p>
                 </div>
               </div>
             </div>
@@ -118,11 +125,13 @@ const EditarHabitacion = () => {
                     <input
                       type="text"
                       className="form-control rounded bg-light"
-                      value={habitacion?.numero_habitacion || ''}
+                      value={habitacion?.numero_habitacion || ""}
                       disabled
-                      style={{ cursor: 'not-allowed' }}
+                      style={{ cursor: "not-allowed" }}
                     />
-                    <small className="text-muted">El número de habitación no se puede modificar</small>
+                    <small className="text-muted">
+                      El número de habitación no se puede modificar
+                    </small>
                   </div>
 
                   <div className="col-md-6 mb-3">
@@ -133,7 +142,7 @@ const EditarHabitacion = () => {
                     <select
                       name="tipo"
                       className="form-select rounded"
-                      value={habitacion?.tipo || 'Individual'}
+                      value={habitacion?.tipo || "Individual"}
                       onChange={manejarCambio}
                       required
                     >
@@ -174,7 +183,7 @@ const EditarHabitacion = () => {
                         className="form-control rounded"
                         step="0.01"
                         min="0"
-                        value={habitacion?.precio_oficial || ''}
+                        value={habitacion?.precio_oficial || ""}
                         onChange={manejarCambio}
                         required
                       />
@@ -208,7 +217,9 @@ const EditarHabitacion = () => {
                     className="btn btn-secondary px-4 py-2"
                     onClick={() => {
                       navigate("/habitaciones");
-                      toast.info(`Edición de habitación ${habitacion.numero_habitacion} cancelada`);
+                      toast.info(
+                        `Edición de habitación ${habitacion.numero_habitacion} cancelada`
+                      );
                     }}
                   >
                     <i className="bi bi-x-circle me-2"></i>
@@ -222,6 +233,6 @@ const EditarHabitacion = () => {
       </div>
     </div>
   );
-}
+};
 
 export default EditarHabitacion;

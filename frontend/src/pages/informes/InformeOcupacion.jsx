@@ -21,15 +21,18 @@ const InformeOcupacion = () => {
         `${import.meta.env.VITE_API_URL}/informes/ocupacion`,
         {
           params: { desde, hasta },
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         }
-      );      setResumen(data);
+      );
+      setResumen(data);
       if (!data || data.total_habitaciones === 0) {
         toast.info("No hay datos de ocupación en ese periodo.");
       }
     } catch (error) {
       toast.error(
-        `Error al obtener el informe: ${error.response?.data?.error || error.message}`
+        `Error al obtener el informe: ${
+          error.response?.data?.error || error.message
+        }`
       );
     }
   };
@@ -78,12 +81,13 @@ const InformeOcupacion = () => {
                 </div>
                 <div className="col-md-4">
                   <p className="text-muted small mb-3">
-                    Selecciona un rango de fechas para calcular la ocupación promedio
+                    Selecciona un rango de fechas para calcular la ocupación
+                    promedio
                   </p>
                 </div>
                 <div className="col-md-2 text-end">
-                  <button 
-                    className="btn btn-primary btn-lg px-4" 
+                  <button
+                    className="btn btn-primary btn-lg px-4"
                     onClick={obtenerInforme}
                     disabled={!desde || !hasta}
                   >
@@ -161,15 +165,20 @@ const InformeOcupacion = () => {
                             <span className="fw-medium">Período analizado</span>
                           </td>
                           <td className="px-4 py-3 text-end">
-                            {new Date(desde).toLocaleDateString('es-ES')} - {new Date(hasta).toLocaleDateString('es-ES')}
+                            {new Date(desde).toLocaleDateString("es-ES")} -{" "}
+                            {new Date(hasta).toLocaleDateString("es-ES")}
                           </td>
                         </tr>
                         <tr>
                           <td className="px-4 py-3">
-                            <span className="fw-medium">Total de habitaciones</span>
+                            <span className="fw-medium">
+                              Total de habitaciones
+                            </span>
                           </td>
                           <td className="px-4 py-3 text-end">
-                            <span className="badge bg-primary fs-6">{resumen.total_habitaciones}</span>
+                            <span className="badge bg-primary fs-6">
+                              {resumen.total_habitaciones}
+                            </span>
                           </td>
                         </tr>
                         <tr>
@@ -177,7 +186,9 @@ const InformeOcupacion = () => {
                             <span className="fw-medium">Días del período</span>
                           </td>
                           <td className="px-4 py-3 text-end">
-                            <span className="badge bg-light text-dark fs-6">{resumen.dias_periodo}</span>
+                            <span className="badge bg-light text-dark fs-6">
+                              {resumen.dias_periodo}
+                            </span>
                           </td>
                         </tr>
                         <tr>
@@ -185,23 +196,33 @@ const InformeOcupacion = () => {
                             <span className="fw-medium">Noches ocupadas</span>
                           </td>
                           <td className="px-4 py-3 text-end">
-                            <span className="badge bg-light text-dark fs-6">{resumen.noches_ocupadas}</span>
+                            <span className="badge bg-light text-dark fs-6">
+                              {resumen.noches_ocupadas}
+                            </span>
                           </td>
                         </tr>
                         <tr>
                           <td className="px-4 py-3">
-                            <span className="fw-medium">Noches disponibles</span>
+                            <span className="fw-medium">
+                              Noches disponibles
+                            </span>
                           </td>
                           <td className="px-4 py-3 text-end">
-                            <span className="badge bg-light text-dark fs-6">{resumen.noches_disponibles}</span>
+                            <span className="badge bg-light text-dark fs-6">
+                              {resumen.noches_disponibles}
+                            </span>
                           </td>
                         </tr>
                         <tr className="table-active">
                           <td className="px-4 py-3">
-                            <span className="fw-bold">Porcentaje de ocupación</span>
+                            <span className="fw-bold">
+                              Porcentaje de ocupación
+                            </span>
                           </td>
                           <td className="px-4 py-3 text-end">
-                            <span className="badge bg-primary fs-5">{resumen.porcentaje_ocupacion}%</span>
+                            <span className="badge bg-primary fs-5">
+                              {resumen.porcentaje_ocupacion}%
+                            </span>
                           </td>
                         </tr>
                       </tbody>
@@ -216,7 +237,8 @@ const InformeOcupacion = () => {
                 <i className="bi bi-inbox fs-1 text-muted mb-3"></i>
                 <h5 className="text-muted">Selecciona un período</h5>
                 <p className="text-muted mb-0">
-                  Selecciona las fechas y haz clic en "Consultar" para ver el informe de ocupación
+                  Selecciona las fechas y haz clic en "Consultar" para ver el
+                  informe de ocupación
                 </p>
               </div>
             </div>

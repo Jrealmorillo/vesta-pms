@@ -24,7 +24,8 @@ const EditarReserva = () => {
         const { data: datosReserva } = await axios.get(
           `${import.meta.env.VITE_API_URL}/reservas/id/${id}`,
           { headers: { Authorization: `Bearer ${token}` } }
-        );        setReserva(datosReserva);
+        );
+        setReserva(datosReserva);
 
         // Verificar si la reserva está anulada
         if (datosReserva.estado === "Anulada") {
@@ -54,7 +55,9 @@ const EditarReserva = () => {
   // Maneja cambios en los campos de la reserva principal
   const manejarCambio = (e) => {
     if (reserva.estado === "Anulada") {
-      toast.error("No se puede modificar una reserva anulada. Debe recuperarla primero.");
+      toast.error(
+        "No se puede modificar una reserva anulada. Debe recuperarla primero."
+      );
       return;
     }
     setReserva({ ...reserva, [e.target.name]: e.target.value });
@@ -62,7 +65,9 @@ const EditarReserva = () => {
   // Maneja cambios en los campos de una línea de reserva
   const manejarCambioLinea = (index, campo, valor) => {
     if (reserva.estado === "Anulada") {
-      toast.error("No se puede modificar una reserva anulada. Debe recuperarla primero.");
+      toast.error(
+        "No se puede modificar una reserva anulada. Debe recuperarla primero."
+      );
       return;
     }
     const nuevasLineas = [...lineas];
@@ -72,7 +77,9 @@ const EditarReserva = () => {
   // Añade una nueva línea de reserva vacía
   const añadirLinea = () => {
     if (reserva.estado === "Anulada") {
-      toast.error("No se puede modificar una reserva anulada. Debe recuperarla primero.");
+      toast.error(
+        "No se puede modificar una reserva anulada. Debe recuperarla primero."
+      );
       return;
     }
     const nuevaLinea = {
@@ -89,10 +96,12 @@ const EditarReserva = () => {
   // Elimina una línea de reserva (pide confirmación si ya existe en la base de datos)
   const eliminarLinea = async (linea) => {
     if (reserva.estado === "Anulada") {
-      toast.error("No se puede modificar una reserva anulada. Debe recuperarla primero.");
+      toast.error(
+        "No se puede modificar una reserva anulada. Debe recuperarla primero."
+      );
       return;
     }
-    
+
     const idLinea = linea.id_linea_reserva;
     if (!idLinea) {
       // Es una línea nueva no guardada aún
@@ -131,10 +140,12 @@ const EditarReserva = () => {
   // Guarda los cambios de la reserva y sus líneas en la API
   const guardarCambios = async () => {
     if (reserva.estado === "Anulada") {
-      toast.error("No se puede guardar una reserva anulada. Debe recuperarla primero para poder modificarla.");
+      toast.error(
+        "No se puede guardar una reserva anulada. Debe recuperarla primero para poder modificarla."
+      );
       return;
     }
-    
+
     try {
       const { estado, ...reservaSinEstado } = reserva;
       // Validar que todas las líneas están dentro del rango de fechas
@@ -288,7 +299,9 @@ const EditarReserva = () => {
       {/* Formulario de datos principales */}
       <div className="row mb-4">
         <div className="col-12">
-          <div className="card border-0 shadow-sm">            <div className="card-header bg-light border-0 py-3">
+          <div className="card border-0 shadow-sm">
+            {" "}
+            <div className="card-header bg-light border-0 py-3">
               <h5 className="mb-0 fw-semibold text-dark">
                 Datos principales de la reserva
                 {reserva.estado === "Anulada" && (
@@ -307,82 +320,90 @@ const EditarReserva = () => {
                   </label>
                   <input
                     type="text"
-                    className={`form-control ${reserva.estado === "Anulada" ? "bg-light" : ""}`}
+                    className={`form-control ${
+                      reserva.estado === "Anulada" ? "bg-light" : ""
+                    }`}
                     name="nombre_huesped"
                     value={reserva.nombre_huesped || ""}
                     onChange={manejarCambio}
                     disabled={reserva.estado === "Anulada"}
                   />
                 </div>
-
                 <div className="col-md-4">
                   <label className="form-label text-muted small mb-1">
                     Primer apellido
                   </label>
                   <input
                     type="text"
-                    className={`form-control ${reserva.estado === "Anulada" ? "bg-light" : ""}`}
+                    className={`form-control ${
+                      reserva.estado === "Anulada" ? "bg-light" : ""
+                    }`}
                     name="primer_apellido_huesped"
                     value={reserva.primer_apellido_huesped || ""}
                     onChange={manejarCambio}
                     disabled={reserva.estado === "Anulada"}
                   />
-                </div>                <div className="col-md-4">
+                </div>{" "}
+                <div className="col-md-4">
                   <label className="form-label text-muted small mb-1">
                     Segundo apellido
                   </label>
                   <input
                     type="text"
-                    className={`form-control ${reserva.estado === "Anulada" ? "bg-light" : ""}`}
+                    className={`form-control ${
+                      reserva.estado === "Anulada" ? "bg-light" : ""
+                    }`}
                     name="segundo_apellido_huesped"
                     value={reserva.segundo_apellido_huesped || ""}
                     onChange={manejarCambio}
                     disabled={reserva.estado === "Anulada"}
                   />
                 </div>
-
                 <div className="col-md-4">
                   <label className="form-label text-muted small mb-1">
                     Fecha entrada
                   </label>
                   <input
                     type="date"
-                    className={`form-control ${reserva.estado === "Anulada" ? "bg-light" : ""}`}
+                    className={`form-control ${
+                      reserva.estado === "Anulada" ? "bg-light" : ""
+                    }`}
                     name="fecha_entrada"
                     value={reserva.fecha_entrada || ""}
                     onChange={manejarCambio}
                     disabled={reserva.estado === "Anulada"}
                   />
                 </div>
-
                 <div className="col-md-4">
                   <label className="form-label text-muted small mb-1">
                     Fecha salida
                   </label>
                   <input
                     type="date"
-                    className={`form-control ${reserva.estado === "Anulada" ? "bg-light" : ""}`}
+                    className={`form-control ${
+                      reserva.estado === "Anulada" ? "bg-light" : ""
+                    }`}
                     name="fecha_salida"
                     value={reserva.fecha_salida || ""}
                     onChange={manejarCambio}
                     disabled={reserva.estado === "Anulada"}
                   />
                 </div>
-
                 <div className="col-md-4">
                   <label className="form-label text-muted small mb-1">
                     Nº Habitación
                   </label>
                   <input
                     type="text"
-                    className={`form-control ${reserva.estado === "Anulada" ? "bg-light" : ""}`}
+                    className={`form-control ${
+                      reserva.estado === "Anulada" ? "bg-light" : ""
+                    }`}
                     name="numero_habitacion"
                     value={reserva.numero_habitacion || ""}
                     onChange={manejarCambio}
                     disabled={reserva.estado === "Anulada"}
                   />
                 </div>
-
                 <div className="col-md-4">
                   <label className="form-label text-muted small mb-1">
                     Importe total (€)
@@ -395,7 +416,6 @@ const EditarReserva = () => {
                     tabIndex={-1}
                   />
                 </div>
-
                 <div className="col-md-4">
                   <label className="form-label text-muted small mb-1">
                     ID Cliente
@@ -408,7 +428,6 @@ const EditarReserva = () => {
                     onChange={manejarCambio}
                   />
                 </div>
-
                 <div className="col-md-4">
                   <label className="form-label text-muted small mb-1">
                     ID Empresa
@@ -421,7 +440,6 @@ const EditarReserva = () => {
                     onChange={manejarCambio}
                   />
                 </div>
-
                 <div className="col-12">
                   <label className="form-label text-muted small mb-1">
                     Observaciones

@@ -488,7 +488,8 @@ const CheckOut = () => {
                   <div className="col-md-6">
                     <p className="mb-2">
                       <span className="text-muted fw-medium">Nombre:</span>{" "}
-                      {reserva.nombre_huesped} {reserva.primer_apellido_huesped} {reserva.segundo_apellido_huesped}
+                      {reserva.nombre_huesped} {reserva.primer_apellido_huesped}{" "}
+                      {reserva.segundo_apellido_huesped}
                     </p>
                     <p className="mb-2">
                       <span className="text-muted fw-medium">
@@ -521,11 +522,15 @@ const CheckOut = () => {
                     <p className="mb-0">
                       <span className="text-muted fw-medium">Factura:</span>{" "}
                       {reserva.estado_factura == "Pagada" ? (
-                        <span className="badge bg-success">Pagada #{reserva.facturas[0].id_factura}</span>
+                        <span className="badge bg-success">
+                          Pagada #{reserva.facturas[0].id_factura}
+                        </span>
                       ) : (
-                        <span className="badge bg-danger">Pendiente {reserva.factura}</span>
+                        <span className="badge bg-danger">
+                          Pendiente {reserva.factura}
+                        </span>
                       )}
-                    </p> 
+                    </p>
                   </div>
                 </div>
               </div>

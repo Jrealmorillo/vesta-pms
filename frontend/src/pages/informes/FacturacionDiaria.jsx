@@ -31,13 +31,17 @@ const FacturacionDiaria = () => {
       }
     } catch (error) {
       toast.error(
-        `Error al obtener el informe de facturación: ${error.response?.data?.error || error.message}`
+        `Error al obtener el informe de facturación: ${
+          error.response?.data?.error || error.message
+        }`
       );
     }
   };
 
   const calcularTotal = () => {
-    return facturas.reduce((sum, f) => sum + parseFloat(f.total || 0), 0).toFixed(2);
+    return facturas
+      .reduce((sum, f) => sum + parseFloat(f.total || 0), 0)
+      .toFixed(2);
   };
 
   const getEstadoBadgeClass = (estado) => {
@@ -54,7 +58,7 @@ const FacturacionDiaria = () => {
   };
 
   const contarPorEstado = (estado) => {
-    return facturas.filter(f => f.estado === estado).length;
+    return facturas.filter((f) => f.estado === estado).length;
   };
 
   return (
@@ -147,7 +151,9 @@ const FacturacionDiaria = () => {
             <h5 className="mb-0 d-flex align-items-center">
               <i className="bi bi-table text-muted me-2"></i>
               Detalle de Facturas
-              <span className="badge bg-primary ms-2">{facturas.length} facturas</span>
+              <span className="badge bg-primary ms-2">
+                {facturas.length} facturas
+              </span>
             </h5>
           </div>
           <div className="card-body p-0">
@@ -169,16 +175,22 @@ const FacturacionDiaria = () => {
                   {facturas.map((f) => (
                     <tr key={f.id_factura}>
                       <td className="py-3">
-                        <span className="fw-bold text-primary">#{f.id_factura}</span>
+                        <span className="fw-bold text-primary">
+                          #{f.id_factura}
+                        </span>
                       </td>
                       <td className="py-3">
                         <span className="text-muted">
-                          {new Date(f["fecha_emision"]).toLocaleDateString("es-ES")}
+                          {new Date(f["fecha_emision"]).toLocaleDateString(
+                            "es-ES"
+                          )}
                         </span>
                       </td>
                       <td className="py-3">
                         {f.id_reserva ? (
-                          <span className="badge bg-light text-dark">#{f.id_reserva}</span>
+                          <span className="badge bg-light text-dark">
+                            #{f.id_reserva}
+                          </span>
                         ) : (
                           <span className="text-muted">—</span>
                         )}
@@ -186,7 +198,9 @@ const FacturacionDiaria = () => {
                       <td className="py-3">
                         <div className="fw-medium">
                           {f.cliente
-                            ? `${f.cliente.nombre} ${f.cliente.primer_apellido ?? ""} ${f.cliente.segundo_apellido ?? ""}`
+                            ? `${f.cliente.nombre} ${
+                                f.cliente.primer_apellido ?? ""
+                              } ${f.cliente.segundo_apellido ?? ""}`
                             : f.nombre_huesped || "—"}
                         </div>
                       </td>
@@ -202,7 +216,9 @@ const FacturacionDiaria = () => {
                         </span>
                       </td>
                       <td className="py-3 text-center">
-                        <span className={`badge ${getEstadoBadgeClass(f.estado)}`}>
+                        <span
+                          className={`badge ${getEstadoBadgeClass(f.estado)}`}
+                        >
                           {f.estado}
                         </span>
                       </td>
@@ -229,10 +245,14 @@ const FacturacionDiaria = () => {
       {facturas.length === 0 && consultaRealizada && (
         <div className="card border-0 shadow-sm">
           <div className="card-body text-center py-5">
-            <i className="bi bi-receipt text-muted mb-3" style={{ fontSize: '3rem' }}></i>
+            <i
+              className="bi bi-receipt text-muted mb-3"
+              style={{ fontSize: "3rem" }}
+            ></i>
             <h5 className="text-muted mb-2">No hay facturas emitidas</h5>
             <p className="text-muted mb-0">
-              No se encontraron facturas para la fecha seleccionada: <strong>{new Date(fecha).toLocaleDateString("es-ES")}</strong>
+              No se encontraron facturas para la fecha seleccionada:{" "}
+              <strong>{new Date(fecha).toLocaleDateString("es-ES")}</strong>
             </p>
           </div>
         </div>

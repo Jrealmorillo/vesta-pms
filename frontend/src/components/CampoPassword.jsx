@@ -24,11 +24,11 @@ const CampoPassword = ({ label, name, value, onChange }) => {
         className="btn btn-sm btn-light position-absolute"
         style={{ top: "34px", right: "10px", padding: "0.25rem 0.5rem" }}
       >
-       {/* Icono de ojo abierto/cerrado según el estado */}
-       <i className={`bi ${mostrar ? "bi-eye-slash" : "bi-eye"}`}></i>
+        {/* Icono de ojo abierto/cerrado según el estado */}
+        <i className={`bi ${mostrar ? "bi-eye-slash" : "bi-eye"}`}></i>
       </button>
     </div>
   );
-}
+};
 
 export default CampoPassword;

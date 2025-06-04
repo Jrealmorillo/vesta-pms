@@ -133,7 +133,10 @@ const App = () => {
           {/* Habitaciones: planning y roomrack (accesibles para usuarios autenticados) */}
           <Route path="/habitaciones/planning" element={<Planning />} />
           <Route path="habitaciones/roomrack" element={<RoomRack />} />
-          <Route path="/habitaciones/calendario-ocupacion" element={<CalendarioOcupacion />} />
+          <Route
+            path="/habitaciones/calendario-ocupacion"
+            element={<CalendarioOcupacion />}
+          />
           {/* Reservas */}
           <Route path="/reservas/nueva" element={<NuevaReserva />} />
           <Route path="/reservas/buscar" element={<BuscarReservas />} />
@@ -156,15 +159,26 @@ const App = () => {
             path="/informes/facturacion-diaria"
             element={<FacturacionDiaria />}
           />
-          <Route path="/informes/facturacion/rango" element={<FacturacionEntreFechas />} />
-<Route path="/informes/cargos" element={<InformeCargos />} />
-<Route path="/informes/estado-habitaciones" element={<InformeEstadoHabitaciones />} />
-<Route path="/informes/clientes-alojados" element={<InformeClientesAlojados />} />
-<Route path="/informes/llegadas" element={<InformeLlegadas />} />
-<Route path="/informes/salidas" element={<InformeSalidas />} />
-<Route path="/informes/resumen-dia" element={<InformeResumenDia />} />
-<Route path="/informes/consumo-forma-pago" element={<InformeConsumoFormaPago />} />
-
+          <Route
+            path="/informes/facturacion/rango"
+            element={<FacturacionEntreFechas />}
+          />
+          <Route path="/informes/cargos" element={<InformeCargos />} />
+          <Route
+            path="/informes/estado-habitaciones"
+            element={<InformeEstadoHabitaciones />}
+          />
+          <Route
+            path="/informes/clientes-alojados"
+            element={<InformeClientesAlojados />}
+          />
+          <Route path="/informes/llegadas" element={<InformeLlegadas />} />
+          <Route path="/informes/salidas" element={<InformeSalidas />} />
+          <Route path="/informes/resumen-dia" element={<InformeResumenDia />} />
+          <Route
+            path="/informes/consumo-forma-pago"
+            element={<InformeConsumoFormaPago />}
+          />
         </Route>
       </Routes>
       {/* Contenedor global para notificaciones tipo toast */}

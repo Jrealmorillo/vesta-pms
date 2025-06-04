@@ -74,20 +74,19 @@ const Navbar = () => {
                       >
                         {item.submenu
                           .filter(
-                            (sub) =>
-                              !sub.adminOnly || usuario.id_rol === 1
+                            (sub) => !sub.adminOnly || usuario.id_rol === 1
                           )
                           .map((subitem, subindex) => (
-                          <li key={subindex}>
-                            <NavLink
-                              to={subitem.path}
-                              end={subitem.exact}
-                              className="dropdown-item"
-                            >
-                              {subitem.label}
-                            </NavLink>
-                          </li>
-                        ))}
+                            <li key={subindex}>
+                              <NavLink
+                                to={subitem.path}
+                                end={subitem.exact}
+                                className="dropdown-item"
+                              >
+                                {subitem.label}
+                              </NavLink>
+                            </li>
+                          ))}
                       </ul>
                     </>
                   ) : (
@@ -131,6 +130,6 @@ const Navbar = () => {
       </div>
     </nav>
   );
-}
+};
 
 export default Navbar;

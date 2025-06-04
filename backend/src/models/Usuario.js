@@ -14,8 +14,8 @@ const Usuario = sequelize.define(
       autoIncrement: true, // Se incrementa automáticamente
     },
     // Nombre completo del usuario (obligatorio)
-    nombre: { 
-      type: DataTypes.STRING(100), 
+    nombre: {
+      type: DataTypes.STRING(100),
       allowNull: false // Obligatorio
     },
     // Nombre de usuario único para login (obligatorio)
@@ -25,13 +25,13 @@ const Usuario = sequelize.define(
       unique: true, // El nombre de usuario debe ser único
     },
     // Email del usuario (obligatorio)
-    email: { 
-      type: DataTypes.STRING(255), 
-      allowNull: false, 
+    email: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
     },
     // Contraseña hasheada (obligatoria)
-    contraseña: { 
-      type: DataTypes.STRING(255), 
+    contraseña: {
+      type: DataTypes.STRING(255),
       allowNull: false // Se almacena la contraseña hasheada
     },
     // Fecha de registro del usuario (por defecto, la fecha actual)
@@ -41,9 +41,9 @@ const Usuario = sequelize.define(
       defaultValue: DataTypes.NOW, // Se establece automáticamente la fecha actual al registrarse
     },
     // ID del rol asociado al usuario (obligatorio, clave foránea)
-    id_rol: { 
-      type: DataTypes.INTEGER, 
-      allowNull: false, 
+    id_rol: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
       defaultValue: 2,
       references: {
         model: "Roles",
@@ -51,9 +51,9 @@ const Usuario = sequelize.define(
       } // Por defecto, los nuevos usuarios tendrán el rol 2
     },
     // Indica si el usuario está activo o desactivado
-    activo: { 
-      type: DataTypes.BOOLEAN, 
-      allowNull: false, 
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
       defaultValue: true // Indica si el usuario está activo o desactivado
     },
   },

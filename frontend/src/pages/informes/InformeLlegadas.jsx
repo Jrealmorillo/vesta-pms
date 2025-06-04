@@ -26,14 +26,18 @@ const InformeLlegadas = () => {
       }
     } catch (error) {
       toast.error(
-        `Error al obtener el informe: ${error.response?.data?.error || error.message}`
+        `Error al obtener el informe: ${
+          error.response?.data?.error || error.message
+        }`
       );
     }
   };
   return (
     <div className="container-fluid py-5 mt-4">
       <div className="row justify-content-center">
-        <div className="col-12">          {/* Header */}
+        <div className="col-12">
+          {" "}
+          {/* Header */}
           <div className="card border-0 shadow-sm mb-4">
             <div className="card-body">
               <div className="d-flex align-items-center">
@@ -43,7 +47,8 @@ const InformeLlegadas = () => {
                 </div>
               </div>
             </div>
-          </div>          {/* Filtros */}
+          </div>{" "}
+          {/* Filtros */}
           <div className="card border-0 shadow-sm mb-4">
             <div className="card-body">
               <div className="row align-items-end">
@@ -60,11 +65,10 @@ const InformeLlegadas = () => {
                     required
                   />
                 </div>
-                <div className="col-md-6">
-                </div>
+                <div className="col-md-6"></div>
                 <div className="col-md-3 text-end">
-                  <button 
-                    className="btn btn-primary btn-lg px-4" 
+                  <button
+                    className="btn btn-primary btn-lg px-4"
                     onClick={obtenerInforme}
                     disabled={!fecha}
                   >
@@ -74,17 +78,18 @@ const InformeLlegadas = () => {
                 </div>
               </div>
             </div>
-          </div>          {/* Resultados */}
+          </div>{" "}
+          {/* Resultados */}
           {reservas.length > 0 ? (
             <div className="card border-0 shadow-sm">
               <div className="card-header bg-light border-bottom">
                 <div className="d-flex justify-content-between align-items-center">
                   <h5 className="mb-0">
                     <i className="bi bi-list-ul me-2"></i>
-                    Llegadas del {new Date(fecha).toLocaleDateString('es-ES')}
+                    Llegadas del {new Date(fecha).toLocaleDateString("es-ES")}
                   </h5>
                   <span className="badge bg-primary fs-6">
-                    {reservas.length} llegada{reservas.length !== 1 ? 's' : ''}
+                    {reservas.length} llegada{reservas.length !== 1 ? "s" : ""}
                   </span>
                 </div>
               </div>
@@ -93,27 +98,13 @@ const InformeLlegadas = () => {
                   <table className="table table-hover align-middle mb-0">
                     <thead className="bg-light">
                       <tr>
-                        <th className="px-4 py-3">
-                          Reserva
-                        </th>
-                        <th className="px-4 py-3">
-                          Habitación
-                        </th>
-                        <th className="px-4 py-3">
-                          Huésped
-                        </th>
-                        <th className="px-4 py-3">
-                          Cliente
-                        </th>
-                        <th className="px-4 py-3">
-                          Estado
-                        </th>
-                        <th className="px-4 py-3">
-                          Entrada
-                        </th>
-                        <th className="px-4 py-3">
-                          Salida
-                        </th>
+                        <th className="px-4 py-3">Reserva</th>
+                        <th className="px-4 py-3">Habitación</th>
+                        <th className="px-4 py-3">Huésped</th>
+                        <th className="px-4 py-3">Cliente</th>
+                        <th className="px-4 py-3">Estado</th>
+                        <th className="px-4 py-3">Entrada</th>
+                        <th className="px-4 py-3">Salida</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -126,7 +117,7 @@ const InformeLlegadas = () => {
                           </td>
                           <td className="px-4 py-3">
                             <span className="badge bg-success fs-6">
-                              {r.numero_habitacion || 'Sin asignar'}
+                              {r.numero_habitacion || "Sin asignar"}
                             </span>
                           </td>
                           <td className="px-4 py-3">
@@ -153,23 +144,32 @@ const InformeLlegadas = () => {
                             )}
                           </td>
                           <td className="px-4 py-3">
-                            <span className={`badge fs-6 ${
-                              r.estado === 'Confirmada' ? 'bg-warning text-dark' :
-                              r.estado === 'Check-in' ? 'bg-success' :
-                              r.estado === 'Check-out' ? 'bg-info' :
-                              'bg-secondary'
-                            }`}>
+                            <span
+                              className={`badge fs-6 ${
+                                r.estado === "Confirmada"
+                                  ? "bg-warning text-dark"
+                                  : r.estado === "Check-in"
+                                  ? "bg-success"
+                                  : r.estado === "Check-out"
+                                  ? "bg-info"
+                                  : "bg-secondary"
+                              }`}
+                            >
                               {r.estado}
                             </span>
                           </td>
                           <td className="px-4 py-3">
                             <small className="text-muted">
-                              {new Date(r.fecha_entrada).toLocaleDateString('es-ES')}
+                              {new Date(r.fecha_entrada).toLocaleDateString(
+                                "es-ES"
+                              )}
                             </small>
                           </td>
                           <td className="px-4 py-3">
                             <small className="text-muted">
-                              {new Date(r.fecha_salida).toLocaleDateString('es-ES')}
+                              {new Date(r.fecha_salida).toLocaleDateString(
+                                "es-ES"
+                              )}
                             </small>
                           </td>
                         </tr>
@@ -177,14 +177,16 @@ const InformeLlegadas = () => {
                     </tbody>
                   </table>
                 </div>
-              </div>            </div>
+              </div>{" "}
+            </div>
           ) : fecha ? (
             <div className="card border-0 shadow-sm">
               <div className="card-body text-center py-5">
                 <i className="bi bi-calendar-x fs-1 text-muted mb-3"></i>
                 <h5 className="text-muted">No hay llegadas programadas</h5>
                 <p className="text-muted mb-0">
-                  No se encontraron reservas con entrada para el {new Date(fecha).toLocaleDateString('es-ES')}
+                  No se encontraron reservas con entrada para el{" "}
+                  {new Date(fecha).toLocaleDateString("es-ES")}
                 </p>
               </div>
             </div>

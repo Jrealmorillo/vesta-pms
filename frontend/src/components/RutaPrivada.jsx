@@ -1,4 +1,4 @@
-// Componente para proteger rutas privadas en la aplicación 
+// Componente para proteger rutas privadas en la aplicación
 // Solo permite el acceso a usuarios autenticados; si no hay sesión, redirige al login.
 // Muestra null mientras se verifica el estado de autenticación (cargando).
 
@@ -13,6 +13,6 @@ const RutaPrivada = ({ children }) => {
 
   // Si hay sesión activa, permite acceso. Si no, redirige al login
   return usuario ? children : <Navigate to="/" />;
-}
+};
 
 export default RutaPrivada;

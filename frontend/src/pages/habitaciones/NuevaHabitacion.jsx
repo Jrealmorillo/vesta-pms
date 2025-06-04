@@ -40,7 +40,9 @@ const NuevaHabitacion = () => {
           },
         }
       );
-      toast.success(`Habitación ${habitacion.numero_habitacion} registrada correctamente`);
+      toast.success(
+        `Habitación ${habitacion.numero_habitacion} registrada correctamente`
+      );
       setHabitacion({
         numero_habitacion: "",
         tipo: "",
@@ -103,7 +105,9 @@ const NuevaHabitacion = () => {
                       onChange={manejarCambio}
                       required
                     >
-                      <option value="" disabled>Selecciona el tipo</option>
+                      <option value="" disabled>
+                        Selecciona el tipo
+                      </option>
                       <option value="Individual">Individual</option>
                       <option value="Doble">Doble</option>
                       <option value="Triple">Triple</option>
@@ -179,6 +183,6 @@ const NuevaHabitacion = () => {
       </div>
     </div>
   );
-}
+};
 
 export default NuevaHabitacion;

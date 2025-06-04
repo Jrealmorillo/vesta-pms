@@ -3,10 +3,10 @@
 
 const GestorHabitaciones = require("../services/GestorHabitaciones");
 
- // Registra una nueva habitación con los datos recibidos en el cuerpo de la petición
+// Registra una nueva habitación con los datos recibidos en el cuerpo de la petición
 exports.registrarHabitacion = async (req, res) => {
   try {
-   // Devuelve la habitación creada y un mensaje de éxito/error 
+    // Devuelve la habitación creada y un mensaje de éxito/error 
     const habitacion = await GestorHabitaciones.registrarHabitacion(req.body);
     res.status(201).json({ mensaje: "Habitacion registrada correctamente", habitacion });
   } catch (error) {
@@ -16,10 +16,10 @@ exports.registrarHabitacion = async (req, res) => {
   }
 };
 
- // Modifica una habitación existente identificada por su número
+// Modifica una habitación existente identificada por su número
 exports.modificarHabitacion = async (req, res) => {
   try {
-     // Devuelve la habitación modificada y un mensaje de éxito/error
+    // Devuelve la habitación modificada y un mensaje de éxito/error
     const habitacion = await GestorHabitaciones.modificarHabitacion(
       req.params.numero,
       req.body
@@ -30,7 +30,7 @@ exports.modificarHabitacion = async (req, res) => {
   }
 };
 
- // Elimina la habitación identificada por su número
+// Elimina la habitación identificada por su número
 exports.eliminarHabitacion = async (req, res) => {
   try {
     // Elimina la habitación y devuelve un mensaje de éxito/error

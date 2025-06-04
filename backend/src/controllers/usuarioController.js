@@ -8,14 +8,14 @@ exports.registrarUsuario = async (req, res) => {
     // Registra un nuevo usuario con los datos recibidos en el cuerpo de la petición
     const usuario = await GestorUsuarios.registrarUsuario(req.body);
     // Devuelve el usuario creado y un mensaje de éxito
-    res.status(201).json({ 
-      mensaje: "Usuario creado exitosamente", 
-      usuario: usuario 
+    res.status(201).json({
+      mensaje: "Usuario creado exitosamente",
+      usuario: usuario
     });
   } catch (error) {
     // Devuelve un error detallado si la operación falla
-    res.status(500).json({ 
-      error: "Error al registrar usuario", 
+    res.status(500).json({
+      error: "Error al registrar usuario",
       detalle: error.message // Se envía el detalle del error para facilitar depuración
     });
   }
@@ -50,8 +50,8 @@ exports.modificarUsuario = async (req, res) => {
     const usuario = await GestorUsuarios.modificarUsuario(req.params.id, req.body);
     // Devuelve el usuario modificado y un mensaje de éxito
     res.json({
-      mensaje: "Usuario modificado exitosamente", 
-      usuario: usuario 
+      mensaje: "Usuario modificado exitosamente",
+      usuario: usuario
     });
   } catch (error) {
     // Devuelve un error si el usuario no se encuentra

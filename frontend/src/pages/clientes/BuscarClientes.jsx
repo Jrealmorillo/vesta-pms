@@ -25,7 +25,9 @@ const BuscarClientes = () => {
 
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/clientes/${tipoBusqueda}/${encodeURIComponent(criterio)}`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/clientes/${tipoBusqueda}/${encodeURIComponent(criterio)}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -57,7 +59,10 @@ const BuscarClientes = () => {
           <div className="card shadow-sm">
             <div className="card-header bg-light">
               <div className="d-flex align-items-center">
-                <i className="bi bi-person-rolodex text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <i
+                  className="bi bi-person-rolodex text-primary me-3"
+                  style={{ fontSize: "1.5rem" }}
+                ></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Gestión de Clientes</h4>
                 </div>
@@ -78,7 +83,7 @@ const BuscarClientes = () => {
               </h5>
             </div>
             <div className="card-body">
-              <form 
+              <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   buscar();
@@ -88,7 +93,8 @@ const BuscarClientes = () => {
                   <div className="col-md-3">
                     <label className="form-label text-muted fw-medium">
                       Tipo de búsqueda
-                    </label>                    <select
+                    </label>{" "}
+                    <select
                       className="form-select rounded"
                       value={tipoBusqueda}
                       onChange={(e) => setTipoBusqueda(e.target.value)}
@@ -111,7 +117,10 @@ const BuscarClientes = () => {
                         value={criterio}
                         onChange={(e) => setCriterio(e.target.value)}
                       />
-                      <button type="submit" className="btn btn-primary rounded-end">
+                      <button
+                        type="submit"
+                        className="btn btn-primary rounded-end"
+                      >
                         <i className="bi bi-search me-1"></i>
                         Buscar
                       </button>
@@ -120,14 +129,17 @@ const BuscarClientes = () => {
                 </div>
               </form>
             </div>
-          </div>          {/* Card: Resultados */}
+          </div>{" "}
+          {/* Card: Resultados */}
           {clientes.length > 0 ? (
             <div className="card shadow-sm">
               <div className="card-header bg-light">
                 <h5 className="mb-0 fw-semibold">
                   <i className="bi bi-table me-2 text-primary"></i>
                   Resultados de la búsqueda
-                  <span className="badge bg-primary ms-2">{clientes.length}</span>
+                  <span className="badge bg-primary ms-2">
+                    {clientes.length}
+                  </span>
                 </h5>
               </div>
               <div className="card-body p-0">
@@ -147,12 +159,16 @@ const BuscarClientes = () => {
                       {clientes.map((c) => (
                         <tr key={c.id_cliente}>
                           <td className="fw-medium">{c.id_cliente}</td>
-                          <td>{`${c.primer_apellido} ${c.segundo_apellido || ""}, ${c.nombre}`}</td>
+                          <td>{`${c.primer_apellido} ${
+                            c.segundo_apellido || ""
+                          }, ${c.nombre}`}</td>
                           <td>
                             <span className="badge bg-info-subtle text-info">
                               {c.tipo_documento}
                             </span>
-                            <span className="ms-1 text-muted">{c.numero_documento}</span>
+                            <span className="ms-1 text-muted">
+                              {c.numero_documento}
+                            </span>
                           </td>
                           <td className="text-muted">{c.telefono || "-"}</td>
                           <td className="text-muted">{c.email || "-"}</td>
@@ -175,9 +191,16 @@ const BuscarClientes = () => {
           ) : (
             <div className="card shadow-sm">
               <div className="card-body text-center py-5">
-                <i className="bi bi-person-x text-muted" style={{ fontSize: "3rem" }}></i>
-                <h6 className="mt-3 text-muted">No hay clientes para mostrar</h6>
-                <p className="text-muted mb-0">Realiza una búsqueda para encontrar clientes</p>
+                <i
+                  className="bi bi-person-x text-muted"
+                  style={{ fontSize: "3rem" }}
+                ></i>
+                <h6 className="mt-3 text-muted">
+                  No hay clientes para mostrar
+                </h6>
+                <p className="text-muted mb-0">
+                  Realiza una búsqueda para encontrar clientes
+                </p>
               </div>
             </div>
           )}
@@ -185,6 +208,6 @@ const BuscarClientes = () => {
       </div>
     </div>
   );
-}
+};
 
 export default BuscarClientes;

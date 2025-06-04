@@ -29,7 +29,9 @@ const CambiarPassword = () => {
     e.preventDefault();
 
     if (form.nueva !== form.confirmar) {
-      toast.warning("La nueva contraseña y su confirmación no coinciden. Por favor, revisa ambos campos.");
+      toast.warning(
+        "La nueva contraseña y su confirmación no coinciden. Por favor, revisa ambos campos."
+      );
       return;
     }
 
@@ -93,6 +95,6 @@ const CambiarPassword = () => {
       </form>
     </div>
   );
-}
+};
 
 export default CambiarPassword;

@@ -144,14 +144,14 @@ exports.obtenerKPIsDashboard = async (req, res) => {
     const ocupadasReales = await models.Reserva.count({ where: { estado: "Check-in" } });
     const ocupacionReal = total > 0 ? Math.round((ocupadasReales / total) * 100) : 0;
     // Ocupación prevista: reservas confirmadas o check-in para hoy
-    const hoy = new Date().toISOString().split("T")[0];    const ocupadasPrevistas = await models.Reserva.count({
+    const hoy = new Date().toISOString().split("T")[0]; const ocupadasPrevistas = await models.Reserva.count({
       where: {
         estado: { [Op.in]: ["Confirmada", "Check-in"] },
         fecha_entrada: hoy
       }
     });
     const ocupacionPrevista = total > 0 ? Math.round((ocupadasPrevistas / total) * 100) : 0;
-    
+
     // Reservas de la semana actual (lunes a domingo)
     const inicioSemana = new Date(hoy);
     const diaSemana = inicioSemana.getDay(); // 0 = domingo, 1 = lunes, etc.
@@ -159,7 +159,7 @@ exports.obtenerKPIsDashboard = async (req, res) => {
     inicioSemana.setDate(inicioSemana.getDate() - diasHastaLunes);
     const finSemana = new Date(inicioSemana);
     finSemana.setDate(inicioSemana.getDate() + 6);
-    
+
     const reservasSemanales = await models.Reserva.count({
       where: {
         fecha_entrada: {
@@ -168,13 +168,13 @@ exports.obtenerKPIsDashboard = async (req, res) => {
         estado: { [Op.in]: ["Confirmada", "Check-in", "Check-out"] }
       }
     });
-      // Ingresos reales del mes actual (facturado)
+    // Ingresos reales del mes actual (facturado)
     const now = new Date();
-    
+
     // Reservas del mes actual
     const inicioMes = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
     const finMes = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-31`;
-    
+
     const reservasMensuales = await models.Reserva.count({
       where: {
         fecha_entrada: {
@@ -198,7 +198,7 @@ exports.obtenerKPIsDashboard = async (req, res) => {
       }
     });
     const ingresosPrevistos = lineas.reduce((acc, l) => acc + (parseFloat(l.precio) * l.cantidad_habitaciones), 0);
-    
+
     res.json({
       ocupacionReal,
       ocupacionPrevista,
@@ -289,7 +289,7 @@ exports.obtenerReservasPorEstado = async (req, res) => {
     const hoy = new Date();
     const hoyStr = hoy.toISOString().split("T")[0];    // Para el gráfico: mostrar reservas confirmadas (incluyendo check-in) y anuladas del día
     const labels = ["Confirmadas", "Anuladas"];
-    
+
     // Reservas confirmadas del día (incluye estado "Confirmada" y "Check-in")
     const reservasConfirmadas = await models.Reserva.count({
       where: {
@@ -297,7 +297,7 @@ exports.obtenerReservasPorEstado = async (req, res) => {
         estado: { [Op.in]: ["Confirmada", "Check-in"] }
       }
     });
-    
+
     // Reservas anuladas del día
     const reservasAnuladas = await models.Reserva.count({
       where: {
@@ -305,7 +305,7 @@ exports.obtenerReservasPorEstado = async (req, res) => {
         estado: "Anulada"
       }
     });
-    
+
     const data = [reservasConfirmadas, reservasAnuladas];// Llegadas previstas hoy: reservas con fecha_entrada = hoy y estado Confirmada o Check-in
     const llegadasPrevistas = await models.Reserva.count({
       where: {
@@ -338,15 +338,15 @@ exports.obtenerReservasPorEstado = async (req, res) => {
     // Salidas pendientes: previstas - realizadas
     const salidasPendientes = salidasPrevistas - salidasRealizadas;
 
-    res.json({ 
-      labels, 
-      data, 
-      llegadasPrevistas, 
-      llegadasRealizadas, 
+    res.json({
+      labels,
+      data,
+      llegadasPrevistas,
+      llegadasRealizadas,
       llegadasPendientes,
-      salidasPrevistas, 
+      salidasPrevistas,
       salidasRealizadas,
-      salidasPendientes 
+      salidasPendientes
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

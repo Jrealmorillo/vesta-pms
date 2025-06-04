@@ -34,8 +34,7 @@ const CheckIn = () => {
           const apellidoA = a.primer_apellido_huesped.toLowerCase();
           const apellidoB = b.primer_apellido_huesped.toLowerCase();
           return apellidoA.localeCompare(apellidoB);
-        }
-        );
+        });
 
         setReservasHoy(reservasOrdenadasPorApellido);
       } catch (error) {
@@ -56,22 +55,26 @@ const CheckIn = () => {
             <div className="card-header bg-light">
               <div className="d-flex align-items-center justify-content-between">
                 <div className="d-flex align-items-center">
-                  <i className="bi bi-box-arrow-in-down-left text-primary me-3" style={{ fontSize: '1.5rem' }}></i>
+                  <i
+                    className="bi bi-box-arrow-in-down-left text-primary me-3"
+                    style={{ fontSize: "1.5rem" }}
+                  ></i>
                   <div>
                     <h4 className="mb-0 fw-semibold">Check-in de Hoy</h4>
                     <small className="text-muted">
-                      {new Date().toLocaleDateString('es-ES', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
+                      {new Date().toLocaleDateString("es-ES", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
                       })}
                     </small>
                   </div>
                 </div>
                 {reservasHoy.length > 0 && (
                   <span className="badge bg-primary fs-6">
-                    {reservasHoy.length} reserva{reservasHoy.length !== 1 ? 's' : ''}
+                    {reservasHoy.length} reserva
+                    {reservasHoy.length !== 1 ? "s" : ""}
                   </span>
                 )}
               </div>
@@ -86,7 +89,10 @@ const CheckIn = () => {
           {reservasHoy.length === 0 ? (
             <div className="card shadow-sm">
               <div className="card-body text-center py-5">
-                <i className="bi bi-calendar-check text-muted mb-3" style={{ fontSize: '4rem' }}></i>
+                <i
+                  className="bi bi-calendar-check text-muted mb-3"
+                  style={{ fontSize: "4rem" }}
+                ></i>
                 <h5 className="text-muted mb-2">No hay reservas para hoy</h5>
                 <p className="text-muted mb-0">
                   No se encontraron reservas con entrada programada para hoy.
@@ -122,19 +128,26 @@ const CheckIn = () => {
                           <td>
                             <div>
                               <div className="fw-semibold">
-                                {reserva.primer_apellido_huesped} {reserva.segundo_apellido_huesped}
+                                {reserva.primer_apellido_huesped}{" "}
+                                {reserva.segundo_apellido_huesped}
                               </div>
-                              <small className="text-muted">{reserva.nombre_huesped}</small>
+                              <small className="text-muted">
+                                {reserva.nombre_huesped}
+                              </small>
                             </div>
                           </td>
                           <td>
                             <small className="text-muted">
-                              {new Date(reserva.fecha_entrada + 'T00:00:00').toLocaleDateString('es-ES')}
+                              {new Date(
+                                reserva.fecha_entrada + "T00:00:00"
+                              ).toLocaleDateString("es-ES")}
                             </small>
                           </td>
                           <td>
                             <small className="text-muted">
-                              {new Date(reserva.fecha_salida + 'T00:00:00').toLocaleDateString('es-ES')}
+                              {new Date(
+                                reserva.fecha_salida + "T00:00:00"
+                              ).toLocaleDateString("es-ES")}
                             </small>
                           </td>
                           <td>
@@ -166,13 +179,20 @@ const CheckIn = () => {
                             {reserva.estado === "Confirmada" ? (
                               <button
                                 className="btn btn-sm btn-primary rounded"
-                                onClick={() => navigate(`/reservas/check-in/${reserva.id_reserva}`)}
+                                onClick={() =>
+                                  navigate(
+                                    `/reservas/check-in/${reserva.id_reserva}`
+                                  )
+                                }
                               >
                                 <i className="bi bi-box-arrow-in-down me-1"></i>
                                 Check-in
                               </button>
                             ) : (
-                              <button className="btn btn-sm btn-outline-secondary rounded" disabled>
+                              <button
+                                className="btn btn-sm btn-outline-secondary rounded"
+                                disabled
+                              >
                                 <i className="bi bi-slash-circle me-1"></i>
                                 No disponible
                               </button>

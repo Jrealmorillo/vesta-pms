@@ -38,9 +38,14 @@ const BuscarFacturas = () => {
         toast.info("No se encontraron facturas con esos criterios.");
       }
     } catch (error) {
-      toast.error(`Error al buscar facturas: ${error.response?.data?.error || error.message}`);	
+      toast.error(
+        `Error al buscar facturas: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
-  };  return (
+  };
+  return (
     <div className="container-fluid py-5 mt-4">
       {/* Header */}
       <div className="row justify-content-center mb-4">
@@ -48,7 +53,10 @@ const BuscarFacturas = () => {
           <div className="card shadow-sm">
             <div className="card-header bg-light">
               <div className="d-flex align-items-center">
-                <i className="bi bi-receipt text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <i
+                  className="bi bi-receipt text-primary me-3"
+                  style={{ fontSize: "1.5rem" }}
+                ></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Gestión de Facturas</h4>
                 </div>
@@ -71,7 +79,10 @@ const BuscarFacturas = () => {
             <div className="card-body">
               <div className="row g-3">
                 <div className="col-md-3">
-                  <label htmlFor="id_factura" className="form-label text-muted fw-medium">
+                  <label
+                    htmlFor="id_factura"
+                    className="form-label text-muted fw-medium"
+                  >
                     ID Factura
                   </label>
                   <input
@@ -85,7 +96,10 @@ const BuscarFacturas = () => {
                 </div>
 
                 <div className="col-md-3">
-                  <label htmlFor="id_reserva" className="form-label text-muted fw-medium">
+                  <label
+                    htmlFor="id_reserva"
+                    className="form-label text-muted fw-medium"
+                  >
                     ID Reserva
                   </label>
                   <input
@@ -99,7 +113,10 @@ const BuscarFacturas = () => {
                 </div>
 
                 <div className="col-md-3">
-                  <label htmlFor="fecha_emision" className="form-label text-muted fw-medium">
+                  <label
+                    htmlFor="fecha_emision"
+                    className="form-label text-muted fw-medium"
+                  >
                     Fecha de Emisión
                   </label>
                   <input
@@ -112,7 +129,10 @@ const BuscarFacturas = () => {
                 </div>
 
                 <div className="col-md-3 d-flex align-items-end">
-                  <button className="btn btn-primary w-100 rounded" onClick={buscarFacturas}>
+                  <button
+                    className="btn btn-primary w-100 rounded"
+                    onClick={buscarFacturas}
+                  >
                     <i className="bi bi-search me-1"></i>
                     Buscar Facturas
                   </button>
@@ -128,7 +148,9 @@ const BuscarFacturas = () => {
                 <h5 className="mb-0 fw-semibold">
                   <i className="bi bi-table me-2 text-primary"></i>
                   Resultados de la búsqueda
-                  <span className="badge bg-primary ms-2">{resultados.length}</span>
+                  <span className="badge bg-primary ms-2">
+                    {resultados.length}
+                  </span>
                 </h5>
               </div>
               <div className="card-body p-0">
@@ -150,7 +172,9 @@ const BuscarFacturas = () => {
                         <tr key={factura.id_factura}>
                           <td className="fw-medium">{factura.id_factura}</td>
                           <td>
-                            {new Date(factura.fecha_emision).toLocaleDateString("es-ES")}
+                            {new Date(factura.fecha_emision).toLocaleDateString(
+                              "es-ES"
+                            )}
                           </td>
                           <td className="text-muted">#{factura.id_reserva}</td>
                           <td>
@@ -160,7 +184,9 @@ const BuscarFacturas = () => {
                                 } ${factura.cliente.segundo_apellido ?? ""}`
                               : "—"}
                           </td>
-                          <td className="fw-medium">{parseFloat(factura.total).toFixed(2)}€</td>
+                          <td className="fw-medium">
+                            {parseFloat(factura.total).toFixed(2)}€
+                          </td>
                           <td>
                             <span
                               className={`badge ${
@@ -177,7 +203,9 @@ const BuscarFacturas = () => {
                           <td className="text-center">
                             <button
                               className="btn btn-sm btn-outline-primary rounded"
-                              onClick={() => navigate(`/facturas/${factura.id_factura}`)}
+                              onClick={() =>
+                                navigate(`/facturas/${factura.id_factura}`)
+                              }
                             >
                               <i className="bi bi-eye me-1"></i>
                               Ver
@@ -193,9 +221,16 @@ const BuscarFacturas = () => {
           ) : (
             <div className="card shadow-sm">
               <div className="card-body text-center py-5">
-                <i className="bi bi-inbox text-muted" style={{ fontSize: "3rem" }}></i>
-                <h6 className="mt-3 text-muted">No hay facturas para mostrar</h6>
-                <p className="text-muted mb-0">Realiza una búsqueda para encontrar facturas</p>
+                <i
+                  className="bi bi-inbox text-muted"
+                  style={{ fontSize: "3rem" }}
+                ></i>
+                <h6 className="mt-3 text-muted">
+                  No hay facturas para mostrar
+                </h6>
+                <p className="text-muted mb-0">
+                  Realiza una búsqueda para encontrar facturas
+                </p>
               </div>
             </div>
           )}

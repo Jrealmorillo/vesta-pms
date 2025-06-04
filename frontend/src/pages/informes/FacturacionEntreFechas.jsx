@@ -49,7 +49,9 @@ const FacturacionEntreFechas = () => {
   };
 
   const calcularTotalPorFecha = (pagos) => {
-    return Object.values(pagos).reduce((sum, total) => sum + total, 0).toFixed(2);
+    return Object.values(pagos)
+      .reduce((sum, total) => sum + total, 0)
+      .toFixed(2);
   };
 
   const contarFechas = () => {
@@ -58,26 +60,26 @@ const FacturacionEntreFechas = () => {
 
   const contarFormasPago = () => {
     const formas = new Set();
-    Object.values(resumen).forEach(pagos => {
-      Object.keys(pagos).forEach(forma => formas.add(forma));
+    Object.values(resumen).forEach((pagos) => {
+      Object.keys(pagos).forEach((forma) => formas.add(forma));
     });
     return formas.size;
   };
 
   const getIconoFormaPago = (forma) => {
     switch (forma.toLowerCase()) {
-      case 'efectivo':
-        return 'bi-cash-coin';
-      case 'tarjeta':
-      case 'tarjeta de credito':
-      case 'tarjeta de débito':
-        return 'bi-credit-card';
-      case 'transferencia':
-        return 'bi-bank';
-      case 'cheque':
-        return 'bi-file-text';
+      case "efectivo":
+        return "bi-cash-coin";
+      case "tarjeta":
+      case "tarjeta de credito":
+      case "tarjeta de débito":
+        return "bi-credit-card";
+      case "transferencia":
+        return "bi-bank";
+      case "cheque":
+        return "bi-file-text";
       default:
-        return 'bi-currency-euro';
+        return "bi-currency-euro";
     }
   };
 
@@ -118,8 +120,8 @@ const FacturacionEntreFechas = () => {
                   />
                 </div>
                 <div className="col-md-4 align-self-end">
-                  <button 
-                    className="btn btn-primary w-100" 
+                  <button
+                    className="btn btn-primary w-100"
                     onClick={obtenerInforme}
                     disabled={!desde || !hasta}
                   >
@@ -167,7 +169,9 @@ const FacturacionEntreFechas = () => {
             <div className="card border-0 bg-light h-100">
               <div className="card-body text-center">
                 <i className="bi bi-calendar-range text-success fs-2 mb-2"></i>
-                <h6 className="mb-1">{desde} / {hasta}</h6>
+                <h6 className="mb-1">
+                  {desde} / {hasta}
+                </h6>
                 <small className="text-muted">Período Consultado</small>
               </div>
             </div>
@@ -182,7 +186,9 @@ const FacturacionEntreFechas = () => {
             <h5 className="mb-0 d-flex align-items-center">
               <i className="bi bi-table text-muted me-2"></i>
               Detalle por Fecha y Forma de Pago
-              <span className="badge bg-primary ms-2">{contarFechas()} fechas</span>
+              <span className="badge bg-primary ms-2">
+                {contarFechas()} fechas
+              </span>
             </h5>
           </div>
           <div className="card-body p-0">
@@ -201,11 +207,14 @@ const FacturacionEntreFechas = () => {
                     .sort(([a], [b]) => new Date(a) - new Date(b)) // Ordenar por fecha
                     .map(([fecha, pagos]) =>
                       Object.entries(pagos)
-                        .sort(([,a], [,b]) => b - a) // Ordenar por total descendente
+                        .sort(([, a], [, b]) => b - a) // Ordenar por total descendente
                         .map(([forma, total], index) => (
                           <tr key={`${fecha}-${forma}`}>
                             {index === 0 && (
-                              <td className="py-3 fw-bold border-end" rowSpan={Object.keys(pagos).length}>
+                              <td
+                                className="py-3 fw-bold border-end"
+                                rowSpan={Object.keys(pagos).length}
+                              >
                                 <div className="d-flex align-items-center">
                                   <i className="bi bi-calendar3 text-primary me-2"></i>
                                   {new Date(fecha).toLocaleDateString("es-ES")}
@@ -214,7 +223,11 @@ const FacturacionEntreFechas = () => {
                             )}
                             <td className="py-3">
                               <div className="d-flex align-items-center">
-                                <i className={`bi ${getIconoFormaPago(forma)} text-primary me-3`}></i>
+                                <i
+                                  className={`bi ${getIconoFormaPago(
+                                    forma
+                                  )} text-primary me-3`}
+                                ></i>
                                 <span className="fw-medium">{forma}</span>
                               </div>
                             </td>
@@ -224,7 +237,10 @@ const FacturacionEntreFechas = () => {
                               </span>
                             </td>
                             {index === 0 && (
-                              <td className="py-3 text-end border-start" rowSpan={Object.keys(pagos).length}>
+                              <td
+                                className="py-3 text-end border-start"
+                                rowSpan={Object.keys(pagos).length}
+                              >
                                 <div className="badge bg-primary fs-6">
                                   {calcularTotalPorFecha(pagos)}€
                                 </div>
@@ -244,11 +260,18 @@ const FacturacionEntreFechas = () => {
       {Object.keys(resumen).length === 0 && consultaRealizada && (
         <div className="card border-0 shadow-sm">
           <div className="card-body text-center py-5">
-            <i className="bi bi-calendar-x text-muted mb-3" style={{ fontSize: '3rem' }}></i>
+            <i
+              className="bi bi-calendar-x text-muted mb-3"
+              style={{ fontSize: "3rem" }}
+            ></i>
             <h5 className="text-muted mb-2">No hay facturación registrada</h5>
             <p className="text-muted mb-0">
-              No se encontraron facturas en el período seleccionado:<br/>
-              <strong>{new Date(desde).toLocaleDateString("es-ES")} - {new Date(hasta).toLocaleDateString("es-ES")}</strong>
+              No se encontraron facturas en el período seleccionado:
+              <br />
+              <strong>
+                {new Date(desde).toLocaleDateString("es-ES")} -{" "}
+                {new Date(hasta).toLocaleDateString("es-ES")}
+              </strong>
             </p>
           </div>
         </div>

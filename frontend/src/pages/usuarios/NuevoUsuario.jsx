@@ -50,7 +50,11 @@ const NuevoUsuario = () => {
         id_rol: 2,
       });
     } catch (error) {
-      toast.error(`Error al registrar usuario: ${error.response?.data?.error || error.message}`);
+      toast.error(
+        `Error al registrar usuario: ${
+          error.response?.data?.error || error.message
+        }`
+      );
     }
   };
   return (
@@ -61,7 +65,10 @@ const NuevoUsuario = () => {
           <div className="card shadow-sm">
             <div className="card-header bg-light">
               <div className="d-flex align-items-center">
-                <i className="bi bi-person-plus text-primary me-3" style={{ fontSize: "1.5rem" }}></i>
+                <i
+                  className="bi bi-person-plus text-primary me-3"
+                  style={{ fontSize: "1.5rem" }}
+                ></i>
                 <div>
                   <h4 className="mb-0 fw-semibold">Registrar Nuevo Usuario</h4>
                 </div>
@@ -85,7 +92,9 @@ const NuevoUsuario = () => {
                 <div className="row">
                   {/* Campo para el nombre completo */}
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Nombre completo *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Nombre completo *
+                    </label>
                     <input
                       type="text"
                       name="nombre"
@@ -99,7 +108,9 @@ const NuevoUsuario = () => {
 
                   {/* Campo para el nombre de usuario */}
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Nombre de usuario *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Nombre de usuario *
+                    </label>
                     <input
                       type="text"
                       name="nombre_usuario"
@@ -123,7 +134,9 @@ const NuevoUsuario = () => {
 
                   {/* Campo para el correo electrónico */}
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Correo electrónico *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Correo electrónico *
+                    </label>
                     <input
                       type="email"
                       name="email"
@@ -137,12 +150,15 @@ const NuevoUsuario = () => {
 
                   {/* Selector de rol */}
                   <div className="col-md-6 mb-3">
-                    <label className="form-label text-muted fw-medium">Rol del usuario *</label>
+                    <label className="form-label text-muted fw-medium">
+                      Rol del usuario *
+                    </label>
                     <select
                       name="id_rol"
                       className="form-select rounded"
                       value={datos.id_rol}
-                      onChange={manejarCambio}                    >
+                      onChange={manejarCambio}
+                    >
                       <option value={1}>Administrador</option>
                       <option value={2}>Empleado</option>
                     </select>
@@ -159,7 +175,10 @@ const NuevoUsuario = () => {
                         onChange={manejarCambio}
                         id="activoCheck"
                       />
-                      <label className="form-check-label fw-medium" htmlFor="activoCheck">
+                      <label
+                        className="form-check-label fw-medium"
+                        htmlFor="activoCheck"
+                      >
                         Usuario activo
                       </label>
                     </div>
@@ -168,7 +187,10 @@ const NuevoUsuario = () => {
 
                 {/* Botón para registrar el usuario */}
                 <div className="d-grid mt-4">
-                  <button type="submit" className="btn btn-primary btn-lg rounded">
+                  <button
+                    type="submit"
+                    className="btn btn-primary btn-lg rounded"
+                  >
                     <i className="bi bi-person-plus me-2"></i>
                     Registrar Usuario
                   </button>
@@ -180,6 +202,6 @@ const NuevoUsuario = () => {
       </div>
     </div>
   );
-}
+};
 
 export default NuevoUsuario;

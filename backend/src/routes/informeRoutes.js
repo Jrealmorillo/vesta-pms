@@ -40,10 +40,13 @@ router.get("/consumo-forma-pago", informeController.obtenerConsumoPorFormaPago);
 
 // KPIs para dashboard
 router.get("/kpis", informeController.obtenerKPIsDashboard);
+
 // Ocupación semanal para dashboard
 router.get("/ocupacion-semanal", informeController.obtenerOcupacionSemanal);
+
 // Reservas por estado para dashboard
 router.get("/reservas-estado", informeController.obtenerReservasPorEstado);
+
 // Ingresos por mes para dashboard
 router.get("/ingresos-mes", informeController.obtenerIngresosPorMes);
 

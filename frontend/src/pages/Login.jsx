@@ -1,4 +1,3 @@
-
 // Página de inicio de sesión
 // Permite al usuario autenticarse introduciendo usuario y contraseña, mostrando feedback y gestionando el estado global de autenticación.
 // Realiza la petición a la API, guarda el usuario en localStorage y redirige al dashboard tras el login exitoso.
@@ -15,7 +14,11 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
   // datos: estado local para usuario y contraseña
-  const [datos, setDatos] = useState({ nombre_usuario: "", contraseña: "", id_rol: "" });
+  const [datos, setDatos] = useState({
+    nombre_usuario: "",
+    contraseña: "",
+    id_rol: "",
+  });
   // login: función de contexto para actualizar el estado global de autenticación
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -37,7 +40,7 @@ const Login = () => {
       toast.success("Bienvenido a Vesta PMS");
       navigate("/dashboard");
     } catch {
-        toast.error("Usuario o contraseña incorrectos");
+      toast.error("Usuario o contraseña incorrectos");
     }
   };
 
@@ -61,8 +64,8 @@ const Login = () => {
               />
             </div>
             <div className="mb-3">
-            {/* Campo de contraseña reutilizable */}
-            <CampoPassword
+              {/* Campo de contraseña reutilizable */}
+              <CampoPassword
                 label="Contraseña"
                 name="contraseña"
                 value={datos.contraseña}
@@ -75,6 +78,6 @@ const Login = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Login;

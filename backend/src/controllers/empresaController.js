@@ -60,7 +60,7 @@ exports.buscarEmpresasPorCif = async (req, res) => {
 // Busca empresas por nombre
 exports.buscarEmpresasPorNombre = async (req, res) => {
   try {
-    
+
     const empresas = await GestorEmpresas.buscarEmpresasPorNombre(
       req.params.filtro
     );

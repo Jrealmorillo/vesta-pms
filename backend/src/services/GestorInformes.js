@@ -1,7 +1,8 @@
 const { LineaReserva, Habitacion, Reserva, Factura, Cliente } = require("../models");
 const { Op } = require("sequelize");
 
-class GestorInformes {    async obtenerOcupacionEntreFechas(desde, hasta) {
+class GestorInformes {
+    async obtenerOcupacionEntreFechas(desde, hasta) {
         try {
             // Contar todas las habitaciones que NO están bloqueadas
             const totalHabitacionesDisponibles = await Habitacion.count();
@@ -58,8 +59,8 @@ class GestorInformes {    async obtenerOcupacionEntreFechas(desde, hasta) {
 
             // Calcular porcentaje de ocupación promedio
             const nochesDisponibles = totalHabitacionesDisponibles * diasPeriodo;
-            const porcentajeOcupacion = nochesDisponibles > 0 
-                ? Math.round((totalNochesOcupadas / nochesDisponibles) * 100) 
+            const porcentajeOcupacion = nochesDisponibles > 0
+                ? Math.round((totalNochesOcupadas / nochesDisponibles) * 100)
                 : 0;
 
             // Devolver resumen consolidado que espera el frontend
@@ -98,75 +99,75 @@ class GestorInformes {    async obtenerOcupacionEntreFechas(desde, hasta) {
         }
     }
 
-    async  obtenerFacturacionEntreFechas(desde, hasta) {
-  try {
-    const facturas = await Factura.findAll({
-      where: {
-        fecha_emision: {
-          [Op.between]: [`${desde} 00:00:00`, `${hasta} 23:59:59`]
+    async obtenerFacturacionEntreFechas(desde, hasta) {
+        try {
+            const facturas = await Factura.findAll({
+                where: {
+                    fecha_emision: {
+                        [Op.between]: [`${desde} 00:00:00`, `${hasta} 23:59:59`]
+                    }
+                },
+                order: [["fecha_emision", "ASC"]],
+            });
+
+            // Agrupar por día y forma de pago
+            const resumen = {};
+
+            for (const factura of facturas) {
+                const fecha = factura.fecha_emision.toISOString().split("T")[0];
+                const formaPago = factura.forma_pago || "Sin especificar";
+                const total = parseFloat(factura.total || 0);
+
+                if (!resumen[fecha]) {
+                    resumen[fecha] = {};
+                }
+
+                if (!resumen[fecha][formaPago]) {
+                    resumen[fecha][formaPago] = 0;
+                }
+
+                resumen[fecha][formaPago] += total;
+            }
+
+            return resumen;
+        } catch (error) {
+            throw new Error("Error al obtener facturación entre fechas: " + error.message);
         }
-      },
-      order: [["fecha_emision", "ASC"]],
-    });
-
-    // Agrupar por día y forma de pago
-    const resumen = {};
-
-    for (const factura of facturas) {
-      const fecha = factura.fecha_emision.toISOString().split("T")[0];
-      const formaPago = factura.forma_pago || "Sin especificar";
-      const total = parseFloat(factura.total || 0);
-
-      if (!resumen[fecha]) {
-        resumen[fecha] = {};
-      }
-
-      if (!resumen[fecha][formaPago]) {
-        resumen[fecha][formaPago] = 0;
-      }
-
-      resumen[fecha][formaPago] += total;
     }
 
-    return resumen;
-  } catch (error) {
-    throw new Error("Error al obtener facturación entre fechas: " + error.message);
-  }
-}
 
+    // Obtener cargos por habitación para una fecha específica
+    async obtenerCargosPendientesPorHabitacion(fecha) {
+        try {
+            const lineas = await LineaReserva.findAll({
+                where: {
+                    fecha: fecha,
+                    activa: true,
+                },
+                include: [
+                    {
+                        model: Reserva,
+                        as: "reserva",
+                        where: {
+                            estado: "Check-in",
+                        },
+                    },
+                ],
+            }); return lineas.map((linea) => ({
+                fecha: linea.fecha,
+                id_reserva: linea.id_reserva,
+                numero_habitacion: linea.reserva?.numero_habitacion ?? "No asignada",
+                concepto: `Alojamiento - ${linea.tipo_habitacion} (${linea.regimen})`,
+                cantidad: linea.cantidad_habitaciones,
+                precio_unitario: linea.precio,
+                total: parseFloat(linea.precio) * linea.cantidad_habitaciones,
+            }));
+        } catch (error) {
+            throw new Error("Error al obtener cargos por habitación: " + error.message);
+        }
+    }
 
-// Obtener cargos por habitación para una fecha específica
-async obtenerCargosPendientesPorHabitacion(fecha) {
-  try {
-    const lineas = await LineaReserva.findAll({
-      where: {
-        fecha: fecha,
-        activa: true,
-      },
-      include: [
-        {
-          model: Reserva,
-          as: "reserva",
-          where: {
-            estado: "Check-in",
-          },
-        },
-      ],
-    });    return lineas.map((linea) => ({
-      fecha: linea.fecha,
-      id_reserva: linea.id_reserva,
-      numero_habitacion: linea.reserva?.numero_habitacion ?? "No asignada",
-      concepto: `Alojamiento - ${linea.tipo_habitacion} (${linea.regimen})`,
-      cantidad: linea.cantidad_habitaciones,
-      precio_unitario: linea.precio,
-      total: parseFloat(linea.precio) * linea.cantidad_habitaciones,
-    }));
-  } catch (error) {
-    throw new Error("Error al obtener cargos por habitación: " + error.message);
-  }
-}
-
-// Estado actual de habitaciones
+    // Estado actual de habitaciones
     async obtenerEstadoActualHabitaciones() {
         try {
             // Todas las habitaciones

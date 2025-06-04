@@ -9,7 +9,7 @@ class GestorHabitaciones {
     } catch (error) {
       throw new Error(
         `Error al crear la habitación nº ${datos.numero_habitacion}: ` +
-          error.message
+        error.message
       );
     }
   }
@@ -26,7 +26,7 @@ class GestorHabitaciones {
     } catch (error) {
       throw new Error(
         `Error al modificar la habitación nº ${numero_habitacion}: ` +
-          error.message
+        error.message
       );
     }
   }
@@ -47,7 +47,7 @@ class GestorHabitaciones {
     } catch (error) {
       throw new Error(
         `Error al eliminar la habitación nº ${numero_habitacion}: ` +
-          error.message
+        error.message
       );
     }
   }
@@ -76,7 +76,7 @@ class GestorHabitaciones {
     } catch (error) {
       throw new Error(
         `Error al obtener la habitación nº ${numero_habitacion}: ` +
-          error.message
+        error.message
       );
     }
   }

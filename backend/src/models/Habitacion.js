@@ -1,7 +1,7 @@
 // Modelo Sequelize para la entidad Habitacion.
 // Define la estructura de la tabla 'Habitaciones' y las restricciones de cada campo.
 
-const { DataTypes} = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
 const Habitacion = sequelize.define("Habitacion", {
@@ -18,7 +18,7 @@ const Habitacion = sequelize.define("Habitacion", {
     // Capacidad máxima de personas permitidas
     capacidad_maxima: {
         type: DataTypes.INTEGER,
-        allowNull:false,
+        allowNull: false,
         validate: {
             min: 1
         }
@@ -26,7 +26,7 @@ const Habitacion = sequelize.define("Habitacion", {
     // Capacidad mínima de personas permitidas
     capacidad_minima: {
         type: DataTypes.INTEGER,
-        allowNull:false,
+        allowNull: false,
         validate: {
             min: 1
         }
@@ -45,7 +45,7 @@ const Habitacion = sequelize.define("Habitacion", {
     {
         tableName: "Habitaciones",
         timestamps: false
-});
+    });
 
 // Exporta el modelo para su uso en otros módulos
 module.exports = Habitacion;
