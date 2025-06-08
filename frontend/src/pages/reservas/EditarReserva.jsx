@@ -191,7 +191,7 @@ const EditarReserva = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // 1. Eliminar en backend las líneas que ya no están en el frontend
+      // Eliminar en backend las líneas que ya no están en el frontend
       for (const lineaBackend of lineasActualesBackend) {
         const existeEnFrontend = lineas.find(
           (l) => l.id_linea_reserva === lineaBackend.id_linea_reserva
@@ -206,7 +206,7 @@ const EditarReserva = () => {
         }
       }
 
-      // 2. Actualizar o crear las líneas que están en el frontend
+      // Actualizar o crear las líneas que están en el frontend
       for (const linea of lineas) {
         if (linea.id_linea_reserva) {
           const existeEnBackend = lineasActualesBackend.find(
@@ -239,7 +239,7 @@ const EditarReserva = () => {
         }
       }
 
-      toast.success("Reserva modificada correctamente");
+      toast.success(`Reserva ${id} modificada correctamente`);
       // recargar datos para reflejar el estado real
       const { data: datosLineasFinal } = await axios.get(
         `${import.meta.env.VITE_API_URL}/reservas/${id}/lineas`,
