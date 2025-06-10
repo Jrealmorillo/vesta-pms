@@ -671,15 +671,15 @@ const EditarReserva = () => {
         </div>
       </div>{" "}
       {/* Botón para guardar cambios */}
-      <div className="row">
-        <div className="col-12">
+      <div className="row d-flex justify-content-center">
+        <div className="col-4">
           <div className="d-grid">
             <button
-              className="btn btn-success btn-lg py-3"
+              className="btn btn-success py-3"
               onClick={guardarCambios}
               style={{ borderRadius: "10px", fontWeight: "bold" }}
             >
-              Guardar todos los cambios
+              Guardar cambios
             </button>
           </div>
         </div>

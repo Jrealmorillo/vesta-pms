@@ -62,7 +62,7 @@ const VerReserva = () => {
         { nuevoEstado: "Confirmada" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      toast.success("Reserva recuperada correctamente");
+      toast.success(`Reserva ${reserva.id_reserva} recuperada correctamente`);
 
       // Volver a cargar la reserva actualizada
       const response = await axios.get(
@@ -101,7 +101,7 @@ const VerReserva = () => {
         { nuevoEstado: "Anulada" },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      toast.warning("Reserva anulada correctamente");
+      toast.warning(`Reserva ${reserva.id_reserva} anulada correctamente`);
 
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL}/reservas/id/${reserva.id_reserva}`,
