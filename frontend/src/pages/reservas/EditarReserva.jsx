@@ -255,7 +255,7 @@ const EditarReserva = () => {
       setReserva(datosReservaFinal);
     } catch (error) {
       toast.error(
-        `Error al modificar la reserva: ${
+        `${
           error.response?.data?.error || error.message
         }`
       );

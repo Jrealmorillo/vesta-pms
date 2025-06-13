@@ -232,6 +232,24 @@ const NuevaReserva = () => {
       return;
     }
 
+    // Validación: número de líneas debe coincidir con número de noches
+    const diffTime = salida.getTime() - entrada.getTime();
+    const numNoches = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (lineas.length !== numNoches) {
+      toast.error(
+        `Debe añadir una línea de reserva por cada noche de estancia (${numNoches} noches)`
+      );
+      return;
+    }
+
+    // Validación: no puede haber varias líneas para la misma fecha
+    const fechas = lineas.map((l) => l.fecha);
+    const fechasUnicas = new Set(fechas);
+    if (fechas.length !== fechasUnicas.size) {
+      toast.error("No puede haber más de una línea de reserva para la misma fecha");
+      return;
+    }
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/reservas/registro`,
