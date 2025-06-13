@@ -182,7 +182,7 @@ const EditarUsuario = () => {
                   </div>
 
                   {/* Estado activo */}
-                  <div className="col-12 mb-4">
+                  <div className="col-3 mb-4">
                     <div className="form-check">
                       <input
                         type="checkbox"
@@ -196,7 +196,6 @@ const EditarUsuario = () => {
                         className="form-check-label fw-medium"
                         htmlFor="activoCheck"
                       >
-                        <i className="bi bi-check-circle me-1 text-success"></i>
                         Usuario activo
                       </label>
                     </div>
