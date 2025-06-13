@@ -51,8 +51,8 @@ const NuevoUsuario = () => {
       });
     } catch (error) {
       toast.error(
-        `Error al registrar usuario: ${
-          error.response?.data?.error || error.message
+        `${
+          error.response?.data?.detalle || error.message
         }`
       );
     }
