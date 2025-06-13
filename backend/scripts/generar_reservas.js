@@ -16,12 +16,12 @@ const observaciones = [
 
 // Nombres y apellidos de ejemplo
 const nombres = ["Juan", "Cristina", "José", "María", "Pedro", "Lucía", "Carlos", "Ana", "Álvaro", "Luis", "Elena", "Miguel", "Carmen", "Javier", "Laura", "Antonio", "Sara", "David", "Paula", "Manuel", "Marta", "Francisco", "Sofía"];
-const apellidos = ["García", "Robles", "Vega", "Martínez", "López", "Sánchez", "Pérez", "Gómez", "Fernández", "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno", "Muñoz", "Álvarez", "Romero", "Alonso", "Gutiérrez", "Navarro", "Torres", "Domínguez"];
+const apellidos = ["García", "Muñoz", "Rey", "Robles", "Vega", "Martínez", "López", "Sánchez", "Pérez", "Gómez", "Fernández", "Jiménez", "Ruiz", "Hernández", "Díaz", "Moreno", "Álvarez", "Romero", "Alonso", "Gutiérrez", "Navarro", "Torres", "Domínguez"];
 
 const reservas = [];
-const fechaInicio = new Date("2025-06-10");
-const diasRango = 90; // 3 meses de dispersión
-const habitacionesPorDia = 24;
+const fechaInicio = new Date("2025-06-13");
+const diasRango = 150; // 5 meses de dispersión
+const habitacionesPorDia = 10;
 let contador = 0;
 
 for (let i = 0; i < 1500; i++) {
